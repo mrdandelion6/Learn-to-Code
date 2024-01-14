@@ -1,3 +1,5 @@
+// C Notes
+
 // std stands for standard library, io for the input/output, and .h to signify header code
 #include <stdio.h> // for scanf and printf
 #include <stdbool.h> // for using bool types
