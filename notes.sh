@@ -12,11 +12,22 @@
 # step 4: now execute myscript.sh in terminal as you would any executable by entering: ./myscript.sh
 # done!!
 
-# declaring variables
+# we prefix exetucables by ./myscript.sh to tell shell to find the myscript.sh in the current directory
+# for executables added to the system's PATH environment, we do not need ./ as those executables/programs are "global"
+# an example is how we type in gcc without ./
+
+# SSH
+# to ssh into a remote location use the following command:
+# ssh <username>@<remote_host>
+# for example, <utorid>@dhXXXXpcXX.utm.utoronto.ca
+# type exit to exit the ssh
+
+# DECLARING VARIABLES
 x="Hello World!"
 # no space around =
 
-y=2
-z=6
-a=y+z 
-
+# ARITHMETIC
+x=1
+y=1
+z=$((x + y)) # must encapsulate math with $(( ))
+echo $z # prints 2
