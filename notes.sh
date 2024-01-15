@@ -50,10 +50,22 @@
 # === COMMANDS ===
 # cd <path>: change directory to path, can use .. in place of <path> to jump into current directory's parent directory
 # ls: list present files in current directory
-# gcc -o main main.c:  compile an executable file for main which can be ran using ./main
-# > <file> redirections stdout to write and override into <file>
-ls > mytext.txt # writes the output of ls to mytext.txt instead of console
-ls >> mytext.txt # same as above but doesnt override the existing content of mytext.txt, instead it appends it
+# gcc -o <name> <cfile>.c:  compile an executable file named <name> for <cfile>.c which can be ran using ./<name>
+    gcc -o main main.c
+    ./main
+# > <file> output redirection, redirects to write and override into <file>
+    ls > mytext.txt # writes the output of ls to mytext.txt instead of console
+    ls >> mytext.txt # same as above but doesnt override the existing content of mytext.txt, instead it appends it
+# | pipe: command line operator that takes output (stdout) for the command on its right
+# grep: command line utility for searching text using regular expressions
+    ls | grep "txt" # filters directories to only display those whose name has .txt in it
+# wc: word count
+    wc mytext.txt
+# < <file>: input rediction 
+    wc < essay.txt: # goes from essay.txt --> wc, ie) wc <-- essay.txt, ie) wc < essay.text.
+# this form uses input redirection (<) to send the contents of the file (essay.txt) to the wc command through standard input. 
+# so wc reads from its standard input as if the contents of the file were typed directly into the terminal. 
+# it doesn't directly know that it's reading from a file; it just sees the input stream.
 
 # DECLARING VARIABLES
 x="Hello World!"
