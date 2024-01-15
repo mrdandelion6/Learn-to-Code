@@ -25,3 +25,5 @@ int takeInput() {
 bool test() {
     return true;
 }
+
+// test
