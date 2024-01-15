@@ -62,10 +62,14 @@
 # wc: word count
     wc mytext.txt
 # < <file>: input rediction 
-    wc < essay.txt: # goes from essay.txt --> wc, ie) wc <-- essay.txt, ie) wc < essay.text.
-# this form uses input redirection (<) to send the contents of the file (essay.txt) to the wc command through standard input. 
-# so wc reads from its standard input as if the contents of the file were typed directly into the terminal. 
-# it doesn't directly know that it's reading from a file; it just sees the input stream.
+    wc < mytext.txt: # goes from essay.txt --> wc, ie) wc <-- essay.txt, ie) wc < essay.text.
+    # this form uses input redirection (<) to send the contents of the file (essay.txt) to the wc command through standard input. 
+    # so wc reads from its standard input as if the contents of the file were typed directly into the terminal. 
+    # it doesn't directly know that it's reading from a file; it just sees the input stream.
+# <() process substituion
+    wc <(ls) # process sub. creates a temp file to transfer the output from one or more processes to the stdin of another process
+    # here takes the output of ls and passes it into the stdin of wc, as if we are entering the output of ls into wc
+    # spaces are important
 
 # DECLARING VARIABLES
 x="Hello World!"
