@@ -16,7 +16,9 @@ int main() {
     int average_temp();
     int iteratingThroughArrays();
     int loopIterationQuestion();
-    loopIterationQuestion();
+    int welcomeToPointers();
+    int assigningToDeferencedPointers();
+    assigningToDeferencedPointers();
 
     return 0;
 }
@@ -174,4 +176,50 @@ int loopIterationQuestion() {
     printf("%d\n", secondOldest);
 
     return 0;
+}
+
+// === POINTERS ===
+int welcomeToPointers() {
+    // pointers are variables with store the addresses of other variables/values 
+    // ie, address holding variable is called a pointer
+    // the concept that we can manipulate memory addresses as values is a powerful idea which defines C
+
+    int i;
+    i = 5;
+    printf("Value of i: %d\n", i);
+    printf("Address of i: %p\n", &i); // the & operator applied to a variable name returns the address of the variable
+
+    // when defining pointers, we use * infront of the variable.
+    // the int means pt holds the address of an integer
+    int *pt; // so this means pt is a pointer variable that holds the address of an integer
+    // we say the type of pt is "int *"
+    pt = &i; // pt is set to the memory address of i.
+    printf("Value of pt: %p\n", pt);
+    printf("Address of pt: %p\n", &pt);
+
+    // the size of addresses varies but on modern intel processors, the size of addresses is 8 bytes or 64-bits
+    // hence the size of pt on my intel 64 bit processor would be 8 bytes.
+    // on something like RISC-V 32 the sizes would be 32 bits for addresses (same size as integers)
+    
+    printf("Value pointed to by pt: %d\n", *pt); // * operator loads the value a pointer points to
+    // this is known as deferencing the pointer
+    
+    // note int *pt; is not a deference, its just a type declaration of int *
+
+    char ch = 'Y';
+    char *ch_pt = &ch;
+
+    printf("ch_pt points to a value of %c\n", *ch_pt);
+    return 0;
+}
+
+int assigningToDeferencedPointers() {
+    int i = 7;
+    int *pt = &i; // pt points to the address of the variable i
+
+    *pt = 9; // we set the deferenced value of pt to 9, this does not unload pt*, ie) it is not 7 = 9
+    // rather what happens is we just set the value stored at the address of pt to 9.
+    // since pt was the memory address of i, then the value of i must change to 9.
+
+    printf("val of i: %d", i); // prints 9
 }
