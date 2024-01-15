@@ -18,7 +18,8 @@ int main() {
     int loopIterationQuestion();
     int welcomeToPointers();
     int assigningToDeferencedPointers();
-    assigningToDeferencedPointers();
+    int usefulnessOfPointers();
+    usefulnessOfPointers();
 
     return 0;
 }
@@ -237,3 +238,40 @@ int assigningToDeferencedPointers() {
 
     return 0;
 }
+
+int usefulnessOfPointers() {
+    char grade_bob1 = 'B';
+    printf("bob1 got: %c\n", grade_bob1);
+    // late penalty applied, now bob1 has a mark of C
+
+    grade_bob1++; // ASCII code keys are in order
+    printf("bob1 got: %c\n", grade_bob1);
+
+    char grade_bob2 = 'A'; 
+    printf("bob2 got: %c\n", grade_bob2);
+    // say bob2 was late as well. lets make a helper function for applying late penalty
+
+    void apply_late_penalty(char grade);
+    void proper_late_penalty(char* pt);
+
+    apply_late_penalty(grade_bob2);
+    printf("bob2 got: %c\n", grade_bob2); // doesn't change bob's grade because the function's variable value is lost in the stack
+
+    // to get around this we can just have the pointer as an argument to change the variable values directly
+
+    proper_late_penalty(&grade_bob2);
+    printf("bob2 really got: %c\n", grade_bob2); // works!
+
+    // pointers give a way from inside a function to change a variable's value that's stored outside of the stack space of the function!
+    return 0;
+}
+
+void apply_late_penalty(char grade) {
+    grade++; // this value gets discard in the stack
+}
+
+void proper_late_penalty(char* pt) {
+    (*pt)++; // *pt = *pt + 1; 
+    // if we did *pt++; it would do pt += 1, then get *pt
+}
+
