@@ -19,7 +19,8 @@ int main() {
     int welcomeToPointers();
     int assigningToDeferencedPointers();
     int usefulnessOfPointers();
-    usefulnessOfPointers();
+    int passingArrays();
+    passingArrays();
 
     return 0;
 }
@@ -275,3 +276,41 @@ void proper_late_penalty(char* pt) {
     // if we did *pt++; it would do pt += 1, then get *pt
 }
 
+
+
+int passingArrays() {
+    // generally want to pass pointers rather than passing arrays
+
+    int scores[4] = {4, 5, -1, 12};
+    
+    int sum(int A[4]);
+
+    printf("size of scores: %d\n", sizeof(scores));
+
+    printf("total is %d\n", sum(scores));
+    // when we pass in an array into a function, we are not passing in the array  itself, 
+    // but rather the address of the array!
+    return 0;
+}
+
+int sum(int A[4]) { // hence, even though this works, it is misleading to think of it as passing in the array.
+    int total = 0;
+
+    for (int i = 0; i < 4; i++) {
+        total += A[i];
+    }
+    
+    printf("size of A: %d\n", sizeof(A)); // we see this doesnt give the same size as scores.
+    // this is because what is actually passed is the pointer to the front of the array, which has a size of 4 bytes here.
+    return total;
+}
+
+int properSum(int *A) { // this is how we should do it
+    int total = 0;
+
+    for (int i = 0; i < 4; i++) {
+        total += A[i];
+    }
+
+    return total;
+}
