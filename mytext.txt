@@ -1,0 +1,7 @@
+README.md
+main
+main.c
+myscript.sh
+mytext.txt
+notes.c
+notes.sh

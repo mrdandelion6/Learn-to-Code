@@ -6,7 +6,8 @@
 
 # step 1: create the shell script .sh file, let's call it myscript.sh
 # step 2: in a terminal, navigate to the directory where the script is
-# step 3: run the command: chmod +x myscript.sh, this makes the script executable by giving it permission
+# step 3: run the command: chmod +x myscript.sh 
+# this makes the script executable by giving it permission
     # lets break down chmod +x myscript.sh,
     # "chmod": changemode, for modifying the file's permissions
     # "+x": adds execute permission to file, allows myscript.sh to be run as a program or script
@@ -49,7 +50,10 @@
 # === COMMANDS ===
 # cd <path>: change directory to path, can use .. in place of <path> to jump into current directory's parent directory
 # ls: list present files in current directory
-# gcc -o main main.c: 
+# gcc -o main main.c:  compile an executable file for main which can be ran using ./main
+# > <file> redirections stdout to write and override into <file>
+ls > mytext.txt # writes the output of ls to mytext.txt instead of console
+ls >> mytext.txt # same as above but doesnt override the existing content of mytext.txt, instead it appends it
 
 # DECLARING VARIABLES
 x="Hello World!"
