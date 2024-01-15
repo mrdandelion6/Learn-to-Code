@@ -217,9 +217,23 @@ int assigningToDeferencedPointers() {
     int i = 7;
     int *pt = &i; // pt points to the address of the variable i
 
+    int *q;
+
     *pt = 9; // we set the deferenced value of pt to 9, this does not unload pt*, ie) it is not 7 = 9
     // rather what happens is we just set the value stored at the address of pt to 9.
     // since pt was the memory address of i, then the value of i must change to 9.
+    printf("val of i: %d\n", i); // prints 9
 
-    printf("val of i: %d", i); // prints 9
+    // using pt* on the LHS of an expression assigns to the value stored at pt
+    // using pt* on the RHS of an expression accesses the value pointed at by pt
+
+    *pt = *pt + 1; // first we calculate the right hand side, and assign it to *pt, just like any basic variable x = x + 1;
+    printf("val of i: %d\n", i);
+
+    // tricky!!
+    int *pt1 = q; // we are not assigning *pt = q, rather we are assigning pt = q. int *pt is just the declaration for pt.
+    int * pt2 = q; // the space can be like this
+    int* pt3 = q; // or like this; it doesnt matter
+
+    return 0;
 }
