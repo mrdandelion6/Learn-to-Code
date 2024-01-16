@@ -15,6 +15,8 @@ int main() {
     // note we cannot have nested functions in C
 
     // jump to a function to see the section of notes
+    int types();
+    int IOstuff();
     int takeInput();
     int average_temp();
     int iteratingThroughArrays();
@@ -28,11 +30,55 @@ int main() {
     int whyUsePointerToPointers();
     int cDeclarationSynax();
     int cFunctionTypes();
-    cDeclarationSynax();
-    cFunctionTypes();
+    
+    IOstuff();
+    
 
     return 0;
 }
+
+int types() {
+    // 
+
+    return 0;
+}
+
+int IOstuff() {
+    printf("yo\n"); // #include <stdio.h> tells C where to find printf function. standard input/output
+    printf("here is an integer: %d\n", 10); // #include <stdio.h> tells C where to find printf function. standard input/output
+    // format specifiers
+    // INTEGERS
+        // %d: signed decimal
+        // %u: unsigned decimal
+        // %o: unsigned octal
+        // %x: unsigned hex
+
+    // FLOATS
+        // %f: decimal floating-point
+        // %e: scienfitic notation (exponential)
+        // %g: use %e or %f, whichever is shorter
+
+    // CHAR SPECIFIERS
+        // %c: character
+        // %s: string
+
+    // POINTER SPECIFIERS
+        // %p: pointer address
+    
+    // SIZE SPECIFIERS
+        // %ld: long int 
+        // %lu: long unsigned int
+        // %lld: long long int
+        // %llu: long long unsigned int
+
+    // WIDTH AND PRECISION, these take 2 args
+        // %*d: integer width specifier. args: int, width
+        // %.f: floating point precision specifier. args: float/double, precision
+
+    double pi = 3.141592653589793238;
+    printf("Approximate value of pi: %.*f\n", 4, pi);
+
+    }
 
 int takeInput() {
     double num1, num2;
