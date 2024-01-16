@@ -1,7 +1,8 @@
 #include "functions.h"
 #include <stdio.h>
 
-void main() {
+int main() {
     // takeInput();
-    printf("Hello World!");
+    printf("Hello World!\n");
+    return 0;
 }

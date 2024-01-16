@@ -17,6 +17,7 @@ int main() {
     // jump to a function to see the section of notes
     int types();
     int IOstuff();
+    int compilingWithUNIX();
     int takeInput();
     int average_temp();
     int iteratingThroughArrays();
@@ -31,7 +32,7 @@ int main() {
     int cDeclarationSynax();
     int cFunctionTypes();
     
-    IOstuff();
+    compilingWithUNIX();
     
 
     return 0;
@@ -73,12 +74,22 @@ int IOstuff() {
 
     // WIDTH AND PRECISION, these take 2 args
         // %*d: integer width specifier. args: int, width
-        // %.f: floating point precision specifier. args: float/double, precision
+        // %.*f: floating point precision specifier. args: float/double, precision
 
     double pi = 3.141592653589793238;
     printf("Approximate value of pi: %.*f\n", 4, pi);
+    printf("Approximate value of pi: %.3f\n", pi); // can also just specify num of decimals, eg %.3f
 
     }
+
+int compilingWithUNIX() {
+    // gcc main.c 
+    // unless we provide additional arguments to the unix command above, the exe file that is produced will be a.out
+    // run the executable by ./a.out
+
+    // gcc -Wall: prints out additional warning messages, recommended to compile with -Wall
+    // gcc -Wall -o main main.c: -o specifies the exectuable file to be created as main
+}
 
 int takeInput() {
     double num1, num2;
