@@ -12,6 +12,7 @@
 int main() {
 
     // in C, even for functions, we must declare the function signatures ahead of time
+    // note we cannot have nested functions in C
     int takeInput();
     int average_temp();
     int iteratingThroughArrays();
@@ -276,7 +277,9 @@ void proper_late_penalty(char* pt) {
     // if we did *pt++; it would do pt += 1, then get *pt
 }
 
-
+void change(int *A) {
+    A[0] = 50;
+}
 
 int passingArrays() {
     // generally want to pass pointers rather than passing arrays
@@ -284,33 +287,53 @@ int passingArrays() {
     int scores[4] = {4, 5, -1, 12};
     
     int sum(int A[4]);
+    int sum2(int *A);
+    int properSum(int *A, int size);
 
     printf("size of scores: %d\n", sizeof(scores));
 
-    printf("total is %d\n", sum(scores));
+    printf("total is %d\n", properSum(scores, 4));
     // when we pass in an array into a function, we are not passing in the array  itself, 
     // but rather the address of the array!
+
+    // it's important to remember we are passing a pointer to the first element of the array (also just the address of the array)
+    // and not a copy of the array itself
+
+    change(scores); // mutates the list! this is because we passed in the address to the array!
+    printf("first element of scores is: %d\n", scores[0]); 
+
     return 0;
 }
 
-int sum(int A[4]) { // hence, even though this works, it is misleading to think of it as passing in the array.
+int sum1(int A[4]) { // hence, even though this works, it is misleading to think of it as passing in the array.
     int total = 0;
 
     for (int i = 0; i < 4; i++) {
         total += A[i];
     }
     
-    printf("size of A: %d\n", sizeof(A)); // we see this doesnt give the same size as scores.
+    // printf("size of A: %d\n", sizeof(A)); // we see this doesnt give the same size as scores.
     // this is because what is actually passed is the pointer to the front of the array, which has a size of 4 bytes here.
     return total;
 }
 
-int properSum(int *A) { // this is how we should do it
+int sum2(int *A) { // this is how we should do it
     int total = 0;
 
     for (int i = 0; i < 4; i++) {
         total += A[i];
     }
 
+    return total;
+} // however we still have an issue with this as the sum is locked to 4 element arrays
+// cant use sizeof because the argument is just the first element's pointer A[0]
+// only way is to pass in the size of the array as an additional parameter
+
+int properSum(int *A, int size) {
+    int total = 0;
+    for (int i = 0; i < size; i++) {
+        total += A[i];
+    }
+    
     return total;
 }
