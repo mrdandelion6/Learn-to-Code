@@ -32,7 +32,7 @@ int main() {
     int cDeclarationSynax();
     int cFunctionTypes();
     
-    compilingWithUNIX();
+    takeInput();
     
 
     return 0;
@@ -89,12 +89,19 @@ int compilingWithUNIX() {
 
     // gcc -Wall: prints out additional warning messages, recommended to compile with -Wall
     // gcc -Wall -o main main.c: -o specifies the exectuable file to be created as main
+
+    return 0;
 }
 
 int takeInput() {
     double num1, num2;
     printf("Type two numbers separated by a space: ");
-    scanf("%lf %lf", &num1, &num2);
+    scanf("%lf %lf", &num1, &num2); // provided by standard io
+    // we can use f for doubles in printf, but for doubles in scanf, we must use lf: long float
+    // we need & on num1 and & on num2 to provide the addresses for num1 and num2 so that their values can be changed to what the user types in on the keyboard.
+    // to read about pointers and memory address manipulation go here:
+    int welcomeToPointers();
+
     printf("You typed %f and %f\n", num1, num2);
     return 0;
 }
