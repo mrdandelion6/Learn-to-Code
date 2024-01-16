@@ -13,6 +13,8 @@ int main() {
 
     // in C, even for functions, we must declare the function signatures ahead of time
     // note we cannot have nested functions in C
+
+    // jump to a function to see the section of notes
     int takeInput();
     int average_temp();
     int iteratingThroughArrays();
@@ -21,7 +23,8 @@ int main() {
     int assigningToDeferencedPointers();
     int usefulnessOfPointers();
     int passingArrays();
-    passingArrays();
+    int pointerArithmetic();
+    pointerArithmetic();
 
     return 0;
 }
@@ -332,8 +335,49 @@ int sum2(int *A) { // this is how we should do it
 int properSum(int *A, int size) {
     int total = 0;
     for (int i = 0; i < size; i++) {
-        total += A[i];
+        total += A[i]; // offset into the memory
     }
     
     return total;
+}
+
+int pointerArithmetic() {
+    // x / y gives integer divsion if theyre both integer but floating if either are floating
+    // but what if int *x; int y ?
+
+    // when we use a + operator on pointer, it depends on the type of the pointer
+
+    int i = 77;
+    int *p = &i;
+
+    int *s = p + 1; // s must be type int *.
+    // doing + 1 adds 4 bytes to the address since p pointed to an int and ints take 4 bytes
+
+    printf("(int) address of p: %p\n", p); // prints memory address in hexadecimal bytes: eg, 0061FF04
+    printf("address of p + 1: %p\n", s); // eg, 0061FF08
+
+
+    char x = 77; // ASCII key 
+    char *q = &x;
+    char *r = q + 1;
+    // doing + 1 adds 1 byte to the address since p pointed to a char and chars take 1 byte
+
+    printf("(char) address of q: %p\n", q); // prints memory address in hexadecimal bytes: eg, 0061FF04
+    printf("address of q + 1:%p\n", r); // eg, 0061FF08
+
+    // pointer arithmetic is useful for arrays
+    int A[3] = {13, 55, 20};
+    int *z = A;
+    printf("value of z deferenced: %d\n", *z); // deference z, prints 13
+    printf("value of z + 1 derefd: %d\n", *(z + 1)); // deference z + 1, prints 55
+
+    // we can use array syntax with a pointer!
+    p[0]; // this is just p + 0
+    p[1]; // this is p + 1. just like when iterating through arrays, we apply a memory offset
+    // ie; p[k] == *(p+k)
+
+    printf("val of z[0]: %d\n", z[0]); 
+    printf("val of z[1]: %d\n", z[1]); 
+
+    return 0;
 }
