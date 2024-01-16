@@ -24,7 +24,9 @@ int main() {
     int usefulnessOfPointers();
     int passingArrays();
     int pointerArithmetic();
-    pointerArithmetic();
+    int pointersToPointers();
+    int whyUsePointerToPointers();
+    whyUsePointerToPointers();
 
     return 0;
 }
@@ -378,6 +380,70 @@ int pointerArithmetic() {
 
     printf("val of z[0]: %d\n", z[0]); 
     printf("val of z[1]: %d\n", z[1]); 
+
+    return 0;
+}
+
+int pointersToPointers() {
+    // storing the address of a pointer in another pointer
+    int i = 81;
+    int *pt = &i; // we want to store the address of the pointer pt in another pointer q
+
+    int **q = &pt; // stores the address of pt!
+    // type is int star star, q is a pointer to pointer to int
+    // q -> pt -> i
+
+    printf("%p\n", pt);
+    printf("%p\n", *q); // prints same!
+
+    // we can dereference q twice to get *pt, the value stored in the address pt points to, also the value of i
+    printf("%d\n", **q);
+
+    // we can keep adding more stars and get ***q
+    // this is a very commonly used in coding! eg) matrices, tables of data.
+
+    return 0;
+}
+
+void find_largest(int *A, int A_size, int *largest_pt) {
+    // set *largest_pt to largest element in array INTEGERS!!
+    *largest_pt = *A; // start by pointer to first pointer
+
+    for (int i = 0; i < A_size; i++) {
+        if (*largest_pt < A[i]) {
+            *largest_pt = A[i];
+        }
+    }
+
+}
+void find_largest2(int **A, int A_size, int *largest_pt) {
+    // set *largest_pt to largest element in array of POINTERS!!
+    *largest_pt = **A; // start by pointer to first pointer
+
+    for (int i = 0; i < A_size; i++) {
+        if (*largest_pt < *A[i]) {
+            *largest_pt = *A[i];
+        }
+    }
+
+}
+
+int whyUsePointerToPointers() {
+    
+    int i = 81;
+    int j = -4;
+    int A[2] = {i, j};
+
+    int largest;
+
+    find_largest(A, 2, &largest);
+    printf("largest is %d\n", largest);
+
+    // what if instead of holding integers, A held integer pointers?
+    // it is common to have an array of pointers so this is a practical question.
+    int *B[2] = {&i, &j}; // type of B is int * array so must specify that
+    find_largest2(B, 2, &largest);
+    printf("largest is %d\n", largest);
 
     return 0;
 }
