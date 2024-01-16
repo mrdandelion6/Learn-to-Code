@@ -26,7 +26,10 @@ int main() {
     int pointerArithmetic();
     int pointersToPointers();
     int whyUsePointerToPointers();
-    whyUsePointerToPointers();
+    int cDeclarationSynax();
+    int cFunctionTypes();
+    cDeclarationSynax();
+    cFunctionTypes();
 
     return 0;
 }
@@ -446,4 +449,50 @@ int whyUsePointerToPointers() {
     printf("largest is %d\n", largest);
 
     return 0;
+}
+
+// === C DECLARATION SYNTAX ===
+// basic rule: declarations mimics use
+// form declaration statement by mimicking syntax we will later use when using the variable
+
+int cDeclarationSynax() {
+    // say we have a variable f
+    // f;
+    // f[10]; and we subscript it with *
+    // *f[10]; make it a pointer
+    // (*f[10])(); and we call it as if it was a function
+
+    int (*f[10])(); // declaration, mimicks the eventual use
+    // this means array of ten pointers to functions returning int
+
+    // simpler:
+    int *g[10]; // an array of 10 pointers that point to int 
+
+    // CASTS
+    // syntax for cast is derived from the corresponding declaration
+    double x = 3.14;
+    int y = (int) x;  // assigns 3 to y
+    printf("%d\n", y);
+
+    return 0;
+}
+
+int cFunctionTypes() {
+    // function types describe the signature of a prototype of a function.
+    // you can declare function types using the following syntax:
+    // return_type (*function_pointer)(parameter_types);
+
+    int (*sum)(int, int);
+    int add(int a, int b);
+
+    // a function pointer; will point to a function that takes two integer arguments and returns an integer
+    sum = &add;
+    // this is similiar to function expressions in javascript.
+    printf("%d\n", sum(3, 2)); // prints 5
+
+    return 0;
+}
+
+int add(int a, int b) {
+    return a + b;
 }
