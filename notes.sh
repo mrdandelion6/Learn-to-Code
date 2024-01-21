@@ -113,7 +113,10 @@ echo "testing"
 alias ls='ls -lah' 
 # now ls always behave as ls -lah
 
-# CUSTOMIZING SHELL
+
+# === CUSTOMIZING SHELL ===
+
+# STARTUP MESSAGE
 # we can change the message of the day and have our own custom code run whenever we start shell
 # for ubuntu do
 cd /etc/update-motd.d
@@ -147,3 +150,28 @@ figlet -f red_phoenix "Welcome" | lolcat
 figlet -f red_phoenix "Whats up" | lolcat -S 13
 # now simply add this code to the bottom of your .bashrc, or whatever else code you want.
 # it will now make output this everytime u open a new terminal/ubuntu shell
+
+# SHELL COLORS
+# go into .bashrc again (from ~)
+cd ~
+vim .bashrc
+# uncomment force_color_promt=yes
+# in the following if statement:
+if [ "$color_prompt" = yes ]; then
+                                                 # user and host     # colon      # directory      # all text after              
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[00;31m\]\u@\h\[\033[00m\]:\[\033[01;30m\]\w\[\033[00m\]\$ '
+else
+    ...
+fi
+# we want to change the values as commented above. for example i set the user@host to be red, the colon to be white, the directory to be dark gray, and all text after to be white
+# if u wanted to make user@host to blue for example, you would do [00;34m] instead of [00;31m]
+# here are the color codes
+# Black       0;30     Dark Gray     1;30
+# Blue        0;34     Light Blue    1;34
+# Green       0;32     Light Green   1;32
+# Cyan        0;36     Light Cyan    1;36
+# Red         0;31     Light Red     1;31
+# Purple      0;35     Light Purple  1;35
+# Brown       0;33     Yellow        1;33
+# Light Gray  0;37     White         1;37
+
