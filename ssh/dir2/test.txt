@@ -1,0 +1,5 @@
+hello this is a text file i edited with vim
+to edit applicable files with vim do 'vim <file>' in shell
+to save vim, press esc to enter normal mode then type :w
+to save and exit type :wq
+to exit without saving type :q!

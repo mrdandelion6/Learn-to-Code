@@ -50,6 +50,7 @@
 # === COMMANDS ===
 # cd <path>: change directory to path, can use .. in place of <path> to jump into current directory's parent directory
 # ls: list present files in current directory
+# ls -lah: list directories with l) long format, providing detailed information. a) all entries, shows hidden files as well. h) human-readable bit sizes such as KB, MB, GB not just the raw bytes 
 # gcc -o <name> <cfile>.c:  compile an executable file named <name> for <cfile>.c which can be ran using ./<name>
     gcc -o main main.c
     ./main
@@ -68,8 +69,9 @@
     # it doesn't directly know that it's reading from a file; it just sees the input stream.
 # <() process substituion
     wc <(ls) # process sub. creates a temp file to transfer the output from one or more processes to the stdin of another process
-    # here takes the output of ls and passes it into the stdin of wc, as if we are entering the output of ls into wc
+    # here we take the output of ls and pass it into the stdin of wc, as if we are entering the output of ls into wc
     # spaces are important
+    mkdir # make directory
 
 # DECLARING VARIABLES
 x="Hello World!"
@@ -158,8 +160,8 @@ vim .bashrc
 # uncomment force_color_promt=yes
 # in the following if statement:
 if [ "$color_prompt" = yes ]; then
-                                                 # user and host     # colon      # directory      # all text after              
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[00;31m\]\u@\h\[\033[00m\]:\[\033[01;30m\]\w\[\033[00m\]\$ '
+                                                 # user and host     # colon      # directory      # the $             
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[00;31m\]\u@\h\[\033[00m\]:\[\033[01;30m\]\w\[\033[00m\]\$ ' # PS1 is the prompt string
 else
     ...
 fi
