@@ -80,3 +80,70 @@ x=1
 y=1
 z=$((x + y)) # must encapsulate math with $(( ))
 echo $z # prints 2
+
+# CREATING ALIASES AND PERSISTENT SHELL CONFIGURATION
+# to set an alias for ls, do the following
+alias ls='ls -lah'
+# this sets ls to same behaviour as ls -lah
+# reopening terminal discards this alias. want to make it persistent
+
+# to make this persistent, we want to have a .bash_profile in our home directory
+# we can create one by doing vim .bash_profile. make sure ur in home directory first
+# so cd to ~ if you arent there already
+cd ~
+vim .bash_profile
+# this will create a file called .bash_profile 
+# enter the following in the .bash_profile through vim
+if [ -f ~/.bashrc ]; then
+	source ~/.bashrc
+fi
+# this code means if there exists a file called .bashrc in ~ (home directory), then source it
+# sourcing it means we run any code that exists there.
+
+# then press esc to be in normal mode in vim, and type :wq to write your changes and quit. this should create a .bash_profile file in your pwd (which should be ~)
+# my pwd is in this git repo so it would have created a bash_profile for me right here, but you could have made this wherever you wanted. for example your home ~
+
+# note, this means we now have to go to the .bashrc file in our home
+# to see .bashrc, we need to do ls -lah because it is hidden and wont show with ls
+# now once again, do vim .bashrc to open and edit .bashrc
+# at the bottom add whatever code you want to run as soon as you open terminal
+# for example, i put this to just test it first:
+echo "testing"
+# now recall we originally wanted to make our alias persistent so just type the following into the .bashrc
+alias ls='ls -lah' 
+# now ls always behave as ls -lah
+
+# CUSTOMIZING SHELL
+# we can change the message of the day and have our own custom code run whenever we start shell
+# for ubuntu do
+cd /etc/update-motd.d
+# now do ls -lah to view everything
+# now we want to disable all that stuff we see, so we can simply just remove the execution permissions
+chmod -x /etc/update-motd.d/*
+
+# now we will install a few things:
+# apt-get install lolcat figlet
+# apt-get install update-motd
+# there's also these three, but i never used them
+# apt-get install inxi screenfetch ansiweather 
+
+# type showfigfonts to show all the fonts from figlet. we can get more
+# now to get even more fonts we can clone a git repo
+git clone https://github.com/xero/figlet-fonts
+
+# now we want to move all of these files over to the figlet folder for fonts
+mv figlet-fonts/* /usr/share/figlet/ # note: mv <source> <destination>
+# <destination> might be different for you
+# type showfigfonts to see the new fonts
+# we can now use figlet fonts by doing:
+# figlet -f <font-name> "Whatever Text". example below
+figlet -f red_phoenix "Hello"
+
+# add color to it by piping output to lolcat, remember piping is like this:
+# <output> | <input>
+# takes the output of left side and passes it as input to right side, which does something with that input (example, generate a new output)
+figlet -f red_phoenix "Welcome" | lolcat
+# we can add custom rainbow spectrum. for example i like how -S 13 rainbow looks
+figlet -f red_phoenix "Whats up" | lolcat -S 13
+# now simply add this code to the bottom of your .bashrc, or whatever else code you want.
+# it will now make output this everytime u open a new terminal/ubuntu shell

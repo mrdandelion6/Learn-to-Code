@@ -31,9 +31,15 @@ int main() {
     int whyUsePointerToPointers();
     int cDeclarationSynax();
     int cFunctionTypes();
-    
-    takeInput();
-    
+    int test2();
+    cFunctionTypes();    
+
+    return 0;
+}
+
+int test2() {
+    int *x;
+    printf("%d\n", *x);
 
     return 0;
 }
@@ -528,6 +534,8 @@ int cDeclarationSynax() {
 
     int (*f[10])(); // declaration, mimicks the eventual use
     // this means array of ten pointers to functions returning int
+
+
 
     // simpler:
     int *g[10]; // an array of 10 pointers that point to int 
