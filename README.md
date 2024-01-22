@@ -1,6 +1,7 @@
 # Learn C and Shell Script!
 
-Welcome to my C and shell script learning repository! 🚀 This repository is a collection of my notes and code snippets as I embark on the journey of learning C and shell scripting.
+Welcome to my C and Shell Script learning repository! 🚀 This repository is a collection of my notes and code snippets as I embark on the journey of learning C and shell scripting.
+I will be using Ubuntu through WSL.  
 
 ## Contents
 - `notes.c`: Dive into my detailed notes on various C concepts.
