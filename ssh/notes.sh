@@ -18,17 +18,17 @@
 # we prefix exetucables by ./myscript.sh to tell shell to find the myscript.sh in the current directory
 # for executables added to the system's PATH environment, we do not need ./ as those executables/programs are "global"
 # an example is how we type in gcc without ./
+# =============================
 
-
-# === SSH ===
+# SSH
 # to ssh into a remote location use the following command:
 # ssh <username>@<remote_host>
 # for example, <utorid>@dhXXXXpcXX.utm.utoronto.ca
 # type exit to exit the ssh
 
-
 # === ASIDE ===
-# other useful command line / terminal / bash / powershell things that may be specific to windows
+# other useful command line / terminal / bash / powershell things that may be specific to windows.
+# skip this part unless u wanna know some useful tricks for windows
 
 # FIND ANY PROCESSES RUNNING FROM SPECIFIC DIRECTORY (windows):
 # run powershell as admin, and enter: Get-Process | Where-Object { $_.Path -like "C:\path\to\dir*" }
@@ -45,9 +45,9 @@
 # note that you can only point to directories, not other files.
 # junction links are very useful for keeping synced folders, allowing access to the same content in two different places
 # whereas shortcuts are merely a link that jumps you to the source.
+# =============
 
-
-# === COMMANDS ===
+# ===== COMMANDS =====
 # cd <path>: change directory to path, can use .. in place of <path> to jump into current directory's parent directory
 # ls: list present files in current directory
 # ls -lah: list directories with l) long format, providing detailed information. a) all entries, shows hidden files as well. h) human-readable bit sizes such as KB, MB, GB not just the raw bytes 
@@ -80,6 +80,12 @@
     # mv <location>/<file> <location>/<new_name>
 # cp <location>/<file> <destination>/<new_name>
     # copy <file> from <location> to <destination> and give it the name <new_name>. omit <new_name> to copy same name.
+# scp <local_location>/<file-or-dir> username@hostname:<host_location>
+    # copy <file-or-dir> from <local_location> to a remote <host_location>.
+    # important remark; if any sort of message is printed when logging into the remote (through .bash_profile or .bashrc), then this will not work. i wasted hours over lol
+# scp username@hostname:<host_location>/<file-or-dir> <local_location>
+    # copy from remote to local
+# ====================
 
 # DECLARING VARIABLES
 x="Hello World!"
@@ -185,5 +191,5 @@ fi
 # Brown       0;33     Yellow        1;33
 # Light Gray  0;37     White         1;37
 
-
+# =========================
 
