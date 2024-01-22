@@ -33,7 +33,9 @@ int main(int argc, char* argv[]) {
     int whyUsePointerToPointers();
     int cDeclarationSynax();
     int cFunctionTypes();
-    int test2(); 
+    int memoryModel();
+    int dynamicMemory();
+    dynamicMemory();
 
     return 0;
 }
@@ -57,13 +59,6 @@ int theMainMethod(int argc, char* argv[]) {
             printf("arg %d is %s\n", i, argv[i]);
         }
     }
-    return 0;
-}
-
-int test2() {
-    int *x;
-    printf("%d\n", *x);
-
     return 0;
 }
 
@@ -606,4 +601,29 @@ int cFunctionTypes() {
 
 int add(int a, int b) {
     return a + b;
+}
+
+
+int memoryModel() {
+    // imagine memory as a single vast array
+    // [buffer, code, global data, heap, -- , stack, os] top to bottom from left to right
+
+    // buffer: allocated memory at zero and very close to zero reserved for prompting segmentation faults when accessed
+    // code segment: stores compiled code
+    // global data: stores global variables and string literals. these are defined top level outside of any function
+    // heap: reserved for dynamic memory allocation using malloc (grows downward)
+    
+    // unnamed space (may be reserved for things like file buffer)
+
+    // stack: stores stack frames from functions containing variables defined inside functions
+    // OS: reserved memory with the largest addresses. normal programs cant access this
+
+    // SEGMENTATION FAULT
+    // caused by:
+    // 1) accessing restricted memory, example: OS memory, buffer memory
+    // 2) accessing nonexistent memory
+}
+
+int dynamicMemory() {
+    
 }

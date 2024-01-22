@@ -11,7 +11,7 @@
     # lets break down chmod +x myscript.sh,
     # "chmod": changemode, for modifying the file's permissions
     # "+x": adds execute permission to file, allows myscript.sh to be run as a program or script
-    # other permissions: -r (read permission), -w (write permission)
+    # other permissions: +r (read permission), +w (write permission)
 # step 4: now execute myscript.sh in terminal as you would any executable by entering: ./myscript.sh
 # done!!
 
@@ -184,4 +184,6 @@ fi
 # Purple      0;35     Light Purple  1;35
 # Brown       0;33     Yellow        1;33
 # Light Gray  0;37     White         1;37
+
+
 
