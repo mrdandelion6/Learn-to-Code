@@ -1,14 +1,25 @@
 #include "functions.h"
 #include <stdio.h>
 
-int main(int argc, char* argv[]) {
+void printStuff(int argc, char* argv[]) {
     
     printf("passed in %d args \n", argc - 1);
 
     for (int i = 0; i < argc; i++) {
         printf("arg %d is %s\n", i, argv[i]);
     }
+}
 
-    printf("Hello World!\n");
+int* set_i() {
+    int i = 5;
+    return &i;
+}
+
+int main(int argc, char* argv[]) {
+    // printStuff(argc, argv);
+    int* pt = set_i();
+    printf("pt is %d\n", *pt);
+
     return 0;
 }
+

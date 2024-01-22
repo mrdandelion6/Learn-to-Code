@@ -1,8 +1,10 @@
 // C Notes
+// i apologize for using camel case everywhere.. i have been coding in javascript for a week nonstop
 
 // std stands for standard library, io for the input/output, and .h to signify header code
 #include "functions.h" // for sharing functions
 #include <stdio.h> // for scanf and printf
+#include <stdlib.h>
 #include <stdbool.h> // for using bool types
 #define DAYS 365 
 // use define to define a constant global value!
@@ -35,7 +37,10 @@ int main(int argc, char* argv[]) {
     int cFunctionTypes();
     int memoryModel();
     int dynamicMemory();
-    dynamicMemory();
+    int allocatingMemoryOnHeap();
+    int freeingMemory();
+    int returningAddressWithPointer();
+    returningAddressWithPointer();
 
     return 0;
 }
@@ -80,6 +85,8 @@ int types() {
     char str2[] = "bye";
     printf("%s\n", str);
     printf("%s\n", str2);
+
+    //size_t: the type returned by sizeof(). generally size_t is an unsigned int because we dont have negative sizes
 
     return 0;
 }
@@ -569,8 +576,6 @@ int cDeclarationSynax() {
     int (*f[10])(); // declaration, mimicks the eventual use
     // this means array of ten pointers to functions returning int
 
-
-
     // simpler:
     int *g[10]; // an array of 10 pointers that point to int 
 
@@ -624,6 +629,77 @@ int memoryModel() {
     // 2) accessing nonexistent memory
 }
 
+// commented out to prevent warnings
+// int* set_i() {
+//     int i = 5;
+//     return &i; // produces a segmentation fault
+// }
+
+// to allocate memory dynamically within functions use heaps instead, using malloc()
+int* proper_set_i() {
+    // void* malloc(size_t size);
+    // malloc takes a size_t argument and returns a void pointer
+    // void pointer is used to return a pointer of GENERIC type
+    // malloc returns a void pointer because it doesnt need to know how the memory allocated is going to be used
+    // simply allocates size bytes of memory on the heap and returns a pointer to that memory
+
+    // when we take that malloc call and assign it to a pointer, the pointer declaration will specify how that pointer's memory is going to be used
+
+    int* pt = malloc(sizeof(int)); // allocate memory on the heap enough for 1 integer
+    *pt = 5; // assign integer value 5 to that memory
+    return pt; // need to return the pointer
+}
+
 int dynamicMemory() {
+    int i; 
+    // int* pt = set_i(); // this line of code generates a seg fault
+    int* pt = proper_set_i();
+    printf("*pt is %d\n", *pt);
+    free(pt);
+}
+
+int* squares(int largest) {
+    int* result = malloc(sizeof(int) * largest); // need this value to be int* result not int result[]
+    for (int i=0; i < 10; i++) {
+        result[i] = (i + 1) * (i + 1);
+    }
+
+    return result;
+}
+
+int allocatingMemoryOnHeap() {
+    int* squares_to_10 = squares(10);
+
+    for (int i=0; i < 10; i++) {
+        printf("square of %d is %d\n", i + 1, squares_to_10[i]);
+    }
+    return 0;
+}
+
+int play_with_memory() {
+    // MEMORY LEAK!!
+
+    int i;
+    int* pt = malloc(sizeof(int)); // we malloc some space
+    i = 15;
+    *pt = 49; // but we never end up using it! we never returned pt, so we lost the address to the memory we allocated!!
+
+    // so we must free the memory using free();
+    free(pt); // free takes a single argument which is a pointer to the beginning of a block of memory that had been returned by a call to malloc
+    // free returns the address to the system managing your memory for the program so it can be reallocated.
+    return 0; 
+
+    // question? how does free() know how much to deallocate?
+    // answer: the memory management system keeps track of how much memory is allocated to pointer when using malloc, so we dont need to worry about passing in how much memory to deallocate into free()
+} // remark: free does not "reset" or change the value of pt, it just makes it "writeable" again. so the address in pt is still legal and we can use it, but it might be overriden
+
+int freeingMemory() {
+    // heap memory isnt automatically deallocated, must free it.
+    play_with_memory(); // memory leak from this function but it doesnt matter in this case since we terminate the freeingMemory() and then terminate main() right after.
+    return 0; // but memory leaks are very destructive for long running programs! for example, calling play_with_memory() in an infinite loop for a web browser.
+} // memory will run out.. memory keeps leaking away. we eventually get an out-of-memory-error: ENOMEM
+
+int returningAddressWithPointer() {
     
+    return 0;
 }
