@@ -7,25 +7,16 @@
 #define DAYS 365 
 // use define to define a constant global value!
 
-// MAIN METHOD
-// C source code has an entry point just like Java, which is the main() method.
-// main method! has a special signature as shown below
-// int main(int argc, char *argv[]) {}. or could also just be empty like the main() we have in notes.c
-
-// argc represents the number of arguments passed into the main method when ran. users cant manually pass in an argc argument, it automatically knows 
-// example: ./main arg1 arg2 will pass the 2 args into main and, along with the program itself as the first argument, hence the value of argc will be 3.
-
-// char* argv[] stands for argument vector. its an array of "strings", char* refers to a string, ie an array of chars
-// the first element of argv, argv[0] is the program itself. the other arguments are the strings. argv[1] points to "arg1", argv[2] points "arg2".
-// to see this being demonstrated, compile and run main.c, not notes.c
 
 // note at the top we have #include statements. this is needed for C for using several (common) methods, types, etc.
-int main() {
+int main(int argc, char* argv[]) {
+    printf("started main\n");
 
     // in C, even for functions, we must declare the function signatures ahead of time
     // note we cannot have nested functions in C
 
     // jump to a function to see the section of notes
+    int theMainMethod(int count, char* vectors[]);
     int types();
     int IOstuff();
     int compilingWithUNIX();
@@ -42,9 +33,30 @@ int main() {
     int whyUsePointerToPointers();
     int cDeclarationSynax();
     int cFunctionTypes();
-    int test2();
-    types();   
+    int test2(); 
 
+    return 0;
+}
+
+int theMainMethod(int argc, char* argv[]) {
+    
+    // MAIN METHOD
+    // C source code has an entry point just like Java, which is the main() method.
+    // main method! has a special signature: int main(int argc, char *argv[]) {}. or could also just be empty like main() {}
+    
+    // argc represents the number of arguments passed into the main method when ran. users cant manually pass in an argc argument, it automatically knows 
+    // example: ./main arg1 arg2 will pass the 2 args into main and, along with the program itself as the first argument, hence the value of argc will be 3.
+
+    // char* argv[] stands for argument vector. its an array of "strings", char* refers to a string, ie an array of chars
+    // the first element of argv, argv[0] is the program itself. the other arguments are the strings. argv[1] points to "arg1", argv[2] points "arg2".
+    // to see this being demonstrated, compile and run notes.c through terminal and pass arguments
+
+    // consequently, main only takes in strings as arguments. of course these strings can be cleverly converted to other data types
+    if (argc > 1) {
+        for (int i=1; i < argc; i++) {
+            printf("arg %d is %s\n", i, argv[i]);
+        }
+    }
     return 0;
 }
 
