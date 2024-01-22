@@ -7,7 +7,18 @@
 #define DAYS 365 
 // use define to define a constant global value!
 
+// MAIN METHOD
 // C source code has an entry point just like Java, which is the main() method.
+// main method! has a special signature as shown below
+// int main(int argc, char *argv[]) {}. or could also just be empty like the main() we have in notes.c
+
+// argc represents the number of arguments passed into the main method when ran. users cant manually pass in an argc argument, it automatically knows 
+// example: ./main arg1 arg2 will pass the 2 args into main and, along with the program itself as the first argument, hence the value of argc will be 3.
+
+// char* argv[] stands for argument vector. its an array of "strings", char* refers to a string, ie an array of chars
+// the first element of argv, argv[0] is the program itself. the other arguments are the strings. argv[1] points to "arg1", argv[2] points "arg2".
+// to see this being demonstrated, compile and run main.c, not notes.c
+
 // note at the top we have #include statements. this is needed for C for using several (common) methods, types, etc.
 int main() {
 
@@ -32,7 +43,7 @@ int main() {
     int cDeclarationSynax();
     int cFunctionTypes();
     int test2();
-    cFunctionTypes();    
+    types();   
 
     return 0;
 }
@@ -45,7 +56,23 @@ int test2() {
 }
 
 int types() {
-    // 
+    // char: single characters which have ASCII keys
+    printf("integers on this device are %zu bytes\n", sizeof(1));
+    long x;
+    printf("longs on this device are %zu bytes\n", sizeof(x));
+    long long y;
+    printf("long longs on this device are %zu bytes\n", sizeof(y));
+    // int: integer value (32 bits) 
+    // long: integer value (64 bits)
+    // float: float value 
+    // strings: strings are a bit different. they are arrays of characters whose ends are terminated by a special null character: \0
+        // so strings are like {}'h', 'e', 'l', 'l', 'o', '\0'}.
+
+    char str[] = {'h', 'e', 'l', 'l', 'o', '\0'};
+    // dont have to make strings like above of course, can use shorter syntax:
+    char str2[] = "bye";
+    printf("%s\n", str);
+    printf("%s\n", str2);
 
     return 0;
 }
