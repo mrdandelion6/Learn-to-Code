@@ -72,6 +72,14 @@
     # here we take the output of ls and pass it into the stdin of wc, as if we are entering the output of ls into wc
     # spaces are important
     mkdir # make directory
+# mkdir <filename>
+    # make a new directory named <filename>
+# mv <location>/<file> <destination>/<new_name>
+    # move <file> from <location> to <destination>. omit <new_name> to move with same name.
+    # we can use this to rename files by moving the file to the same location with a new name
+    # mv <location>/<file> <location>/<new_name>
+# cp <location>/<file> <destination>/<new_name>
+    # copy <file> from <location> to <destination> and give it the name <new_name>. omit <new_name> to copy same name.
 
 # DECLARING VARIABLES
 x="Hello World!"
