@@ -6,6 +6,7 @@
 #include <stdio.h> // for scanf and printf
 #include <stdlib.h>
 #include <stdbool.h> // for using bool types
+#include <string.h>
 #define DAYS 365 
 // use define to define a constant global value!
 
@@ -41,7 +42,10 @@ int main(int argc, char* argv[]) {
     int freeingMemory();
     int returningAddressWithPointer();
     int nestedDataStructures();
-    nestedDataStructures();
+    int typeConversions(); // some recursion here as well
+    int commandLineArguments(int count, char* vectors[]);
+    commandLineArguments(argc, argv);
+    
 
     return 0;
 }
@@ -760,4 +764,121 @@ int nestedDataStructures() {
     // suppose we had freed pointers first. then we might have trouble accessing pointers[0] and pointers[1] as they will become dangling pointers
     // and we need access to pointers[0] and pointers[1] to free them. so free memory in the reverse order you allocated it  
     // good practice is to write the free statements right after the malloc statements so u dont forget.
+}
+
+
+int parseIntegerString(char* s) { // note this will mutate s
+    int x = 0;
+    while (s[0] != '\0') {
+        int y = strtol(s, &s, 10);
+        x += y;
+
+        if (y == 0) { // nothing was yielded from string
+            s++; // move on to next character
+        }
+    }
+
+    return x;
+}
+
+int recursiveParseString(char* s) {
+
+    if (s[0] == '\0') { // empty string
+        return 0;
+    }
+
+
+    int x = strtol(s, &s, 10);
+
+    // 2 recursive cases
+
+    if (x == 0) { // zero or bad string
+        return recursiveParseString(s + 1); 
+    }
+
+    // good string 
+    return x + recursiveParseString(s);
+}
+
+int typeConversions() {
+    // convert from string to integer
+
+    // strtol!! string to long. strtol() is a special function that returns long.
+    // strtol(str, endptr, base)
+    // str is the string to convert and base is the number base. 10 for decimal 2 for binary etc.
+    // if endptr is not NULL, strtol will also store the address of the first invalid character (i.e., the first character that cannot be part of the representation of a valid long integer) in the location pointed to by endptr. 
+    int x = strtol("9", NULL, 10);
+    printf("%d\n", x);
+
+    // strtol accounts for leading/trailing spaces
+    printf("%d\n", strtol("   9 ", NULL, 10));
+
+    // strtol will ignore any invalid input and count it as 0
+    printf("%d\n", strtol("   asassdff ", NULL, 10));
+
+    // strtol begins from left of string and parses right, until it hits invalid input
+    printf("%d\n", strtol("   asass 2 ", NULL, 10)); // this should be zero because it his invalid input before getting 2
+
+    // strtol begins from left of string and parses right, until it hits invalid input
+    printf("%d\n", strtol("  2 asdaf ", NULL, 10)); // this should be 2 because the 2 is before invalid
+
+    // strtol stops parsing once it reads a noninteger character after an integer character, including spaces
+    printf("%d\n", strtol("  23 100 ", NULL, 10)); // this should be 23 because the space will stop strtol from parsing
+
+    // practice: make a method that adds all integers separated with spaces. ignore all noninteger terms in addition.
+    char* s = "s1s1ss 10 23 -3sdad 30  ";
+    printf("%d\n", parseIntegerString(s)); // should be 1 + 1 + 10 + 23 + (-3) + 30 = 62
+    printf(s); // s remains unchanged
+
+    printf("\n\n---------\n\n");
+
+    printf("doing it recursively, %d\n", recursiveParseString(s)); // srecursive version for fun
+
+    return 0;
+}
+
+int sumX(char** arr, int size) {
+    int x = 0;
+    for (int i = 2; i < size; i++) { // start at i = 2 because i = 0 is ./program and i = 1 is s
+        x += strtol(arr[i], NULL, 10);
+    }
+
+    return x;
+}
+
+double avgX(char** arr, int size) {
+
+    if (size == 2) {
+        return 0;
+    }
+
+    int x = 0;
+    int c = 0;
+    for (int i = 2; i < size; i++) { 
+        x += strtol(arr[i], NULL, 10);
+        c ++;
+    }
+
+    return (double) x / c;
+}
+
+int commandLineArguments(int argc, char* argv[]) {
+    // pass in arguments from the command line into main
+    printf("you passed in %d arguments\n", argc - 1);
+
+    if (argc < 2) {
+        printf("no arguments given");
+    }
+
+    else if (strcmp(argv[1], "a")) { // cannot directly compare strings in C. it will end up comparing addresses. (remember theyre pointers!)
+        printf("sum is %d\n", sumX(argv, argc));
+    }
+
+    else if (strcmp(argv[1], "s")) {
+        printf("avg is %f\n", avgX(argv, argc));
+    }
+
+    else {
+        printf("unrecogized value for first argument.\n please enter a or s as the first argument.\n");
+    }
 }
