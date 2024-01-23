@@ -40,7 +40,8 @@ int main(int argc, char* argv[]) {
     int allocatingMemoryOnHeap();
     int freeingMemory();
     int returningAddressWithPointer();
-    returningAddressWithPointer();
+    int nestedDataStructures();
+    nestedDataStructures();
 
     return 0;
 }
@@ -692,6 +693,7 @@ int play_with_memory() {
     // question? how does free() know how much to deallocate?
     // answer: the memory management system keeps track of how much memory is allocated to pointer when using malloc, so we dont need to worry about passing in how much memory to deallocate into free()
 } // remark: free does not "reset" or change the value of pt, it just makes it "writeable" again. so the address in pt is still legal and we can use it, but it might be overriden
+// dangling pointer: a pointer that points to memory that has already been freed is known as a dangling pointer
 
 int freeingMemory() {
     // heap memory isnt automatically deallocated, must free it.
@@ -699,7 +701,63 @@ int freeingMemory() {
     return 0; // but memory leaks are very destructive for long running programs! for example, calling play_with_memory() in an infinite loop for a web browser.
 } // memory will run out.. memory keeps leaking away. we eventually get an out-of-memory-error: ENOMEM
 
-int returningAddressWithPointer() {
-    
+int* returnHelper() {
+    int* arr = malloc(sizeof(int) * 3);
+    arr[0] = 18;
+    arr[1] = 21;
+    arr[2] = 23;
+    return arr; // returns address
+}
+
+int paramHelper(int** pt) { 
+    int* arr = malloc(sizeof(int) * 3);
+    arr[0] = 18;
+    arr[1] = 21;
+    arr[2] = 23;
+    *pt = arr;
     return 0;
+}
+
+int returningAddressWithPointer() {
+    // this section focuses on strategies to retrieve an address for a malloc from some other scope
+
+    // strat 1: simply have it return the address
+    int* data = returnHelper();
+    printf("middle value: %d\n", data[1]);   
+
+    // strat 2: pass in another variable to store it
+    data = NULL; // rmk: setting it to null sets it to zero address
+    paramHelper(&data);
+    printf("middle value: %d\n", data[1]);  
+
+    free(data);
+    return 0;
+}
+
+int nestedDataStructures() {
+    // nested array: an array with elements as pointers. each element may point to another array. [[], [], []].
+    // we often dont know the length of an array we might want. so we need a dynamically changing array
+    // need to use dynamic memory as opposed to statically defined arrays
+
+    // practice example, create an array of pointers which point to an array of 1 integer and an array of 3 integers respectively
+    int** pointers = malloc(sizeof(int*) * 2);
+    pointers[0] = malloc(sizeof(int)); 
+    pointers[1] = malloc(sizeof(int) * 3);
+
+    // setting values
+    *pointers[0] = 55; // this is basically *(pointers[0]) = 55. we first get the 0th element of pointers, then dereference it and set the value to 55.
+    printf("first element of first array is %d\n", pointers[0][0]);
+    // *pointers[0] is same as pointers[0][0]. the * acts the same as the outer [0]
+    pointers[0][0] = 40;
+    printf("first element of first array is now %d\n", pointers[0][0]);
+    pointers[1][2] = 300;
+
+    // free memory now
+    free(pointers[1]); // standard practice is to free memory from bottom-up.
+    free(pointers[0]);
+    free(pointers);
+    // note this "standard practice" is for important reasons.
+    // suppose we had freed pointers first. then we might have trouble accessing pointers[0] and pointers[1] as they will become dangling pointers
+    // and we need access to pointers[0] and pointers[1] to free them. so free memory in the reverse order you allocated it  
+    // good practice is to write the free statements right after the malloc statements so u dont forget.
 }
