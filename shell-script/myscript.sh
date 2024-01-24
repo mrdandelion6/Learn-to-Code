@@ -1,6 +1,10 @@
-functionA() {
-    local name="$1"
-    echo "Hello" $name
+function_test() {
+    echo "first"
+    echo "second"
+    echo "third"
 }
 
-val1=$(functionA "bob")
+
+result=$(function_test)
+
+echo "$(echo "$result" | sed -n '3p')"

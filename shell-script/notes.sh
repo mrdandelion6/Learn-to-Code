@@ -238,6 +238,12 @@ echo ${fruitsArray[@]} # now third element is grapes
 # =========================
 
 
+# ======= VARIABLE DECLARTIONS =======
+declare -i x=0 # i for integer
+x=$x+1
+echo $x
+# ====================================
+
 # ========= FUNCTIONS =========
 # functions have a very simple syntax in shell script
 
@@ -255,7 +261,32 @@ val1=$(functionA "bob")
 
 # =============================
 
+# ======== FOR LOOPS ========
+# for loops over folders in pwd
+
+# dir1 and dir2 are just presented as string values, not actual directories
+# so cd $d is just same as typing cd dir1 into terminal, hence we could do this with files that dont exist
+# if we did that with files that dont exist we would get a terminal message error
+for d in dir1 dir2; do # do states that the following is what to do in loop
+    echo $d # print d value
+    cd $d # go into the d value
+    ls # list everything there
+    cd .. # go back for next loop
+    echo # print a space
+done # done states the loop is done
+# ===========================
+
 
 # ===== IF STATEMENTS =====
+# if statement syntax is very simple in bash as well
+# its just a matter of learning what conditionals there are
+if [ conditional ]; then
+    echo "condition met"
+elif [ conditional2 ]; then 
+    echo "condition 2 met"
+else
+    echo "no condition met"
+fi # fi signifies the end of an if statement
+
 
 # =========================
