@@ -20,11 +20,13 @@
 # an example is how we type in gcc without ./
 # =============================
 
+
 # SSH
 # to ssh into a remote location use the following command:
 # ssh <username>@<remote_host>
 # for example, <utorid>@dhXXXXpcXX.utm.utoronto.ca
 # type exit to exit the ssh
+
 
 # === ASIDE ===
 # other useful command line / terminal / bash / powershell things that may be specific to windows.
@@ -46,6 +48,7 @@
 # junction links are very useful for keeping synced folders, allowing access to the same content in two different places
 # whereas shortcuts are merely a link that jumps you to the source.
 # =============
+
 
 # ===== COMMANDS =====
 # cd <path>: change directory to path, can use .. in place of <path> to jump into current directory's parent directory
@@ -107,6 +110,7 @@
         # -r, treats backslashes as literal characters instead of special characters
         # -a, outputs the input into an array
 # ====================
+
 
 # DECLARING VARIABLES
 x="Hello World!"
@@ -244,6 +248,7 @@ x=$x+1
 echo $x
 # ====================================
 
+
 # ========= FUNCTIONS =========
 # functions have a very simple syntax in shell script
 
@@ -286,6 +291,7 @@ echo $val2
 echo $val3
 echo $val4
 # =============================
+
 
 # ======== FOR LOOPS ========
 # for loops over folders in pwd
