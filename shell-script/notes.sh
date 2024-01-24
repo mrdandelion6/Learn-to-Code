@@ -60,6 +60,7 @@
 # | pipe: command line operator that takes output (stdout) for the command on its right
 # grep: command line utility for searching text using regular expressions
     ls | grep "txt" # filters directories to only display those whose name has .txt in it
+# <var>=`<stuff>`: back ticks known as command substitution, capture the output of <stuff> and assign it to <var>.
 # wc: word count
     wc mytext.txt
 # < <file>: input rediction 
@@ -67,13 +68,15 @@
     # this form uses input redirection (<) to send the contents of the file (essay.txt) to the wc command through standard input. 
     # so wc reads from its standard input as if the contents of the file were typed directly into the terminal. 
     # it doesn't directly know that it's reading from a file; it just sees the input stream.
+# <command> <<< <string>: here-string
+    # used to direct a string into a command. example:
+    cat <<< "hello"
 # <() process substituion
     wc <(ls) # process sub. creates a temp file to transfer the output from one or more processes to the stdin of another process
     # here we take the output of ls and pass it into the stdin of wc, as if we are entering the output of ls into wc
     # spaces are important
-    mkdir # make directory
 # mkdir <filename>
-    # make a new directory named <filename>
+    mkdir filename # make a new directory named <filename>
 # mv <location>/<file> <destination>/<new_name>
     # move <file> from <location> to <destination>. omit <new_name> to move with same name.
     # we can use this to rename files by moving the file to the same location with a new name
@@ -89,11 +92,31 @@
 # touch [options] <filename>
     # used to update the access and modification timestamps of a file. 
     # or can omit [options] to create a new file <filename> only if it doesnt exist
+# cat <file>
+    # concatenate and print contents of files
+# tr [options] <set1> <set2>
+    # replace the characters of <set1> by the characters of <set2>
+# tail -n <N> <file>
+    # display the last <N> lines of a file
+# IFS=<char> 
+    # internal field separator. not a command but a value that other commands use.
+    # the value of IFS is what shell uses for word splitting. set it to something else to manipulate how shell will separate words.
+# read [options] <var>
+    # reads some input and assigns it to var
+    # some [options] are:
+        # -r, treats backslashes as literal characters instead of special characters
+        # -a, outputs the input into an array
 # ====================
 
 # DECLARING VARIABLES
 x="Hello World!"
 # no space around =
+
+# SCOPE OF VARIABLES
+# having a variable declaration by itself on a line has a global scope
+IFS='A';
+# having a variable on the same line of some command has a limited scope only for the stuff on that line
+IFS='B' read -ra grArray <<< "yoskiesBahhh" 
 
 # ARITHMETIC
 x=1
@@ -194,6 +217,26 @@ fi
 # Brown       0;33     Yellow        1;33
 # Light Gray  0;37     White         1;37
 # =========================
+
+
+# ====== BASH ARRAYS ======
+fruitsArray=("apple" "mango" "pineapple" "guava" "lichi")
+echo ${fruitsArray[0]} # prints apple
+echo ${fruitsArray[4]} # prints lichi 
+echo ${fruitsArray[5]} # prints nothing (echo prints \n by default)
+
+#display whole array
+echo ${fruitsArray[@]}
+
+# add elements to array
+fruitsArray+=("banana" "orange")
+echo ${fruitsArray[5]} # prints banana
+
+# change elements
+fruitsArray[2]="grape"
+echo ${fruitsArray[@]} # now third element is grapes
+# =========================
+
 
 # ===== IF STATEMENTS =====
 
