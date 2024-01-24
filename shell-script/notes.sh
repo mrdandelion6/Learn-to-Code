@@ -252,13 +252,39 @@ functionA() {
     echo "Hello" $name
 }
 
-# for returns, just use echo and grab values with $() or ``.
-# for parameters you can functions like
 
+# for passing arguments just type them next to the function like this
 functionA "bob" # will return Hello bob
+
+# but handling return values gets complicated
+# for returns, just use echo and grab values with $() or ``.
 # capture return value instead of printing in terminal:
 val1=$(functionA "bob")
 
+# this is easy enough for one echo, but supposed a function has several echo that it prints and returns
+# then you will need to use sed, it gets very annoying
+
+multiple_return_values() {
+    echo "orange1"
+    echo "apple2"
+    echo "carrot3"
+    echo "mango4"
+    echo "banana5"
+    echo "peach6"
+}
+
+# for efficieny, let us first collect all of the echos in one variable
+result=$(multiple_return_values)
+# now we can access each individal return like so
+val1=$(echo "$result" | sed -n '1p')
+val2=$(echo "$result" | sed -n '2p')
+val3=$(echo "$result" | sed -n '3p')
+val4=$(echo "$result" | sed -n '4p')
+
+echo $val1 # print values to check
+echo $val2
+echo $val3
+echo $val4
 # =============================
 
 # ======== FOR LOOPS ========
@@ -280,6 +306,18 @@ done # done states the loop is done
 # ===== IF STATEMENTS =====
 # if statement syntax is very simple in bash as well
 # its just a matter of learning what conditionals there are
+
+# there are two types of ways we can have conditions
+# single square brackets []
+# double square brackets [[]]
+
+# [] brackets
+    # traditional
+    # performs only basic string and numeric comparisons
+    # requires quoting of variables to avoid word split issues
+    # uses -a and -o for logical AND, OR respectively which has unexpected behaviour sometimes
+
+# single bracket examples
 if [ conditional ]; then
     echo "condition met"
 elif [ conditional2 ]; then 
@@ -288,5 +326,26 @@ else
     echo "no condition met"
 fi # fi signifies the end of an if statement
 
+# some useful [] conditionals!!
+# check if dir exists
+if [ -d "$directory" ]; then
+    echo $directory
+fi
+#check if file exists
+if [ -f "$file" ]; then
+    echo $file
+fi
+# these are assuming you are in the pwd for file/directory. if not then preceed path based on pwd
 
+# [[ ]] brackets
+    # provides extended test features
+    # supports additional string and numeric comparisons
+    # variables inside dont need to be quoted
+    # uses && and || for logical AND , OR respectively
+
+# double bracket examples
+a="ya"
+if [[ $a == "ya" ]]; do # the spacing is important, should be [[ a == b ]] exactly, or else syntax error.
+    echo variable a is ya
+fi
 # =========================
