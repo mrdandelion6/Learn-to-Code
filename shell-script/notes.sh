@@ -85,6 +85,10 @@
     # important remark; if any sort of message is printed when logging into the remote (through .bash_profile or .bashrc), then this will not work. i wasted hours over lol
 # scp username@hostname:<host_location>/<file-or-dir> <local_location>
     # copy from remote to local
+    # for copying directories and their contents use -r after scp
+# touch [options] <filename>
+    # used to update the access and modification timestamps of a file. 
+    # or can omit [options] to create a new file <filename> only if it doesnt exist
 # ====================
 
 # DECLARING VARIABLES
@@ -131,7 +135,6 @@ alias ls='ls -lah'
 
 
 # === CUSTOMIZING SHELL ===
-
 # STARTUP MESSAGE
 # we can change the message of the day and have our own custom code run whenever we start shell
 # for ubuntu do
@@ -190,6 +193,8 @@ fi
 # Purple      0;35     Light Purple  1;35
 # Brown       0;33     Yellow        1;33
 # Light Gray  0;37     White         1;37
-
 # =========================
 
+# ===== IF STATEMENTS =====
+
+# =========================
