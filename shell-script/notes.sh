@@ -238,6 +238,24 @@ echo ${fruitsArray[@]} # now third element is grapes
 # =========================
 
 
+# ========= FUNCTIONS =========
+# functions have a very simple syntax in shell script
+
+functionA() {
+    local name="$1"
+    echo "Hello" $name
+}
+
+# for returns, just use echo and grab values with $() or ``.
+# for parameters you can functions like
+
+functionA "bob" # will return Hello bob
+# capture return value instead of printing in terminal:
+val1=$(functionA "bob")
+
+# =============================
+
+
 # ===== IF STATEMENTS =====
 
 # =========================
