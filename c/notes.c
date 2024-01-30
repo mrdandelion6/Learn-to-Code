@@ -44,7 +44,10 @@ int main(int argc, char* argv[]) {
     int nestedDataStructures();
     int typeConversions(); // some recursion here as well
     int commandLineArguments(int count, char* vectors[]);
-    commandLineArguments(argc, argv);
+    int structs();
+    int IOmoreStuff();
+    int stringStuff();
+    stringStuff();
     
 
     return 0;
@@ -881,4 +884,72 @@ int commandLineArguments(int argc, char* argv[]) {
     else {
         printf("unrecogized value for first argument.\n please enter a or s as the first argument.\n");
     }
+}
+
+struct bars {
+    int count;
+};
+
+void out_of_park(struct bars* b) {
+    b->count++; // short hand for the following
+    (*b).count++;
+}
+
+int structs() {
+    // like arrays but we can store several different types
+    // we can make structs on the stack or we can statically allocate it in memoryy
+
+    struct student1 { // goes on stack
+        // the "properties" are called members of the struct
+        char name[21];
+        int student_num;
+    }; // size of this struct would be 25 bytes. 21 bytes for the string name and 4 bytes for the integer student_num
+    // but this actually wrong! sizeof prints 28. we cant really say how large a struct may be. just use sizeof to find out.
+    // making structs like this is risky. size is ambiguous
+    printf("%zu\n", sizeof(struct student1));
+
+    // declaring and initializing structs
+    struct player {
+        char name[32];
+        char* position;
+        int home_runs;
+        float avg;
+    };
+
+    // declare  a struct
+    struct player p1;
+
+    // init members of the struct
+    strcpy(p1.name, "Shohei Ohtani");
+    p1.avg = 0.304;
+    p1.home_runs = 44;
+    // shoudlnt do this for a membeer that varies:
+    // p1.position = "pitcher" // we cant go back and change this if we do it like that
+    // use malloc instead
+    p1.position = malloc(sizeof("pitcher"));
+
+    strcpy(p1.position, "pitcher");
+    free(p1.position);
+
+    struct bars BAAA;
+    printf("some random value for BAA's member before init: %d\n", BAAA.count);
+    BAAA.count = 1;
+    printf("after init: %d\n", BAAA.count);
+    out_of_park(&BAAA);
+    printf("after function: %d\n", BAAA.count);
+
+    return 0;
+}
+
+int stringStuff() {
+    char name[32]; // name is an array of chars
+
+    // string literals
+    printf("Hello World");
+    return 0;
+}
+
+int IOmoreStuff() {
+    // fprintf()
+    return 0;
 }
