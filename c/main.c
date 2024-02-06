@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 void printStuff(int argc, char* argv[]) {
     
@@ -11,14 +12,16 @@ void printStuff(int argc, char* argv[]) {
 }
 
 int* set_i() {
-    int i = 5;
-    return &i;
+    int* i = malloc(sizeof(int));
+    *i = 5;
+    return i;
 }
 
 int main(int argc, char* argv[]) {
     // printStuff(argc, argv);
     int* pt = set_i();
     printf("pt is %d\n", *pt);
+    free(pt);
 
     return 0;
 }

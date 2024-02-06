@@ -47,7 +47,8 @@ int main(int argc, char* argv[]) {
     int structs();
     int IOmoreStuff();
     int stringStuff();
-    stringStuff();
+    int compilers();
+    compilers();
     
 
     return 0;
@@ -952,4 +953,13 @@ int stringStuff() {
 int IOmoreStuff() {
     // fprintf()
     return 0;
+}
+
+int compilers() {
+    // generally speaking, a compiler is any program that translates code in one language to a different language
+    // typically, compilers accept input in some high level language (like C) and produce output in low level (like assembly)
+    // we can compile c files and create .s assembly files by running
+    // gcc -S main.c
+    // this produces an executable main.s, and you can do cat main.s to see its contents
+    
 }
