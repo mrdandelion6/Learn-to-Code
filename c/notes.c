@@ -47,8 +47,9 @@ int main(int argc, char* argv[]) {
     int structs();
     int IOmoreStuff();
     int stringStuff();
-    int compilers();
-    compilers();
+    int compilerToolChain();
+    int compiling();
+    compiling();
     
 
     return 0;
@@ -955,11 +956,81 @@ int IOmoreStuff() {
     return 0;
 }
 
-int compilers() {
+int compilerToolChain() {
     // generally speaking, a compiler is any program that translates code in one language to a different language
     // typically, compilers accept input in some high level language (like C) and produce output in low level (like assembly)
     // we can compile c files and create .s assembly files by running
     // gcc -S main.c
     // this produces an executable main.s, and you can do cat main.s to see its contents
+
+    // 3 phases of compilation:
+    // 1) front end: translates source code to largely-language independent intermediate representation
+        // eg; gcc translates all of its input languages into 2 languages: Gimple and generic.
+        // can be thought of as "abstract syntax trees"
+
+    // 3) back end: translates intermediate language into assembly language of the machine
+    // 2) middle end: semantic analysis, the compiler optimizes the code
+
+    // note the above toolchain is idealized. in reality, the phases may be very overlapped for many compilers
+    // for instance, optimizations also occur in the front end and backend of the compiler
+
+    // COMPILER:
+    // (source code) -> intermediate code -> assembly code
+
+    // then we need an ASSEMBLER to assemble the assembly code into object code (NOT EXECUTABLE YET!)
     
+    //ASSEMBLER:
+    // (assembly code) -> object code
+    
+    // Tthen we need a LINKER to link the object code and create an executable
+
+    // LINKER
+    // (main.o) -> main.out
+
+
+
+    // SUMMARY:
+    // we make source code (main.c)
+
+    // compiler (like gcc) takes source code and turns it into intermediate code then into assembly code (main.s) 
+
+    // assembler takes that assembly code and turns it into object code (main.o)
+
+    // linker takes the all the object code stuff and combines it into an executable (main.out)
+
+    // main.c -> compiler [intermediate -> main.s] -> assembler [main.o] -> linker [main.out]
+
+    // EXECUTABLE FILES
+    // contains:
+    // - all of instructions
+    // - data section: containing items like constant strings
+    // - links to dynamic libraries: contain object code that implements functions like printf
+
+    // executables are not portable. cant copy from machine to another and assume it will run.
+    // everything excluding source code, ie from assembly code to executable code is produced for specific machine hardware
+    // executable not only cares about type of machine but also OS and system configurations 
+
+    // A BIT MORE
+    // after executable is made, it needs to be loaded into memory when it is executed. 
+    // this is the LOADER's job
+    // a LOADER is OS specific.
+
+    // EVEN MORE
+    // also , before the compiler takes in the source code we need to prepare it 
+    // a PREPROCESSOR takes the source code and prepares it for the front end (the compiler)   
+    
+    // PREPROCESSOR:
+    // - adds function prototypes for library and system calls required
+    // - interprets preprocessor directives like "macros"
+    // - removes comments
+
+    // basically every line that starts with a # needs to be cleaned up by preprocessor
+
+    return 0;
+}
+
+int compiling() {
+    // compiling a program withh multiple source files
+
+    return 0;
 }
