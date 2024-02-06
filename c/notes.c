@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdbool.h> // for using bool types
 #include <string.h>
+#include <time.h>
 #define DAYS 365 
 // use define to define a constant global value!
 
@@ -48,8 +49,9 @@ int main(int argc, char* argv[]) {
     int IOmoreStuff();
     int stringStuff();
     int compilerToolChain();
-    int compiling();
-    compiling();
+    int defining_types();
+    int headerFiles();
+    headerFiles();
     
 
     return 0;
@@ -1029,8 +1031,36 @@ int compilerToolChain() {
     return 0;
 }
 
-int compiling() {
+int defining_types() {
+    typedef int monkey;
+    // monkey is now an alias for int
+    monkey x = 1;
+    printf("%d\n", x);
+
+    // more complex
+    typedef void (*SortFunc_t)(int*, int);
+    // SortFunc_t is now an alias for a pointer to a function that takes in two args (int*, int) and returns void
+
+    typedef struct {
+        char* name;
+        SortFunc_t sort_funct;
+    } sort_info;
+    // sort_info is now an alias for a struct with the members char* name and SortFunc_t sort_funct
+
+    return 0;
+}
+
+int headerFiles() {
     // compiling a program withh multiple source files
+    // need header files!!
+
+    typedef void (*SortFunc_t)(int*, int);
+    typedef struct {
+        char* name;
+        SortFunc_t sort_funct;
+    } sort_info;
+
+
 
     return 0;
 }
