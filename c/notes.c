@@ -984,11 +984,10 @@ int compilerToolChain() {
     //ASSEMBLER:
     // (assembly code) -> object code
     
-    // Tthen we need a LINKER to link the object code and create an executable
+    // then we need a LINKER to link the object code and create an executable
 
     // LINKER
     // (main.o) -> main.out
-
 
 
     // SUMMARY:
@@ -1082,3 +1081,4 @@ int headerFiles() {
 
     return 0;
 }
+

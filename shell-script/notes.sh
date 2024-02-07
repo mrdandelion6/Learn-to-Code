@@ -358,43 +358,47 @@ fi
 
 
 # ====== COMPILING IN GENERAL ======
-# if we have some functions we want to grab from another C program
-# and we havent used header files, we can just add its name when compiling
-gcc notes.c sorting.c
-# compiles multiple c files together
-# the order doesnt matter just make sure only one of them has a main function
-# if there are multiple main functions then the compiler will not know where to enter the C program
+# compiling several C files
+    gcc notes.c sorting.c
+    # compiles multiple c files together
+    # the order doesnt matter just make sure only one of them has a main function
+    # if there are multiple main functions then the compiler will not know where to enter the C program
 
 # compiling object code
-gcc -c notes.c 
-# this creates a.o, not a.out
-# a.o is an object code file 
+    gcc -c notes.c 
+    # this creates notes.o, not a.out/notes.out
+    # notes.o is an object code file 
 
+# compiling assembly code
+    gcc -S notes.c
+    # this creates notes.s
+    # notes.s is an assembly code file
 
-# separate compilation approach:
-# compiling each object code file separately and then linking them all together.
-gcc -c notes.c
-gcc -c sorting.c
-gcc notes.o sorting.o -o notes
-
-# benefits:
-# 1.) faster c ompilation: when u compile each file separately, only need to recompile the files that have changed which saves time
-    # eg) say we chanced sorting.c
-    # initial comppilation:
+# SEPERATE-COMPILATION-APPROACH:
+    # compiling each object code file separately and then linking them all together.
     gcc -c notes.c
     gcc -c sorting.c
-    gcc notes.o sorting.o -o notes
-    # now we change sorting.c
-    gcc -c sorting.c
-    gcc notes.o sorting.o -o notes
-    # we didnt have to remake the notes.o! all we did was link them together.
-    # for single compilation we would have to call
-    gcc notes.c sorting.c -o notes
-    # all over again, which rebuilds notes.c
-# 2.) easier debugging: with separate compilation, u can debug individual files by looking at the object code for each file
-# 3.) more flexibility: separate compilation allows to use different compilation options such as optimization levels or debug flags for each file
-# 4.) better code organization: separate complilation encourages better code organization  as each file is a self contained unit that can be very easily maintained
+    gcc notes.o sorting.o -o notes # this is only linking the object code together into an executable
 
-# drawbacks:
-# 1.) more comp[licated build process, need to manage multiple object files and libraries
-# 2.) increased storage requirements: more space needed for several .o files
+    # benefits:
+    # 1.) faster c ompilation: when u compile each file separately, only need to recompile the files that have changed which saves time
+        # eg) say we chanced sorting.c
+        # initial comppilation:
+        gcc -c notes.c
+        gcc -c sorting.c
+        gcc notes.o sorting.o -o notes
+        # now we change sorting.c
+        gcc -c sorting.c
+        gcc notes.o sorting.o -o notes
+        # we didnt have to remake the notes.o! all we did was link them together.
+        # for single compilation we would have to call
+        gcc notes.c sorting.c -o notes
+        # all over again, which rebuilds notes.c
+    # 2.) easier debugging: with separate compilation, u can debug individual files by looking at the object code for each file
+    # 3.) more flexibility: separate compilation allows to use different compilation options such as optimization levels or debug flags for each file
+    # 4.) better code organization: separate complilation encourages better code organization  as each file is a self contained unit that can be very easily maintained
+
+    # drawbacks:
+    # 1.) more comp[licated build process, need to manage multiple object files and libraries
+    # 2.) increased storage requirements: more space needed for several .o files
+# ==================================
