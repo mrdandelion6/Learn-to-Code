@@ -2,13 +2,13 @@
 // i apologize for using camel case everywhere.. i have been coding in javascript for a week nonstop
 
 // std stands for standard library, io for the input/output, and .h to signify header code
-#include "functions.h" // for sharing functions
 #include <stdio.h> // for scanf and printf
 #include <stdlib.h>
 #include <stdbool.h> // for using bool types
 #include <string.h>
 #include <time.h>
 #define DAYS 365 
+#include "sorting.h"
 // use define to define a constant global value!
 
 
@@ -1054,13 +1054,31 @@ int headerFiles() {
     // compiling a program withh multiple source files
     // need header files!!
 
-    typedef void (*SortFunc_t)(int*, int);
+    // moved all of this to functions.h
+    // void bubble_sort(int*, int);
+    // void selection_sort(int*, int);
+    // void insertion_sort(int*, int);
+
     typedef struct {
         char* name;
         SortFunc_t sort_funct;
     } sort_info;
 
+    const int NUM_SORTS = 3;
+    sort_info SORTS[] = {
+        {.name = "bubble", .sort_funct = bubble_sort},
+        {.name = "selection", .sort_funct = selection_sort},
+        {.name = "insertion", .sort_funct = insertion_sort}
+    };
 
+    // when multiple files are compiled together (see shell notes)
+    // each file is compiled and assembled separately and linked at the end
+    // to create one executable
+
+    // HEADER FILES:
+    // headers are interfaces
+    // they define what types functions require
+    // the C files implement the header files interface design
 
     return 0;
 }
