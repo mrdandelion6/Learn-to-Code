@@ -51,7 +51,8 @@ int main(int argc, char* argv[]) {
     int compilerToolChain();
     int defining_types();
     int headerFiles();
-    headerFiles();
+    int headerFileVariables();
+    headerFileVariables();
     
 
     return 0;
@@ -1071,9 +1072,9 @@ int headerFiles() {
 
     const int NUM_SORTS = 3;
     sort_info SORTS[] = {
-        {.name = "bubble", .sort_funct = bubble_sort},
-        {.name = "selection", .sort_funct = selection_sort},
-        {.name = "insertion", .sort_funct = insertion_sort}
+        // {.name = "bubble", .sort_funct = bubble_sort},
+        // {.name = "selection", .sort_funct = selection_sort},
+        // {.name = "insertion", .sort_funct = insertion_sort}
     };
 
     int arr[6] = {1, 6, 3, 0, 12, 1};
@@ -1099,6 +1100,11 @@ int headerFiles() {
 
     // note that header files can contain more than just function prototypes. 
     // they can also define macros, constants, enumerations, structs, unions, and other types.
+    return 0;
+}
+
+int headerFileVariables() {
+    
     return 0;
 }
 
