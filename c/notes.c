@@ -1049,6 +1049,12 @@ int defining_types() {
     return 0;
 }
 
+void print_array(int* arr, int size) {
+    for (int i = 0; i < size; i++) {
+        printf("index %d: %d\n", i, arr[i]);
+    }
+}
+
 int headerFiles() {
     // compiling a program withh multiple source files
     // need header files!!
@@ -1070,6 +1076,13 @@ int headerFiles() {
         {.name = "insertion", .sort_funct = insertion_sort}
     };
 
+    int arr[6] = {1, 6, 3, 0, 12, 1};
+    printf("at first array is:\n");
+    print_array(arr, 6);
+
+    SORTS[1].sort_funct(arr, 6);
+    printf("\nnow array is:\n");
+    print_array(arr, 6);
     // when multiple files are compiled together (see shell notes)
     // each file is compiled and assembled separately and linked at the end
     // to create one executable
@@ -1079,6 +1092,13 @@ int headerFiles() {
     // they define what types functions require
     // the C files implement the header files interface design
 
+    // remark: it is good practice to write #include "header_file.h" at the top of the C file that implements it
+    // it may seem redundant, but it ensures types are consist across different files which use the functions in header file
+   
+    // large projects may have many header files; one for each specific interface
+
+    // note that header files can contain more than just function prototypes. 
+    // they can also define macros, constants, enumerations, structs, unions, and other types.
     return 0;
 }
 

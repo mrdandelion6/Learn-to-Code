@@ -394,6 +394,8 @@ fi
         # for single compilation we would have to call
         gcc notes.c sorting.c -o notes
         # all over again, which rebuilds notes.c
+        # this is a small example but in big projects this can save A LOT OF TIME
+        # really big projects might take 1+ hour to compile all the files
     # 2.) easier debugging: with separate compilation, u can debug individual files by looking at the object code for each file
     # 3.) more flexibility: separate compilation allows to use different compilation options such as optimization levels or debug flags for each file
     # 4.) better code organization: separate complilation encourages better code organization  as each file is a self contained unit that can be very easily maintained

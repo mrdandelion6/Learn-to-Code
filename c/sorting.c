@@ -1,3 +1,5 @@
+#include "sorting.h"
+#include <stdio.h>
 
 void swap(int* arr, int index1, int index2) {
     int temp = arr[index1];
@@ -6,8 +8,9 @@ void swap(int* arr, int index1, int index2) {
 }
 
 void bubble_sort(int* arr, int size) {
+    printf("\n === doing bubble sort=== \n");
     for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; i++) {
+        for (int j = 1; j < size - i; j++) {
             if (arr[j-1] > arr[j]) {
                 swap(arr, j-1, j);
             }
@@ -16,6 +19,7 @@ void bubble_sort(int* arr, int size) {
 }
 
 void selection_sort(int* arr, int size) {
+    printf("\n === doing selection sort=== \n");
     for (int i = 0; i < size; i++) {
         int current = i;
         for (int j = i; j < size; j++) {
@@ -28,6 +32,7 @@ void selection_sort(int* arr, int size) {
 }
 
 void insertion_sort(int* arr, int size) {
+    printf("\n === doing insertion sort=== \n");
     for (int i = 0; i < size; i++) {
         for (int j = i; j > 0 && arr[j-1] > arr[j]; j--) {
             swap(arr, j-1, j);
