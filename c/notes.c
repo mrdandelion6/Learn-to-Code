@@ -56,7 +56,8 @@ int main(int argc, char* argv[]) {
     int makeFiles();
     int IOStreams();
     int usingFiles();
-    usingFiles();
+    int readingFromFiles();
+    readingFromFiles();
     
 
     return 0;
@@ -1351,6 +1352,44 @@ int usingFiles() {
     // want a way to store values across executions; DATA PERSISTENCE
     // we can do this via local files
 
+    // we can open files for reading like so:
+    // FILE* file = fopen(const char* filename, const char* mode);
+
+    // modes are "r": reading, "w": writing, "a": appending
+
+    // FILE is a typedef struct from stdio.h library
+    FILE* score_files = fopen("iostuff.txt", "r"); // this makes the file available as a STREAM
+    
+    // fopen can fail for several reasons:
+        // file doesnt exist
+        // dont have permissions to open file
+    
+    // if fopen fails, it returns NULL instead of a valid file pointer. so we need a NULL check.
+    if (score_files == NULL) {
+        fprintf(stderr, "Error opening file\n"); 
+        return 1; // returning 1 means error
+        // note that fprintf allows us to choose the output stream. this is a specified output stream.
+    } else {
+        printf("File opened!\n");
+    }
+
+    // if we open a file we should also close it.
+
+    // we can fclose within the condition for an if statement, then check if it returns 0 or not
+    if (fclose(score_files) != 0) { // fclose returns 0 if it closed the file successfully.
+        fprintf(stderr, "fclose failed\n");
+        return 1;
+    } // fclose can fail if the file pointer is invalid, for example if it is NULL.
+
+    return 0;
+}
+
+int readingFromFiles() {
+    // there are a variety of functions in C standard library that can be used to read data from streams
+    // the one to use depends on the kind of data u are reading
+
+    // when reading text or complete lines of data, fgets is often the choice to use.
+    // char* fgets(char* s, int n, FILE* stream)
     
 
     return 0;
