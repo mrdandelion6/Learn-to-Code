@@ -1384,13 +1384,57 @@ int usingFiles() {
     return 0;
 }
 
+#define LINE_LENGTH 80
+
 int readingFromFiles() {
     // there are a variety of functions in C standard library that can be used to read data from streams
     // the one to use depends on the kind of data u are reading
 
     // when reading text or complete lines of data, fgets is often the choice to use.
     // char* fgets(char* s, int n, FILE* stream)
-    
+        // fgets returns s on success
+        // first arg: s is a pointer to memory where text can be stored
+            // s can be a char array or point to a block of memory allocated by malloc
+            // this argument specifies where the input should be stored after reading it
+        // second arg: n is the maximum number of characters fgets is allowed to put in s, including the \0 null character at end of string
 
+    FILE* opm_scores = fopen("iostuff.txt", "r");
+
+    // define string location for fgets
+    char line[LINE_LENGTH + 1]; // char array of size LINE_LENGTH + 1 (add 1 to account for null terminator)
+
+    // OPEN
+    if (opm_scores == NULL) {
+        fprintf(stderr, "erro: could not open file\n");
+    }
+    
+    // loop to read ALL LINES
+    while(fgets(line, LINE_LENGTH + 1, opm_scores)) {
+        printf("%s", line);
+    }
+    // remember: the opm_scores is a pointer to the file.
+    // the pointer automatically points to the first line of the file at the start.
+    // after each fgets call, the pointer moves down one line
+    // if fgets has nothing to read, ie; end of file, then fgets returns NULL and loop ends
+    // fgets reads a line and adds null terminator to the end of the line or after at most LINE_LENGTH characters
+
+    // CLOSE
+    if (fclose(opm_scores) != 0) {
+        fprintf(stderr, "erro: could not close file\n");
+    }
+
+    // fgets can also be used to read from stdin (stdin is a stream just like a file)
+    // fgets is often more useful than scanf for reading strings from the keyboard
+    // this is because scanf stops reading at a space character whereas fgets stops reading after a newline char
+    // eg)
+
+    while (fgets(line, LINE_LENGTH + 1, stdin)) {
+        printf("you typed: %s", line);
+    }
+    // for something like a terminal, this loop happens indefinitely as the input stream stdin will stay open and fgets will wait for input.
+    // to end the loop, use a keyboard shortcut to signal end of file, CTRL + D.
+
+    printf("\nended\n");
+ 
     return 0;
 }
