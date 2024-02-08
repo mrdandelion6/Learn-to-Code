@@ -1,5 +1,7 @@
-notes_sort: notes.o sorting.o
-	gcc notes.o sorting.o -o notes_sort
+OBJFILES = notes.o sorting.o
+
+notes_sort: $(OBJFILES)
+	gcc $(OBJFILES) -o notes_sort
 
 notes.o: notes.c sorting.h
 	gcc -c notes.c

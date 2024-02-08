@@ -1269,19 +1269,26 @@ int makeFiles() {
         // clean:
         //     rm *.o notes_sort
 
-        // WILDCARDS
-        // quick syntax for multiple files and stuff. here is an example:
+    // WILDCARDS
+    // quick syntax for multiple files and stuff. here is an example:
+    // %.o: %.c sorts.h
+        // gcc -c $< -o $@
+
+    // lets analyze this part by part:
         // %.o: %.c sorts.h
-            // gcc -c $< -o $@
+        // here the target is %.o and the dependencies are %.c (a source file of the same name) and sorts.h
 
-        // lets analyze this part by part:
-            // %.o: %.c sorts.h
-            // here the target is %.o and the dependencies are %.c (a source file of the same name) and sorts.h
+        // gcc -c $< -o $@
+        // here we create an object file from $< which symbolizes the first name in the last of dependencies, ie; $.c
+        // and $@ just means the target's name, so we give it the name of the target
 
-            // gcc -c $< -o $@
-            // here we create an object file from $< which symbolizes the first name in the last of dependencies, ie; $.c
-            // and $@ just means the target's name, so we give it the name of the target
-
+    // one last thing is that Makefiles can include variables.
+    // this can help a lot against having to rewrite a whole chain of files over and over again
+    // at the top we define variables like:
+        // OBJFILES = notes.o sorting.o
+    // and we can reference the variable by doing $(OBJFILES) instead of having to write notes.o sorting.o each time.
+    // the primary benefit of this is that we wont have to go and change several lines of code if we decide to add another file later into the mix.
+    // its all factored out into the OBJFILES variable, the only thing we will have to change. basic coding principle.
 
     return 0;
 }
