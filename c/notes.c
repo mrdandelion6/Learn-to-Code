@@ -52,7 +52,9 @@ int main(int argc, char* argv[]) {
     int defining_types();
     int headerFiles();
     int headerFileVariables();
-    headerFileVariables();
+    int staticKeywordInsideFunctions();
+    int makeFiles();
+    makeFiles();
     
 
     return 0;
@@ -960,6 +962,9 @@ int IOmoreStuff() {
 }
 
 int compilerToolChain() {
+    // COMPILER TOOLCHAIN:
+    // the compilertoolchain is a set of applications that transform source code into a running program
+
     // generally speaking, a compiler is any program that translates code in one language to a different language
     // typically, compilers accept input in some high level language (like C) and produce output in low level (like assembly)
     // we can compile c files and create .s assembly files by running
@@ -1065,23 +1070,23 @@ int headerFiles() {
     // void selection_sort(int*, int);
     // void insertion_sort(int*, int);
 
-    typedef struct {
-        char* name;
-        SortFunc_t sort_funct;
-    } sort_info;
+    // typedef struct {
+    //     char* name;
+    //     SortFunc_t sort_funct;
+    // } sort_info; UNC
 
-    const int NUM_SORTS = 3;
-    sort_info SORTS[] = {
-        // {.name = "bubble", .sort_funct = bubble_sort},
-        // {.name = "selection", .sort_funct = selection_sort},
-        // {.name = "insertion", .sort_funct = insertion_sort}
-    };
+    // const int NUM_SORTS = 3;
+    // sort_info SORTS[] = {
+    //     {.name = "bubble", .sort_funct = bubble_sort},
+    //     {.name = "selection", .sort_funct = selection_sort},
+    //     {.name = "insertion", .sort_funct = insertion_sort}
+    // }; // UNC
 
     int arr[6] = {1, 6, 3, 0, 12, 1};
     printf("at first array is:\n");
     print_array(arr, 6);
 
-    SORTS[1].sort_funct(arr, 6);
+    // SORTS[1].sort_funct(arr, 6); // UNC
     printf("\nnow array is:\n");
     print_array(arr, 6);
     // when multiple files are compiled together (see shell notes)
@@ -1104,7 +1109,129 @@ int headerFiles() {
 }
 
 int headerFileVariables() {
+    // we have factored out the typedef struct sort_info
+    // and the const int NUM_SORTS = 3
+    // and the sort_info SORTS[] array
+
+    // this is an issue because it declares and INITIALIZES!! the variables in the header file
+    // which is included in two separate source files.
+    // this means the variables will be initialized twice, in both notes.o and sorting.o 
+    // when the linker tries to link them it will see duplicate variables
+
+    // solution: separate the declaration from the initalizion 
+    // variables should be created in sorting.c in this case
+    // but note that a declaration must still happen in header file or else notes.c will not know the type exists
+    // when declaring variable in header file thats defined externally, we must use extern like so:
+    // extern <type> <var_name>
+
+    int arr[6] = {1, 6, 3, 0, 12, 1};
+    printf("at first array is:\n");
+    print_array(arr, 6);
+
+    // SORTS[1].sort_funct(arr, 6);
+    // now we can use SORTS variable here which was only declared in the header file (with extern)
+    // and initialized in the sorting.c file!
+
+    printf("\nnow array is:\n");
+    print_array(arr, 6);
+
+    // STATIC VARIABLES
+    // conversely.. (continue below about this below this function)
+
+    // we should use header guards to prevent multiple inclusions of the same header file which can lead to errors and duplicated code
+    // HEADER GUARDS:
+    // header guards are conditional compilation directives that are placed at the beginning of a header file
+    // they prevent it from being included more than once in a single translation unit (ie a single source file)
+    // implemented using the #ifndef directive.
+
+    // #ifndef: checks if a specific symbol (usually a macro) has not been defined before.
+        // if it hasnt been defined before, the header file is included otherwise the inclusion is skipped
+        // eg:
+        // #ifndef MY_HEADER_H  // (if not defined)
+        // #define MY_HEADER_H // (now we define)
+        // ... header code stuff ...
+        // #endif // MY_HEADER_H // ending the if-body, we usually add a comment to show which if statement is being terminated (for readability)
+
+    // by using header guards we can ensure that each header file is included only once,
+    // even if it is included at the top of multiple source files that are being compiled.
+   
+    // DEPENDENCY OF HEADER FILES:
+    // note that if we change a header file which source files use, then we must recompile the source files
+    // this is because the header file is a "dependency" of the source files and must be reread anew after it has been changed
+    // in other words, each time we run the executable we aren't going to read the header files again
+    // the header files are only accessed and parsed ONCE when we compile our program
     
+    // tracking dependcies can be tedious, especially for large scale projects
+    // for this reason, the compiler toolchain includes a tool for tracking which files need to be recompiled
+    // this is known as MAKE
     return 0;
 }
 
+// STATIC VARIABLES (continued from above function)
+// .. conversely, if we would like to limit the scope of variables to just the file they are defined in
+// we can use the static keyword. this will prevent other files from knowing about those variables
+static int x = 0;
+// note we have another x variable defined in sorting.c
+// also note we are doing this outside of the headerFileVariables() function because if we did it inside
+// the variable x's scope would be limited to the stack and not globally defined
+
+void staticVarsFunctionExample() {
+    static int x = 1;
+    printf("%d\n", x);
+    x++;
+}
+
+int staticKeywordInsideFunctions() {
+    // STATIC takes on a different meaning if used within the local scope of a function!!
+    // in a local function, the behaviour of the static keyword is similiar to that of static in java
+    // that is, variables defined in functions with the static keyword will  
+
+    // observe how the increment is saved
+    staticVarsFunctionExample(); // prints .. 1
+    staticVarsFunctionExample(); // .. 2
+    staticVarsFunctionExample();// .. 3
+    staticVarsFunctionExample();// .. 4
+
+    return 0;
+}
+
+int makeFiles() {
+    // Makefiles are extremely useful and vital for c programs
+
+    // recall in headerFileVariables(), we talk about how both source files need to be recompiled
+    // if a header file they're dependent on is changed. tracking these dependencies is tricky.
+
+    // we use a tool called make for this.
+    // the project we've been compiling consists of 3 files:
+        // - notes.c
+        // - sorting.c
+        // - sorting.h
+
+    // we will create a Makefile to build the parts of the project that need it
+    // a Makefile is a just literally a file named Makefile (no extension, capital M is important)
+
+    // Makefiles consist of a sequence of rules.
+    // each rule has:
+        // - target (the excecutable file to be constructed)
+        // - recipe (the list of commands to create the target)
+        // - dependencies (the stuff the target is dependent on)
+
+    // FORMAT
+    // target: dependencies
+        // recipe
+
+    // if the dependencies..
+        // A) are newer than the target (ie have been modified after the last modification of the target)
+            // then the recipes are executed
+
+        // B) dont exist
+            // then the recipes are executed if target also doesnt exist yet
+    
+    // example:
+    // notes_sort: notes.c sorting.c
+        // gcc notes.c sorting.c -o notes_sort
+
+    // our target is notes_sort
+    // view the Makefile in this repo for details
+    return 0;
+}

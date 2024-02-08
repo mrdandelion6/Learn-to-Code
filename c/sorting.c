@@ -39,3 +39,12 @@ void insertion_sort(int* arr, int size) {
         }
     }
 }
+
+sort_info SORTS[] = {
+    {.name = "bubble", .sort_funct = bubble_sort},
+    {.name = "selection", .sort_funct = selection_sort},
+    {.name = "insertion", .sort_funct = insertion_sort}
+};
+
+int x = 1;
+
