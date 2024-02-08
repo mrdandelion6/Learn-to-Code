@@ -54,7 +54,9 @@ int main(int argc, char* argv[]) {
     int headerFileVariables();
     int staticKeywordInsideFunctions();
     int makeFiles();
-    makeFiles();
+    int IOStreams();
+    int usingFiles();
+    usingFiles();
     
 
     return 0;
@@ -1184,7 +1186,13 @@ void staticVarsFunctionExample() {
 int staticKeywordInsideFunctions() {
     // STATIC takes on a different meaning if used within the local scope of a function!!
     // in a local function, the behaviour of the static keyword is similiar to that of static in java
-    // that is, variables defined in functions with the static keyword will  
+    // that is, variables defined in functions with the static keyword will retain their value across function calls
+
+    // this is because the memory location of local static variables will not be on the function stack,
+    // but instead they get stored in the global data section like global variables do.
+    
+    // however this does not mean static turns local variables into global ones. static keyword does not change the scope of the variables.
+    // their scope will still be local to the functions they are defined in.
 
     // observe how the increment is saved
     staticVarsFunctionExample(); // prints .. 1
@@ -1289,6 +1297,61 @@ int makeFiles() {
     // and we can reference the variable by doing $(OBJFILES) instead of having to write notes.o sorting.o each time.
     // the primary benefit of this is that we wont have to go and change several lines of code if we decide to add another file later into the mix.
     // its all factored out into the OBJFILES variable, the only thing we will have to change. basic coding principle.
+
+    return 0;
+}
+
+int IOStreams() {
+    // we always use printf and scanf, but there is more.
+    // writing and reading from files etc.
+
+    // c's input and output functions read and write from STREAMS.
+
+    // INPUT STREAM: source of data that provides input to program
+    // OUTPUT STREAM: a destination for data output by program
+
+    // when we do scanf to read data from keyboard, we actually read from the input stream called STANDARD INPUT
+    // by default, standard input is set to read from keyboard
+
+    // similiarly, printf writes data to standard output which is the screen by default
+
+    // furthermore, there is a third stream that is automatically open as well called standard error.
+    // the default location for standard error is also screen.
+
+    // STREAM                 STANDARD NAME         DEFAULT LOCATION
+    // Standard Input         stdin                 Keyboard
+    // Standard Output        stdout                Screen
+    // Standard Error         stderr                Screen
+
+    // why have 2 different streams for output? 
+    // ans: we can change the location for specific streams giving different output behaviours for each stream.
+    // for example, maybe we want normal output to be saved in a file but error messages to appear on screen.
+
+    // streams have standard names (see table above). 
+    // streams are powerful because of how versatile they are; 
+        // they can refer to disc files, network connections, computer devices, etc.
+
+    // REDIRECTING STREAMS!
+
+    int number;
+    scanf("%d", &number);
+    printf("the num is %d\n", number);
+
+    // want to instead read the input from a text file, not keyboard.
+    // we can do this by compiling the program with ./notes < iostuff.txt
+
+    // for example:
+    // sort < names.cat > students.txt
+    // this sets the stdin of sort to be from names.cat and the stdout to be students.txt
+
+    return 0;
+}
+
+int usingFiles() {
+    // want a way to store values across executions; DATA PERSISTENCE
+    // we can do this via local files
+
+    
 
     return 0;
 }
