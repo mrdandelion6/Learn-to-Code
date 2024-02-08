@@ -57,7 +57,8 @@ int main(int argc, char* argv[]) {
     int IOStreams();
     int usingFiles();
     int readingFromFiles();
-    readingFromFiles();
+    int scanFFunction();
+    scanFFunction();
     
 
     return 0;
@@ -1406,6 +1407,7 @@ int readingFromFiles() {
     // OPEN
     if (opm_scores == NULL) {
         fprintf(stderr, "erro: could not open file\n");
+        return 1;
     }
     
     // loop to read ALL LINES
@@ -1421,6 +1423,7 @@ int readingFromFiles() {
     // CLOSE
     if (fclose(opm_scores) != 0) {
         fprintf(stderr, "erro: could not close file\n");
+        return 1;
     }
 
     // fgets can also be used to read from stdin (stdin is a stream just like a file)
@@ -1436,5 +1439,47 @@ int readingFromFiles() {
 
     printf("\nended\n");
  
+    return 0;
+}
+
+int scanFFunction() {
+    // very same to scanf, but fscanf can choose to read from any input stream whereas scanf is forced to read from stdin
+
+    // prototype:
+    // int fscanf(FILE* stream, const char* format, ...)
+        // like scanf, fscanf returns the number of items successfully read
+        // number of items will be equal to number of format specifiers, unless something goes wrong when reading.
+
+    // we can use fscanf to read from iostuff.txt instead of fgets like last time
+    // this is useful if we wanna parse based on spaces
+
+    FILE* scores_file = fopen("iostuff.txt", "r");
+    char name[81];
+    int total;
+
+    if (scores_file == NULL) {
+        fprintf(stderr, "erro: file could not be opened\n");
+        return 1;
+    }
+
+    while(fscanf(scores_file, "%80s %d", name, &total) == 2) { // we compare to 2 becuase we expect 2 values
+        // we choose scores_file as the input stream
+        // we read two values separate by a space
+            // %80s is a string of 80 characters 
+            // %d is a number as you should know by now
+        // we pass in ADDRESSES so we can actually change the values, eg &total
+        // for a recap on this go to takeInput():
+        if (0 == 1) {
+            takeInput();
+        }
+        
+        printf("Name: %s, Score: %d.\n", name, total);
+    }
+
+    if (fclose(scores_file) != 0) {
+        fprintf(stderr, "erro: could not close file\n");
+        return 1;
+    }
+
     return 0;
 }
