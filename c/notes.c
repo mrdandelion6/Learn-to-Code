@@ -1228,10 +1228,60 @@ int makeFiles() {
             // then the recipes are executed if target also doesnt exist yet
     
     // example:
-    // notes_sort: notes.c sorting.c
-        // gcc notes.c sorting.c -o notes_sort
+    // notes_sort: notes.o sorting.o
+        // gcc notes.o sorting.o -o notes_sort
 
-    // our target is notes_sort
-    // view the Makefile in this repo for details
+    // our target is notes_sort, here. so we will create a notes_sort whenever the Makefile is ran if notes.o or sorting.o have been modified.
+    // view the Makefile in this repo for examples. 
+    // to run the Makefile, simply type `make` in the terminal while the Makefile is in your pwd
+
+    // to run a specific target within the Makefile, for example:
+        // clean:
+            // rm *.o notes_sort
+    // we can just type `make clean` in the terminal
+    // for targets like this that arent actual files, preceed the line with .PHONY: `clean`
+            // .PHONY: clean
+            // clean:
+            // rm *.o notes_sort
+
+    // REMARK:
+    // when u type `make` and run a Makefile, it only evaluates the first rule in the file.
+    // it does not automatically start going from top to down on each rule to evaluate it.
+    // what does happen is this:
+        // 1.) the first rule is evaluated
+        // 2.) all the dependencies are checked
+        // 3.) if the dependencies for the first rule are also targets in the makefile, it will jump and evaluate those rules first
+        // 4.) this way, the rules in the makefile are recursively evaluated
+    
+    // hence it is important to select your first rule wisely if you want to just call `make`
+    // otherwise you can call a specific rule to evaluate by specifying the target: `make clean`
+    // here is an example of a smartly structured Makefile. all of the rules are recursively evaluated here.
+        // notes_sort: notes.o sorting.o
+        //     gcc notes.o sorting.o -o notes_sort
+
+        // notes.o: notes.c sorting.h
+        //     gcc -c notes.c
+
+        // sorting.o: sorting.c sorting.h
+        //     gcc -c sorting.c
+
+        // .PHONY: clean
+        // clean:
+        //     rm *.o notes_sort
+
+        // WILDCARDS
+        // quick syntax for multiple files and stuff. here is an example:
+        // %.o: %.c sorts.h
+            // gcc -c $< -o $@
+
+        // lets analyze this part by part:
+            // %.o: %.c sorts.h
+            // here the target is %.o and the dependencies are %.c (a source file of the same name) and sorts.h
+
+            // gcc -c $< -o $@
+            // here we create an object file from $< which symbolizes the first name in the last of dependencies, ie; $.c
+            // and $@ just means the target's name, so we give it the name of the target
+
+
     return 0;
 }

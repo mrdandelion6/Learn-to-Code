@@ -7,5 +7,10 @@ notes.o: notes.c sorting.h
 sorting.o: sorting.c sorting.h
 	gcc -c sorting.c
 
+# the following rule is never called
+%.o: %.c sorting.h 
+	echo "BARS"
+
+.PHONY: clean
 clean:
 	rm *.o notes_sort
