@@ -58,7 +58,10 @@ int main(int argc, char* argv[]) {
     int usingFiles();
     int readingFromFiles();
     int scanFFunction();
-    scanFFunction();
+    int writingToFiles();
+    int usingFilesEnd();
+    int welcomeToStructs();
+    welcomeToStructs();
     
 
     return 0;
@@ -1482,4 +1485,160 @@ int scanFFunction() {
     }
 
     return 0;
+}
+
+int writingToFiles() {
+    FILE* output_file = fopen("write_here.txt", "w");
+    int some_int = 69;
+    float some_float = 0.69;
+
+    // use fprintf, allows to specify stream
+
+    if (output_file == NULL) {
+        fprintf(stderr, "erro: couldnt open file\n");
+        return 1;
+    }
+
+    fprintf(output_file, "some number is: %d\n", some_int);
+    fprintf(output_file, "some float is: %.2f\n", some_float);
+    // just like printf, we just specify the output stream in first arg
+
+    if (fclose(output_file) != 0) {
+        fprintf(stderr, "erro: could not close file\n");
+        return 1;
+    }
+
+    // insights:
+    // when a program writes to a stream, its actually writing to a LOCATION in memory controlled by the OS.
+    // that memory is periodically written to the file on the disk. when these write backs occur depends on how the stream is set up.
+    // usually the contents of the file will be what you've written.
+
+    // potential error:
+    // if the computer loses power in the middle of the program after some fprintfs, the data could not have been written.
+    // we dont know if the program would have written to our file if the computer crashes
+
+    // this is why it is not reccomended to use IO: file IO/stdout for debugging.
+    // if program crashes abnormally, fprintf and printf statements may not actually be written to disk/screen.
+
+    // hence if u are using print statements to debug, this can be misleading.
+    // for debugging, use gdb!!
+
+    // if you need to absolutely make sure that key modifications have been made to a stream you're writing to,
+    // then you can FLUSH the stream:
+    
+    // int fflush(FILE* stream)
+    // we typically dont do this, the OS handles it for you. 
+    // but it essentially request the OS to write any changes that are in its buffer. 
+
+    return 0;
+}
+
+int checkFileOpen(FILE* file, char* name) {
+    if (file == NULL) {
+        fprintf(stderr, "erro: could not open file %s", name);
+        return 1;
+    }
+    return 0;
+} 
+int checkFileClose(FILE* file, char* name) {
+    if (fclose(file) != 0) {
+        fprintf(stderr, "erro: could not open file %s", name);
+        return 1;
+    }
+    return 0;
+} 
+
+int usingFilesEnd() {
+    // say we want to read the iostuff.txt file and write to write_here.txt and list all the names from iostuff but not the scores:
+
+    FILE* iostuff = fopen("iostuff.txt", "r");
+    FILE* writehere = fopen("write_here.txt", "w");
+    char name[81];
+    int score;
+
+    if (checkFileOpen(iostuff, "iostuff.txt") == 1) {
+        return 1;
+    }
+    if (checkFileOpen(writehere, "write_here.txt") == 1) {
+        return 1;
+    }
+
+    while(fscanf(iostuff, "%80s %d", name, &score) == 2) {
+        printf(name);
+        fprintf(writehere, "%s\n", name);
+    }
+
+    if (checkFileClose(iostuff, "iostuff.txt") == 1) {
+        return 1;
+    }
+    if (checkFileClose(writehere, "write_here.txt") == 1) {
+        return 1;
+    }
+
+    return 0;
+}
+
+// global struct
+struct student {
+    char first_name[20];
+    char last_name[20];
+    int year;
+    float GPA;
+};
+
+int welcomeToStructs() {
+    // recall the usefulness of arrays where the data has to be of all the same type.
+    // structs used to aggregate data where the values may be of different type.
+
+    // the syntax is simple and is like a javascript object, but its usage is like that of a class. it is just a template.
+    struct student1 { // student is the "structure tag"
+        char first_name[20];
+        char last_name[20];
+        int year;
+        float GPA;
+    };
+
+    // whenever we declare a variable fo a structure type, we must include struct keyword
+    // MANUAL INITALIZATION (compare this with DESIGNATED version below)
+    struct student1 faisal;
+    // now explicitly initalize the members
+    strcpy(faisal.first_name, "Faisal"); // for strings, dont do X = Y, do strcpy(X, Y)
+    strcpy(faisal.last_name, "Shaik");
+    // remark: we are able to use the unsafe strcpy function as opposed to the unsafe strncopy function (more on this later),
+    // because we harded coded the strings to have a size of exactly 20 chars
+
+    faisal.year = 2;
+    faisal.GPA = 3.96;
+
+    printf("my name is %s and i am in year %d\n", faisal.first_name, faisal.year);
+
+    // elements of a struct are called members. access members using dot notation, just like class objects.
+
+    // STRUCTS VS CLASSES
+    // classes are more powerful and flexible than structs, and are used to create complex, modular, and reusable code. 
+    // structs, on the other hand, are simpler and more lightweight, and are used to create aggregates of data that can be easily passed around.
+
+
+    // USING STRUCTS IN FUNCTIONS
+    // recall we cant pass arrays directly into functions, rather the pointer to the first element of the array
+    // structs DONT work this way!! 
+
+    void changeStruct(struct student);
+
+    // global struct student, not student1
+
+    // we can also declare and init structs like this
+    // DESIGNATED INITALIZATER
+    struct student bob = {
+        .first_name = "John",
+        .last_name = "Doe",
+        .GPA = 2.0,
+        .year = 6
+    };
+
+    return 0;
+}
+
+void changeStruct(struct student s) {
+    s.GPA = 4.0;
 }
