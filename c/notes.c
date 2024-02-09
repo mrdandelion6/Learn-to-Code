@@ -61,7 +61,12 @@ int main(int argc, char* argv[]) {
     int writingToFiles();
     int usingFilesEnd();
     int welcomeToStructs();
-    welcomeToStructs();
+    int pointersToStructs();
+    int lowLevelIO();
+    int writingBinaryFiles();
+    int readingBinaryFiles();
+    int wavFiles();
+    wavFiles();
     
 
     return 0;
@@ -1362,7 +1367,7 @@ int usingFiles() {
     // modes are "r": reading, "w": writing, "a": appending
 
     // FILE is a typedef struct from stdio.h library
-    FILE* score_files = fopen("iostuff.txt", "r"); // this makes the file available as a STREAM
+    FILE* score_files = fopen("io-stuff/iostuff.txt", "r"); // this makes the file available as a STREAM
     
     // fopen can fail for several reasons:
         // file doesnt exist
@@ -1402,7 +1407,7 @@ int readingFromFiles() {
             // this argument specifies where the input should be stored after reading it
         // second arg: n is the maximum number of characters fgets is allowed to put in s, including the \0 null character at end of string
 
-    FILE* opm_scores = fopen("iostuff.txt", "r");
+    FILE* opm_scores = fopen("io-stuff/iostuff.txt", "r");
 
     // define string location for fgets
     char line[LINE_LENGTH + 1]; // char array of size LINE_LENGTH + 1 (add 1 to account for null terminator)
@@ -1456,7 +1461,7 @@ int scanFFunction() {
     // we can use fscanf to read from iostuff.txt instead of fgets like last time
     // this is useful if we wanna parse based on spaces
 
-    FILE* scores_file = fopen("iostuff.txt", "r");
+    FILE* scores_file = fopen("io-stuff/iostuff.txt", "r");
     char name[81];
     int total;
 
@@ -1488,7 +1493,7 @@ int scanFFunction() {
 }
 
 int writingToFiles() {
-    FILE* output_file = fopen("write_here.txt", "w");
+    FILE* output_file = fopen("io-stuff/write_here.txt", "w");
     int some_int = 69;
     float some_float = 0.69;
 
@@ -1551,15 +1556,15 @@ int checkFileClose(FILE* file, char* name) {
 int usingFilesEnd() {
     // say we want to read the iostuff.txt file and write to write_here.txt and list all the names from iostuff but not the scores:
 
-    FILE* iostuff = fopen("iostuff.txt", "r");
-    FILE* writehere = fopen("write_here.txt", "w");
+    FILE* iostuff = fopen("io-stuff/iostuff.txt", "r");
+    FILE* writehere = fopen("io-stuff/write_here.txt", "w");
     char name[81];
     int score;
 
-    if (checkFileOpen(iostuff, "iostuff.txt") == 1) {
+    if (checkFileOpen(iostuff, "io-stuff/iostuff.txt") == 1) {
         return 1;
     }
-    if (checkFileOpen(writehere, "write_here.txt") == 1) {
+    if (checkFileOpen(writehere, "io-stuff/write_here.txt") == 1) {
         return 1;
     }
 
@@ -1568,10 +1573,10 @@ int usingFilesEnd() {
         fprintf(writehere, "%s\n", name);
     }
 
-    if (checkFileClose(iostuff, "iostuff.txt") == 1) {
+    if (checkFileClose(iostuff, "io-stuff/iostuff.txt") == 1) {
         return 1;
     }
-    if (checkFileClose(writehere, "write_here.txt") == 1) {
+    if (checkFileClose(writehere, "io-stuff/write_here.txt") == 1) {
         return 1;
     }
 
@@ -1662,4 +1667,188 @@ void changeStruct(struct student s) {
 
 void goodChangeStruct(struct student* s) {
     (*s).GPA = 4.0;
+}
+
+int pointersToStructs() {
+    // basically the same concepts as pointers to ints
+
+    struct student s;
+    struct student* p_s = &s;
+
+    s = (struct student) {
+        .first_name = "Daa",
+        .last_name = "Zaa",
+        .GPA = 3.2,
+        .year = 3
+    };
+
+    // when using dot notation on structs by deferencing pointers, we need to put () around the dereference
+    (*p_s).GPA = 2.3;
+    printf("GPA changed to %.1f\n", s.GPA);
+    // this is because . has higher precedence than *, so *p_s.GPA is same as *(p_s.GPA), which results in an error
+
+    // as this syntax is kind of messy, C has easier syntax for this:
+    p_s->year = 1;
+    printf("year changed to: %d\n", s.year);
+    // is the same as
+    p_s->year = 2;
+
+
+    return 0;
+}
+
+
+int lowLevelIO() {
+    // not all files contain text but all files contain binary data.
+    // the binary bytes can be translated to human readable text for .txt files etc.
+    // we will explore using files where the bytes dont translate to human text.
+
+    // binary files are smaller and more versatile for text files, that is why we use them.
+    // binary files come in many different extensions:
+        // - .dat
+        // - .jpg
+        // - .mp3
+        // no extension at all, etc.
+    
+    // when opening binary files with fopen, we add a `b` to the end of our mode argument. eg
+    // fopen("testing.dat", "rb") 
+    // above we are opening a BINARY file for reading
+
+    // fgets, fprintf, and fscanf are not useful for binary files.
+        // this is because binary files dont have a notion of "lines"
+        // and those functions read and produce text anyway, not binary data.
+    
+    return 0;
+}
+
+int writingBinaryFiles() {
+    // for writing binary data into a file we use the fwrite() function.
+    // the prototype is:
+        // size_t fwrite(const void* ptr, size_t size, size_t nmemb, FILE* stream)
+            // ptr is a pointer to the data we want to write to the file. typically the starting address of an array.
+            // could also be the pointer to an individual variable if we want to write just 1 value. thats why its void, because its ambiguous.
+        // size is the size of each element that we are writing to the file
+        // nmemb is the number of elements we are writing to the file
+        // stream is a pointer to the file where we will write. this pointer must refer to a stream open in binary mode.
+
+    // fwrite returns the number of elements written to the file if successful, or else it returns 0 on error.
+    // typically add error checking code after fwrite calls.
+
+    FILE* binary_file;
+    int error;
+    int number = 512;
+    char character = 's';
+    float fraction = 4.5;
+
+    binary_file = fopen("binary_data", "wb");
+    if (binary_file == NULL) {
+        fprintf(stderr, "erro: could not open binary file!\n");
+        return 1;
+    }
+
+    error = fwrite(&number, sizeof(int), 1, binary_file);
+    error += fwrite(&character, sizeof(char), 1, binary_file);
+    error += fwrite(&fraction, sizeof(fraction), 1, binary_file);
+    // since we intended to write 3 items to the file, we can check to make sure everything is good by doing the following:
+
+    if (error != 3) {
+        fprintf(stderr, "erro: data not fully written to file 1\n");
+        return 1;
+    }
+
+    error = fclose(binary_file);
+    if (error != 0) {
+        fprintf(stderr, "erro: could not close file\n");
+        return 1;
+    }
+
+    // remark: characters are human readable whether in binary file or text file.
+    // everything else such as integers and floats are not.
+
+    // writing entire array:
+    FILE* binary_file2;
+    int numbers[] = {400, 800, 1200, 1600, 2000};
+
+    binary_file2 = fopen("binary_data2", "wb");
+    if (binary_file2 == NULL) {
+        fprintf(stderr, "erro: could not open binary file 2!\n");
+        return 1;
+    }
+
+    error = fwrite(numbers, sizeof(int), 5, binary_file2);
+    // 5 since we are writing 5 elements from the array, each ints
+
+    if (error != 5) {
+        fprintf(stderr, "erro: data not fully written to file 2\n");
+        return 1;
+    }
+
+    error = fclose(binary_file2);
+    if (error != 0) {
+        fprintf(stderr, "erro: could not close file\n");
+        return 1;
+    }
+
+
+    return 0;
+}
+
+int readingBinaryFiles() {
+    // we use fread()
+    // the prototype is simliar to that of fwrite
+    // size_t fread(void* ptr, size_t size, size_t nmemb, FILE* stream)
+        // only difference is that ptr for fread does not have constant keyword
+
+    FILE* binary_file;
+    int error;
+
+    int number;
+    char character;
+    float fraction;
+
+    binary_file = fopen("binary_data", "rb");
+    if (binary_file == NULL) {
+        fprintf(stderr, "erro: could not open binary file! if it doesn't exist then first run writingBinaryFiles() to create it. \n");
+        return 1;
+    }
+
+    error = fread(&number, sizeof(int), 1, binary_file);
+    error += fread(&character, sizeof(char), 1, binary_file);
+    error += fread(&fraction, sizeof(fraction), 1, binary_file);
+    // note that each time we call fread, we move the file pointer accordingly
+    // order in which we read values must be in same order in which they were wrote.
+
+    // an important remark about fread here is that it may return 0 even if there is no error.
+    // this is a simple case where the binary_file is just empty or the pointer has reached the end of the file.
+
+    // this is different from fwrite where 0 is guaranteed to be an error of some sort.
+    // because if we call fwrite, then we must be intending to write something, at least one thing.
+    // so fwrite returning 0 guarantees an error and means to items were written to the file,
+    // whereas fread returning 0 may or may not be an error, but it means that no items were read from the file.
+
+    if (error != 3) {
+        fprintf(stderr, "the data was not properly/fully read from the binary file\n");
+    }
+
+    error = fclose(binary_file);
+    if (error != 0) {
+        fprintf(stderr, "erro: could not close the binary file\n");
+        return 1;
+    }
+    printf("from the file we got: %d, %c, %f\n", number, character, fraction);
+
+    // there is a complication, fread and fwrite may be inconsistent across different machines.
+    // this is because different machines may read/write binary data differently.
+    // thus it is complicated to transfer binary data between machines.
+
+    return 0;
+}
+
+int wavFiles() {
+    // we will utilize our knowledge of binary files and apply it to .wav files.
+    // task: take a .wave file and make its volume louder.
+
+    // we will begin by learning how video files are structured.
+
+    return 0;
 }
