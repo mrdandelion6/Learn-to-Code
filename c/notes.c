@@ -1636,9 +1636,30 @@ int welcomeToStructs() {
         .year = 6
     };
 
+    changeStruct(bob);
+
+    printf("gpa remains the same: %.1f\n", bob.GPA);
+
+    // we see that structs do not behave the same way as arrays when passing them as arguments in a fuction.
+    // they do not get changed. functions just get a copy of the struct.
+    // this is in contrast to how class objects are in many coding languages. objects usually refer to an address in memory themselves, thus can be passed in like arrays in C.
+    // however, this concept does not extend to structs in C.
+
+    printf("arrays also remains same: %s\n", bob.first_name);
+
+    // solution: to operate on the original struct just send a pointer to the struct instread of the struct itself.
+    void goodChangeStruct(struct student* s);
+    goodChangeStruct(&bob);
+    printf("gpa now changes: %.1f\n", bob.GPA);
+
     return 0;
 }
 
 void changeStruct(struct student s) {
     s.GPA = 4.0;
+    strcpy(s.first_name, "adam");
+}
+
+void goodChangeStruct(struct student* s) {
+    (*s).GPA = 4.0;
 }
