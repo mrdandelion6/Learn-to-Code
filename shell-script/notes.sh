@@ -109,6 +109,21 @@
     # some [options] are:
         # -r, treats backslashes as literal characters instead of special characters
         # -a, outputs the input into an array
+# od -A <base> -j <num> -t <byte_values> <wav_file>
+    # is like a "file viewer" for binary files
+    od -A d -j 44 -t d2 ../c/wav-stuff/short.wav
+    # `-A d` translates od's output from default base 8 to base 10
+    # `-j 44` causes od to skip the first 44 bytes of the file. we skip these for .wav because the first 44 bytes are just the header and we have no reason to modify or look at this.
+    # `-t d2` tells od that the file consists of 2 byte values, as this is the case for .wav files
+    # output:
+    0000044      2      2      2      2      2      8      8      8
+    0000060      8      8     16     16     16     16     16      4
+    0000076      4      4      4      4
+    0000084
+    # col 1:
+        # file position for the bytes given in that line.
+        # for example the first row has 44. the following values of that row: 2, 2, 2, 2, .. correspond to the 2-byte integers found at bytes 44, 46, 48, ... and so on.
+    # last line/row shows that we end at 84. this means the entire file is 84 bytes and the 2-byte values take 84 - 44 = 40 bytes.
 # ====================
 
 

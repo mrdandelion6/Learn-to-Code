@@ -65,8 +65,8 @@ int main(int argc, char* argv[]) {
     int lowLevelIO();
     int writingBinaryFiles();
     int readingBinaryFiles();
-    int wavFiles();
-    wavFiles();
+    int wavFiles(int argc, char* argv[]);
+    wavFiles(argc, argv);
     
 
     return 0;
@@ -1844,11 +1844,92 @@ int readingBinaryFiles() {
     return 0;
 }
 
-int wavFiles() {
+#define HEADER_SIZE 44
+
+int wavFiles(int argc, char* argv[]) {
     // we will utilize our knowledge of binary files and apply it to .wav files.
     // task: take a .wave file and make its volume louder.
 
-    // we will begin by learning how video files are structured.
+    // we will begin by learning how wav files are structured. wav files are much simpler than mp3 files.
+
+    // WAV FILES
+    // 2 parts:
+        // header: 44 bytes  of data.
+            // header contains info about wav file, including parameters required to properly play the file in music programs.
+        // sample values: these come after the header.
+            // samples are two-byte values. when a wav file is created, the audio signal is sampled many thousands of times every second.
+            // each of these samples is stored as one of these 2 byte integers.
+        
+        // linux and other OS' come with utilities for viewing binary files like .wav files.
+        // one such utility is od; prints out the values found in a binary file. see the notes for od in notes.sh
+
+    char* input_name;
+    char* output_name;
+    FILE* input_wav;
+    FILE* output_wav;
+    short sample;
+    short header[HEADER_SIZE];
+    int error;
+
+    if (argc != 3) {
+        fprintf(stderr, "Usage: %s inputfile outputfile \n", argv[0]);
+        return 1;
+    }
+
+    input_name = argv[1];
+    output_name = argv[2];
+
+
+    // ==== OPENING FILES ====
+    input_wav = fopen(input_name, "rb");
+    if (input_wav == NULL) {
+        fprintf(stderr, "erro: could not open %s\n", input_name);
+        return 1;
+    }
+    output_wav = fopen(output_name, "wb");
+    if (output_wav == NULL) {
+        fprintf(stderr, "erro: could not open %s\n", input_name);
+        return 1;
+    }
+    // =======================
+
+
+    // === TRANSFERRING HEADER ===
+    // should first read the HEADER from the input file and write it to the output file
+    fread(header, HEADER_SIZE, 1, input_wav); // we store it in header variable
+    // header variable is an array of shorts.
+    // now write it into output_wav
+    error = fwrite(header, HEADER_SIZE, 1, output_wav);
+    if (error != 1) {
+        fprintf(stderr, "erro: could not write header to output.wav\n");
+        return 1;
+    }
+    // ===========================
+
+
+    // === MULTIPLYING SAMPLES ===
+    // now we will INCREASE the volume!!
+    while (fread(&sample, sizeof(short), 1, input_wav) == 1) {
+        sample *= 4; // multiply each sample by 4 to increase the volume
+        
+        if(fwrite(&sample, sizeof(short), 1, output_wav) !=1) {
+            fprintf(stderr, "failed to write short to output_wav\n");
+            return 1;
+        }
+    } // note that we have to do a while loop for this in order to multiply each individual sample.
+    // ===========================
+
+
+    // ====== CLOSING FILES ======
+    if (fclose(input_wav) != 0) {
+        fprintf(stderr, "erro: could not close input_wav\n");
+        return 1;
+    }
+    if (fclose(output_wav) != 0) {
+        fprintf(stderr, "erro: could not close output_wav\n");
+        return 1;
+    }
+    // ===========================
 
     return 0;
 }
