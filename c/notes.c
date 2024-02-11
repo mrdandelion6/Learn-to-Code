@@ -1994,13 +1994,29 @@ int readWriteStructs() {
     return 0;
 }
 
+struct assassin {
+        char favorite_wep[20];
+        char code_name[20];
+        int assassinations;
+        float cost;
+};
+
+
+void printAssassin(struct assassin* a) {
+    printf("=== assassin ===\n");
+    printf("name: %s\n", a->code_name);
+    printf("kills: %d\n", a->assassinations);
+    printf("weapon: %s\n", a->favorite_wep);
+    printf("hire: $%f\n\n", a->cost);
+}
+
 int movingAroundInFiles() {
     // move around in files!!
     // note that each read and write call moves the fill position. we want to control this position.
     // a useful function for this is fseek():
 
     // int fseek(FILE* stream, long int offset, int whence);
-        // offset indicates how much the file position should change
+        // offset indicates how much the file position should change (in BYTES!!)
         // whence determines how offset is interpreted, it applies to offset relative to a position.
 
         // whence value (constant)          meaning
@@ -2018,13 +2034,6 @@ int movingAroundInFiles() {
    
     // lets practice moving around in files by first writing a bunch of struct elements in a file.
 
-    struct assassin {
-        char favorite_wep[20];
-        char code_name[20];
-        int assassinations;
-        float cost;
-    };
-
     struct assassin a = {
         .favorite_wep = "golf club",
         .code_name = "Willius Billius",
@@ -2034,8 +2043,8 @@ int movingAroundInFiles() {
     struct assassin b = {
         .favorite_wep = "broken sword",
         .code_name = "sword master",
-        .cost = 9999999999,
-        .assassinations = 9999999999
+        .cost = 9999999,
+        .assassinations = 9999999
     };
     struct assassin c = {
         .favorite_wep = "firework",
@@ -2059,26 +2068,67 @@ int movingAroundInFiles() {
     // we will write 5 assassin structs into a file.
     struct assassin assassins[5] = {a, b, c, d, e};
 
-    FILE* assassin_list = fopen("io-stuff/assassin_list", "rb");
+    FILE* assassin_list = fopen("io-stuff/assassin_list", "wb");
     if (assassin_list == NULL) {
         fprintf(stderr, "could not open file assassin_list\n");
+        return 1;
     }
 
     int writes = 0;
     for (int i = 0; i < 5; i++) {
-        writes += fwrite(&assassins[i], sizeof(struct assassin), 1, assassin_list);
+        writes += fwrite(&(assassins[i]), sizeof(struct assassin), 1, assassin_list);
     }
 
     if (writes != 5) {
         fprintf(stderr, "could not write all assassin date to assassin_list\n");
+        return 1;
     }
 
     if (fclose(assassin_list) != 0) {
         fprintf(stderr, "could not close assassin_list file\n");
+        return 1;
     }
 
+    // done writing process, just focus on the stuff below!
+
     
-    
-    
+    assassin_list = fopen("io-stuff/assassin_list", "rb");
+    int num;
+    struct assassin read;
+
+    fread(&read, sizeof(struct assassin), 1, assassin_list);
+    printAssassin(&read);
+
+    if (assassin_list == NULL) {
+        fprintf(stderr, "could not open assassin_list for reading\n");
+    }
+
+    printf("Enter assassin number (1-5), or -1 to exit:\n");
+    while (num != -1) {
+        scanf("%d", &num);
+
+        if (num != -1) {
+            // here is the important part
+            // notice that our offset value: num*sizeof(struct assassin). we offset by an amount of bytes!
+            fseek(assassin_list, num * sizeof(struct assassin), SEEK_SET);
+            if (fread(&read, sizeof(struct assassin), 1, assassin_list) != 1) {
+                fprintf("error reading assassin from list.\n");
+            }
+            printAssassin(&read);
+
+            printf("Enter again:\n");
+        }
+    }
+
+    if (fclose(assassin_list != 0)) {
+        fprintf(stderr, "could not class assassin_list file after reading from it.");
+    }
+
+    // now consider this last question. why do fseek? why not just load ALL the assassins into an array, ie)
+    // fread(assassin_array, sizeof(struct assassin), 5, assassin_list)
+
+    // well we could have done that, but this quickly becomes very inefficient for large data sets.
+    // imagine parsing a binary file containing 10000000000000 structs into an array. this takes up a lot of memory and time!
+    // instead of doing that we could just fseek and find the struct we want (given an index).
     return 0;
 }
