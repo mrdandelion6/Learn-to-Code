@@ -66,7 +66,9 @@ int main(int argc, char* argv[]) {
     int writingBinaryFiles();
     int readingBinaryFiles();
     int wavFiles(int argc, char* argv[]);
-    wavFiles(argc, argv);
+    int readWriteStructs();
+    int movingAroundInFiles();
+    movingAroundInFiles();
     
 
     return 0;
@@ -1931,5 +1933,95 @@ int wavFiles(int argc, char* argv[]) {
     }
     // ===========================
 
+    return 0;
+}
+
+int readWriteStructs() {
+    // a good application of previous knowledge
+
+    struct assassin {
+        char favorite_wep[20];
+        char code_name[20];
+        int assassinations;
+        float cost;
+    };
+    // given a struct we can write down the members separately to a file
+    // this is tedious to do manually, so we will write the entire struct at once.
+
+    FILE* contracts = fopen("io-stuff/contract_data", "wb");
+    int error;
+    struct assassin a = {
+        .assassinations = 9238,
+        .code_name = "six",
+        .cost = 890000.00,
+        .favorite_wep = "golf club"
+    };
+
+    if (contracts == NULL) {
+        fprintf(stderr, "coild not open contract_data file\n");
+        return 1;
+    }
+
+    if (fwrite(&a, sizeof(struct assassin), 1, contracts) != 1) {
+        fprintf(stderr, "could not write to contracts\n");
+    }
+
+    if (fclose(contracts) != 0) {
+        fprintf(stderr, "could not close file contracts\n");
+    }
+
+    contracts = fopen("io-stuff/contract_data", "rb");
+    if (contracts == NULL) {
+        fprintf(stderr, "could not open file after writing it\n");
+    }
+
+    // remark: very important that we enter sizeof(struct assassin) instead of trying to manually compute it ourselves.
+    // this is because it basically impossible to for sure know the size of the struct even if we know the size of all its members.
+    // this is because C is allowed to insert space between the members of a struct!!
+        // for eithering speeding up memory accesses or just required by machine.
+    
+    // now we will read the data into another struct!
+    struct assassin b;
+    // it is very easy to read from structs, same as writing them!
+
+    if(fread(&b, sizeof(struct assassin), 1, contracts) != 1) {
+        fprintf(stderr, "could not properly read from file\n");
+    }
+
+    printf("==new assassin stats==\ncode name: %s\nfavorite weapon: %s\nkills: %d\ncost: %f\n", b.code_name, b.favorite_wep, b.assassinations, b.cost);
+    // get same stuff!!
+
+    return 0;
+}
+
+int movingAroundInFiles() {
+    // move around in files!!
+    // note that each read and write call moves the fill position. we want to control this position.
+    // a useful function for this is fseek():
+
+    // int fseek(FILE* stream, long int offset, int whence);
+        // offset indicates how much the file position should change
+        // whence determines how offset is interpreted, it applies to offset relative to a position.
+
+        // whence value (constant)          meaning
+        // SEEK_SET                         from beginning of file
+        // SEEK_CUR                         from current position of file
+        // SEEK_END                         from end of file
+
+    // to move backwards, just use negative offsets.
+    // this can be dangerous and prone to errors.
+    // for example applying an offset greater than the file size itself will cause issues.
+        // the fseek call doing this will succeed, but later read or write calls may fail
+        // fseek itself will fail if we pass an invalid file pointer (just check to open)
+
+    // failure for fseek is better cause before or after the fseek call, not during.
+        struct assassin {
+        char favorite_wep[20];
+        char code_name[20];
+        int assassinations;
+        float cost;
+    };
+    
+    
     return 0;
 }
