@@ -2112,7 +2112,7 @@ int movingAroundInFiles() {
             // notice that our offset value: num*sizeof(struct assassin). we offset by an amount of bytes!
             fseek(assassin_list, num * sizeof(struct assassin), SEEK_SET);
             if (fread(&read, sizeof(struct assassin), 1, assassin_list) != 1) {
-                fprintf("error reading assassin from list.\n");
+                fprintf(stderr, "error reading assassin from list.\n");
             }
             printAssassin(&read);
 
