@@ -2130,5 +2130,10 @@ int movingAroundInFiles() {
     // well we could have done that, but this quickly becomes very inefficient for large data sets.
     // imagine parsing a binary file containing 10000000000000 structs into an array. this takes up a lot of memory and time!
     // instead of doing that we could just fseek and find the struct we want (given an index).
+
+    // one more thing for this section: 
+    // we can use rewind() to move the beginning of the file instead of doing fseek.
+        // could do this with fseek(stream, 0, SEEK_SET), but rewind() is simpler
+    // void rewind(FILE* stream). only needs 1 parameter, the stream.
     return 0;
 }
