@@ -321,6 +321,11 @@ for d in dir1 dir2; do # do states that the following is what to do in loop
     cd .. # go back for next loop
     echo # print a space
 done # done states the loop is done
+
+# array iteration
+for d in "${fruitsArray[@]}"; do
+    echo $d
+done
 # ===========================
 
 

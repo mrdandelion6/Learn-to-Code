@@ -2015,12 +2015,69 @@ int movingAroundInFiles() {
         // fseek itself will fail if we pass an invalid file pointer (just check to open)
 
     // failure for fseek is better cause before or after the fseek call, not during.
-        struct assassin {
+   
+    // lets practice moving around in files by first writing a bunch of struct elements in a file.
+
+    struct assassin {
         char favorite_wep[20];
         char code_name[20];
         int assassinations;
         float cost;
     };
+
+    struct assassin a = {
+        .favorite_wep = "golf club",
+        .code_name = "Willius Billius",
+        .cost = 0.02,
+        .assassinations = 0
+    };
+    struct assassin b = {
+        .favorite_wep = "broken sword",
+        .code_name = "sword master",
+        .cost = 9999999999,
+        .assassinations = 9999999999
+    };
+    struct assassin c = {
+        .favorite_wep = "firework",
+        .code_name = "hamlet",
+        .cost = 0,
+        .assassinations = 40
+    };
+    struct assassin d = {
+        .favorite_wep = "fork",
+        .code_name = "jeff",
+        .cost = 30,
+        .assassinations = 10
+    };
+    struct assassin e = {
+        .favorite_wep = "cat",
+        .code_name = "six",
+        .cost = 20000,
+        .assassinations = 100000
+    };
+
+    // we will write 5 assassin structs into a file.
+    struct assassin assassins[5] = {a, b, c, d, e};
+
+    FILE* assassin_list = fopen("io-stuff/assassin_list", "rb");
+    if (assassin_list == NULL) {
+        fprintf(stderr, "could not open file assassin_list\n");
+    }
+
+    int writes = 0;
+    for (int i = 0; i < 5; i++) {
+        writes += fwrite(&assassins[i], sizeof(struct assassin), 1, assassin_list);
+    }
+
+    if (writes != 5) {
+        fprintf(stderr, "could not write all assassin date to assassin_list\n");
+    }
+
+    if (fclose(assassin_list) != 0) {
+        fprintf(stderr, "could not close assassin_list file\n");
+    }
+
+    
     
     
     return 0;
