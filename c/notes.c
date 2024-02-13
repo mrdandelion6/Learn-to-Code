@@ -2138,3 +2138,32 @@ int movingAroundInFiles() {
     return 0;
 }
 
+
+int everyIO() {
+    // PROTOTYPES:
+    // FILE* fopen(const char* path,const char* type)
+        // returns a file pointer if successfully opened
+    // int fclose(FILE* stream)
+        // returns 0 if file successfully closed. returns E0F if file not closed (E0F is defined in stdio.h, usually as -1)
+    // void printf(char* format, ...)
+        // prints to stdin
+    // int scanf(char* format, ...)
+        // reads from stdin, returns number of items ... read
+    // void fprintf(FILE* stream, char* format, ...)
+        // same as printf but we choose stream
+    // int fscanf(FILE* stream, char* format, ...)
+        // same as scanf but we choose stream
+
+    // char* fgets(char* s, int n, FILE* stream)
+        // choose over fscanf if we want to store full lines of text together
+        // returns s on success. n specifies number of characters to read. reads characters from stream and stores it into *s
+    // size_t fread(void* ptr, size_t size, size_t nmemb, FILE* stream)
+        // for low level reading. returns size_t which is basically unsigned integers, ie) no negative values.
+    // size_t fwrite(void* ptr, size_t size, size_t nmemb, FILE* stream)
+
+    // int f(FILE* stream, size_t offset, int whence)
+        // SEEK_SET = 0
+        // SEEK_CUR = 1
+        // SEEK_END = 2
+    return 0;
+}
