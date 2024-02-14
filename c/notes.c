@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
     int wavFiles(int argc, char* argv[]);
     int readWriteStructs();
     int movingAroundInFiles();
-    movingAroundInFiles();
+    typeConversions();
     
 
     return 0;
@@ -366,9 +366,9 @@ int welcomeToPointers() {
 
 int assigningToDeferencedPointers() {
     int i = 7;
-    int *pt = &i; // pt points to the address of the variable i
+    int* pt = &i; // pt points to the address of the variable i
 
-    int *q;
+    int* q;
 
     *pt = 9; // we set the deferenced value of pt to 9, this does not unload pt*, ie) it is not 7 = 9
     // rather what happens is we just set the value stored at the address of pt to 9.
@@ -382,7 +382,7 @@ int assigningToDeferencedPointers() {
     printf("val of i: %d\n", i);
 
     // tricky!!
-    int *pt1 = q; // we are not assigning *pt = q, rather we are assigning pt = q. int *pt is just the declaration for pt.
+    int *pt1 = q; // we are not assigning *pt = q, rather we are assigning pt = q. int * is just the declaration for pt.
     int * pt2 = q; // the space can be like this
     int* pt3 = q; // or like this; it doesnt matter
 
@@ -495,7 +495,7 @@ int pointerArithmetic() {
     int i = 77;
     int *p = &i;
 
-    int *s = p + 1; // s must be type int *.
+    int* s = p + 1; // s must be type int *.
     // doing + 1 adds 4 bytes to the address since p pointed to an int and ints take 4 bytes
 
     printf("(int) address of p: %p\n", p); // prints memory address in hexadecimal bytes: eg, 0061FF04
@@ -891,7 +891,7 @@ int commandLineArguments(int argc, char* argv[]) {
     printf("you passed in %d arguments\n", argc - 1);
 
     if (argc < 2) {
-        printf("no arguments given");
+        printf("no arguments given\n");
     }
 
     else if (strcmp(argv[1], "a")) { // cannot directly compare strings in C. it will end up comparing addresses. (remember theyre pointers!)
@@ -2161,7 +2161,7 @@ int everyIO() {
         // for low level reading. returns size_t which is basically unsigned integers, ie) no negative values.
     // size_t fwrite(void* ptr, size_t size, size_t nmemb, FILE* stream)
 
-    // int f(FILE* stream, size_t offset, int whence)
+    // int fseek(FILE* stream, size_t offset, int whence)
         // SEEK_SET = 0
         // SEEK_CUR = 1
         // SEEK_END = 2

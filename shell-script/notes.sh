@@ -133,7 +133,7 @@ x="Hello World!"
 
 # SCOPE OF VARIABLES
 # having a variable declaration by itself on a line has a global scope
-IFS='A';
+IFS='A'
 # having a variable on the same line of some command has a limited scope only for the stuff on that line
 IFS='B' read -ra grArray <<< "yoskiesBahhh" 
 
@@ -305,6 +305,8 @@ echo $val1 # print values to check
 echo $val2
 echo $val3
 echo $val4
+# this is kind of expected since functions typically return only 1 value
+# hence, return an array like how we return tuples if we wanna give back several values
 # =============================
 
 
