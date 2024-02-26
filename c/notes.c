@@ -2629,7 +2629,11 @@ int relationshipOfProcesses() {
 
 int relationBetweenShellAndProcesses() {
     // relation between the shell and the processes it spawns
-    // can use the wait system call to force the parent process to wait until its children have been terminated
+    // can use the wait() system call to force the parent process to wait until its children have been terminated. prototype is:
+    // wait(int* state_loc)
+
+    // information about how the child terminated; ie terminates with error or terminates cleanly, is stored in the integer value of the stat_loc argument
+
     // must call wait for each child that was created to wait for all of the child processes:
 
     // here is the code modified from before:
@@ -2662,4 +2666,7 @@ int relationBetweenShellAndProcesses() {
     }
 
     printf("[%d] Parent about to terminate\n", getpid());
+
+
+
 }
