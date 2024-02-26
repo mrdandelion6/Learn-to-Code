@@ -69,7 +69,8 @@ int main(int argc, char* argv[]) {
     int movingAroundInFiles();
     int stringsInC();
     int linkedStructures();
-    linkedStructures();
+    int processModels();
+    processModels();
     
 
     return 0;
@@ -2447,4 +2448,54 @@ void printLinky(Node* node) {
         curr = curr->next;
     }
     printf("NULL\n");
+}
+
+
+int processModels() {
+    // what does it mean to run a program?
+    // define a program, processes, and understand how an OS works with them.
+
+    // program:
+        // the executable instructions of a program, either source code or compiled machine code.
+
+    // process:
+        // running instance of a program
+        // a process includes the machine code of the program + info about the current state of the process, ie) what to step to execute next
+        
+    // when a program is loaded into memory, it is loaded into a contiguous piece
+    // the contiguous piece is the memory model we are familiar with:
+        
+        // 0 (buffer area)
+        // code
+        // global data
+        // heap
+        // empty (file buffer)
+        // stack
+        // OS
+
+    // the OS keeps track of additional info for a process
+        // PID: process ID
+            // just the ID of the running process
+        // PC: program counter
+            // points to next instruction to be executed in code
+        // SP: stack pointer
+            // points to top of stack 
+
+    // these are all stored in the PCB: process control block.
+    // the process control block stores the current value of important registers.
+    // enter top in bash to see all the processes running
+
+    // number of active proccesses is much larger than the number of processes executing instructions at an instance of time
+    // the number of processors, aka CPUs determines how many processes can execute an instruction at the same time.
+        // eg) if a computer has 4 CPUs, then 4 processes can be running simultaneously
+        // we say those processes are in the "running state"
+        // processes that are waiting to be executed as soon as a CPU is available are in the "ready state"
+        // other processes may be waiting for an event to occur, these processes are in a sleeping state / blocked state
+
+    // the OS gives an illusion of running hundreds of processes simultaneously by switching between the ready and running processes very quickly.
+    // the OS scheduler is responsible for deciding which processes to execute and when.
+
+    // knowing about how the OS schedules processes and when it blocks them helps when we write programs that create or manage cooperating processes. 
+
+    return 0;
 }
