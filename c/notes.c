@@ -9,7 +9,13 @@
 #include <time.h>
 #define DAYS 365 
 #include "sorting.h"
-// use define to define a constant global value!
+#include <sys/types.h> 
+
+// these libraries are for forking processes
+#include <unistd.h>
+#include <signal.h>
+
+// use define to define a constant global value! these are stored in global data
 
 
 // note at the top we have #include statements. this is needed for C for using several (common) methods, types, etc.
@@ -70,7 +76,8 @@ int main(int argc, char* argv[]) {
     int stringsInC();
     int linkedStructures();
     int processModels();
-    processModels();
+    int creatingProcesses();
+    creatingProcesses();
     
 
     return 0;
@@ -2486,6 +2493,8 @@ int processModels() {
     // enter top in bash to see all the processes running
 
     // number of active proccesses is much larger than the number of processes executing instructions at an instance of time
+        // an active process is in the RUNNING, READY, or BLOCKED state
+        // all processes have owners.
     // the number of processors, aka CPUs determines how many processes can execute an instruction at the same time.
         // eg) if a computer has 4 CPUs, then 4 processes can be running simultaneously
         // we say those processes are in the "running state"
@@ -2497,5 +2506,53 @@ int processModels() {
 
     // knowing about how the OS schedules processes and when it blocks them helps when we write programs that create or manage cooperating processes. 
 
+    return 0;
+}
+
+int creatingProcesses() {
+    // use fork system call (on Windows is CreateProcess())
+    // creating a process requires a system call because the OS needs to set up process data structures such as the control block.
+
+    // when a process calls fork, it passes control to the OS
+    // calling fork duplicates said process
+    // a new process will be created with everything exactly the same (almost)
+    // the new process will have a different PID however, and the return value of fork is different
+    // we say the original process is the parent and the newly created process is the child
+
+    // child process starts executing just after fork returns
+    // however, we cant say whether the parent process or child process will begin executing first
+        // when OS is finished creating new process, control can be returned to either parent or child process.
+    
+    // example
+
+    int i;
+    pid_t result; // include <sys/types.h> at top
+
+    i = 5;
+    printf("%d\n", i);
+    result = fork(); // fork!! need include <unistd.h> for it
+    // child process created
+    // child process begins executing from here, right after fork() returns
+    
+    // in the parent process, as it continues to run, the return value of fork() is the child process' PID, which is some positive integer
+    // in the child process, the return value of fork just gives 0
+    // if fork fails, then the return value of fork in parent is -1, and a new process is not created
+    // fork could fail if there are already too many running processes for user or across the entire system.
+
+    if (result > 0) { // parent process follows this path
+        i = i + 2;
+    }
+
+    else if (result == 0) { // child process follows this path
+        i = i - 2;
+    }
+
+    else { // else there was an error and child process wasnt created
+        perror("fork");
+    }
+
+    printf("ya %d\n", i); // we see we get two prints, ya 7 and ya 3
+    // we cant determine their order. ya 7 corresponds to parent's diverged process and ya 3 corresponds to child's diverged process
+    // remember that the child and parent processes are 2 separate processes, and dont share memory
     return 0;
 }
