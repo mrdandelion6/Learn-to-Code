@@ -2401,5 +2401,50 @@ int linkedStructures() {
         curr = curr->next;
     }
 
+
+    // INSERTING IN LINKED LISTS
+    
+    // linked list before insertion:
+    void printLinky(Node*);
+    printLinky(front);
+
+    Node* insertLinked(Node* node, int val, int index);
+    front = insertLinked(front, 9, 3);
+
+    if (front == NULL) { // a little error catching
+        fprintf(stderr, "Index Error\n");
+    }
+    else {
+        printLinky(front);
+    }
+
     return 0;
+}
+
+Node* insertLinked(Node* node, int val, int index) {
+    if (index == 0) {
+        Node* new = malloc(sizeof(Node));
+        new->value = val;
+        new->next = node;
+        return new;
+    }
+
+    if (node == NULL) {
+        return NULL;
+    }
+
+    node->next = insertLinked(node->next, val, index - 1);
+    if (node->next == NULL) {
+        return NULL;
+    }
+    return node;
+}
+
+void printLinky(Node* node) {
+    Node* curr = node;
+    while (curr != NULL) {
+        printf("%d -> ", curr->value);
+        curr = curr->next;
+    }
+    printf("NULL\n");
 }
