@@ -68,7 +68,8 @@ int main(int argc, char* argv[]) {
     int readWriteStructs();
     int movingAroundInFiles();
     int stringsInC();
-    stringsInC();
+    int linkedStructures();
+    linkedStructures();
     
 
     return 0;
@@ -2199,7 +2200,7 @@ int stringsInC() {
     // shorthand for doing the same as creating Cstring1
 
     // the following is not a legal string
-    char Cstring4[6] = "BABABABOEEEEEYYYYY AHHHHHHHH THIS STRING IS TOO LONG";
+    // char Cstring4[6] = "BABABABOEEEEEYYYYY AHHHHHHHH THIS STRING IS TOO LONG";
     // printf(Cstring4);
     // does not crash program, but only prints:BABABA + gibberish
 
@@ -2346,6 +2347,59 @@ int stringsInC() {
         printf("substring found starting at index: %d\n", p-s1);
     }
     printf("substring is %s\n", p); // prints "sity of C Programming"
+
+    return 0;
+}
+
+
+// we can typedef it as follows:
+typedef struct node1 {
+    int value;
+    struct node1* next;
+} Node;
+
+Node* create_node(int num, Node* next) { // this is kind of reverse, instead returning a next node, we return a new node 
+    Node* new_node = malloc(sizeof(Node)); // that is fed a next node for it as a parameter.
+    new_node->next = next;
+    new_node->value = num;
+    return new_node;
+}
+
+int linkedStructures() {
+    // linked lists etc
+    // linked structure facts:
+        // user-defined
+        // requires a traverse() function to go over elements as opposed to the easy indexing of built in arrays
+        // dynamic size as opposed to arrays' fixed size
+
+    // linked lists consist of nodes
+    // in C, we make nodes using structs
+    struct node {
+        int value;
+        struct node* next; // points to the next node struct
+    }; // same as python implementation of linked lists 
+
+
+    // traversing linked lists.
+    // we typically allocate nodes on the heap.
+    // Node* front = malloc(sizeof(Node));
+    // front->next = malloc(sizeof(Node));
+    // since the nodes of a linked lists may be scattered , we do not readily know the memory offset to the i'th node like we would with arrays
+    // hence we are forced to essentially follow a trail of nodes until we get to the i'th one we want.
+    // whereas for arrays it is as simple as arr[i] = *(arr + i)
+    
+    Node* front = NULL;
+    // we build it in reverse because of how create_node() is defined
+    front = create_node(3, front); // set (3) to point to NULL, (3) -> NULL
+    front = create_node(2, front); // set (2) to point to (3), (2) -> (3) -> NULL
+    front = create_node(1, front); // set (1) to point to (2), (1) -> (2) -> (3) -> NULL
+
+    // let us now iteratre through this linked list and print the values
+    Node* curr = front;
+    while (curr != NULL) {
+        printf("%d\n", curr->value);
+        curr = curr->next;
+    }
 
     return 0;
 }
