@@ -47,7 +47,6 @@ int main(int argc, char* argv[]) {
     int commandLineArguments(int count, char* vectors[]);
     int structs();
     int IOmoreStuff();
-    int stringStuff();
     int compilerToolChain();
     int defining_types();
     int headerFiles();
@@ -68,7 +67,8 @@ int main(int argc, char* argv[]) {
     int wavFiles(int argc, char* argv[]);
     int readWriteStructs();
     int movingAroundInFiles();
-    typeConversions();
+    int stringsInC();
+    stringsInC();
     
 
     return 0;
@@ -959,14 +959,6 @@ int structs() {
     out_of_park(&BAAA);
     printf("after function: %d\n", BAAA.count);
 
-    return 0;
-}
-
-int stringStuff() {
-    char name[32]; // name is an array of chars
-
-    // string literals
-    printf("Hello World");
     return 0;
 }
 
@@ -2120,7 +2112,7 @@ int movingAroundInFiles() {
         }
     }
 
-    if (fclose(assassin_list != 0)) {
+    if (fclose(assassin_list) != 0) {
         fprintf(stderr, "could not class assassin_list file after reading from it.");
     }
 
@@ -2165,5 +2157,195 @@ int everyIO() {
         // SEEK_SET = 0
         // SEEK_CUR = 1
         // SEEK_END = 2
+    return 0;
+}
+
+int stringsInC() {
+    char text[6]; // can create a string with char array
+    text[0] = 'h';
+    text[1] = 'e';
+    text[2] = 'l';
+    text[3] = 'l';
+    text[4] = 'o';
+
+    
+    printf(text); // this is not a good idea because the char array has no terminating string
+    printf("\n"); // we might get a bunch of gibberish printed after it
+    // we could add text[5] = '\0'; to make it work properly
+
+    // only way to do the above "safely" without \0 is with a loop:
+
+    for (int i = 0; i < 5; i++) {
+        printf("%c", text[i]);
+    } // this is safe, no risk of gibberish being printed
+    printf("\n");
+
+    // C STRINGS:
+    // c strings are char arrays that have a "null character" 
+        // else we dont consider it a string.
+    // aka terminating character at the end of the array to signify that the string is done
+
+    char Cstring1[6] = {'h', 'e', 'l', 'l', 'o', '\0'};
+    printf("%s\n", Cstring1);
+
+    // note for something like the following:
+    char Cstring2[20] = {'h', 'e', 'l', 'l', 'o', '\0'};
+    // note that the element at index 5 is \0
+    // every element in the array after index 5 is set is set to \0 
+    // so Cstring2 is {'h', 'e', 'l', 'l', 'o', '\0', '\0', '\0', '\0', '\0', '\0', '\0' ...} so on for 20 entries of \0
+
+    // regular way to make strings
+    char Cstring3[6] = "hello";
+    // shorthand for doing the same as creating Cstring1
+
+    // the following is not a legal string
+    char Cstring4[6] = "BABABABOEEEEEYYYYY AHHHHHHHH THIS STRING IS TOO LONG";
+    // printf(Cstring4);
+    // does not crash program, but only prints:BABABA + gibberish
+
+    // there is short cut for creating string variables.
+    // we do not need to specify the size like the following example shows
+    char Cstring5[] = "Whats upppppppppp!";
+    // in this case, C automatically passes an X inside [] where X is the length of the string + 1 for the null terminator
+    // this helps cus we dont needa count every character when making strings.
+    // also note this doesnt make the array a dynamically changing one or anything
+    // the size will be fixed to whatever X was (X = str length + 1)
+
+    // STRING LITERALS
+    // not same as a string variable
+    // string literals are string constants that cant be changed
+    char* stringLiteral = "hello";
+    // here we have a pointer to a string instead of a char array
+    printf("%s\n", stringLiteral);
+
+    // attempting to change the string literal will cause undefined behavior
+        // stringLiteral[0] = 'c'; 
+        // causes a seg fault
+
+    // STRING LENGTH
+    char weekday[10] = "Monday";
+    printf("%lu\n", sizeof(weekday)); // this prints 10, not 6!
+    // on an array, sizeof(arr) always gives the number of bytes occupied by the array arr
+    // sizeof() is a compile time operation, and hence not useful for determining the length of a string or any array for that matter
+    // unless the length is known at compile time.
+
+    // we can use functions from the C standard library 
+    // remember to do #incude <string.h> at top
+    printf("%lu\n", strlen(weekday)); // strlen returns the length of the string excluding the null termination character.
+    // prints 6 as needed
+    
+    
+    // COPYING STRINGS
+
+    // we can use the function strcpy, the prototype is as follows
+    // char* strcpy(char* s1, const char* s2)
+    //  strcpy() is known as an unsafe function.. will see how :)
+
+    // copies the characters from string s2 into the beginning of the array s1
+    // the stuff at the start of s1 gets overriden
+    // whats weirder is that s1 isnt required to be a string when strcpy is called
+    // however s2 is required to be a string: string literal or char array with null terminator
+
+    char s1[40]; // note s1 is not a string because there is no null terminaton character
+    char s2[14] = "University of";
+    strcpy(s1, s2); // doesnt mutate stuff in s2
+    printf("%s\n", s1);
+
+
+    char s3[5];
+    strcpy(s3, s2);
+    printf("%s\n", s3); // since s3 doesnt have enough space for everything in s2
+    // the case is undefined, depends on the compiler
+    // this is why its unsafe, we cant rlly know or detect bugs on different machines
+
+    // there are often safe counterparts to unsafe functions like these in the C standard library
+    // safe versions often add an 'n' somewhere in the name of the unsafe ones
+    // the n in the name indicates therre is a new n parameter in the function which will indicate
+    // how much activity the function is allowed to do before it stops.
+
+    // strncpy() is the safe counterpart to strcpy(). here is prototype:
+    // char* strncpy(char* s1, const char* s2, int n)
+    // same as strcpy(), but has n.
+    // n indicates the max number of characters s1 can hold, and thus indicates the max number of characters to copy over INCLUDING NULL CHARACTER
+    char x1[5];
+    char x2[32] = "BARSSSSSSSSSS";
+    strncpy(x1, x2, sizeof(x1));
+    // this is also unsafe!! not guaranteed to add a null terminator unless we find one in the first n characters of x2!
+    printf("%s\n", x1); // only enough characters to fill x1 are copied, but not a null terminator
+    // will print some random stuff after first n characters of x2
+
+    // so what we must do is explicitly add a null string after strncpy is called
+    x1[4] = '\0';
+    printf("%s\n", x1); // this works! prints BARS
+
+    // CONCATENATING STRINGS
+    char ss1[10] = "Mon";
+    char ss2[10] = "day";
+    // want to add them together
+    // s3 = s1 + s2 wont work because it just sums the addresses together
+    // we can use the function strcat()
+    // char* strcat(char* s1, const char* s2)
+
+    // strcat adds the characters from s2 to the end of string s1
+    // both s1 and s2 must be strings prior to calling strcat.
+
+    char q1[30];
+    char q2[14] = "University of";
+    char q3[15] = " C Programming";
+
+    strncpy(q1, q2, sizeof(q1));
+    strcat(q1, q3); // adds q3 to the end of q1
+    printf("%s\n", q1); // prints good because we have enough space
+    // just like strcpy(), strcat() is an unsafe function. 
+    // q1 couldve had too little space for having everything from q3 appended to it
+    
+    // use strncat
+    // char* strncat(char* s1, const char* s2, int n)
+    // n indicates the max number of characters that should be copied over from s2
+    // this value of n is excluding null terminator
+
+    // important!! unlike strncpy, strncat always adds a null terminator to the end of s1 automatically!
+
+    // safe way:
+    strncpy(q1, q2, sizeof(q1));
+    strncat(q1, q3, sizeof(q1) - strlen(q1) - 1);
+    // we see that sizeof(q1) - strlen(q1) = space left in q1 for more characters,
+    // then we also subtract 1 to ensure space for a null terminator. 
+
+
+    // SEARCHING THROUGH STRINGS
+    // std C library has several functions for this
+    // one is: strchr, which searches for a single character inside a string
+    // char* strchr(const char* s, int c)
+    // s is the string to search, and c is the character to search for in the string provided as an ASCII code
+    // strchr searches from left to right in the string.
+
+    // strchr returns a pointer to the character that was found or NULL if it was not found.
+    // so strchr doesnt return the index of the character in the string but rather returns the address to where that character is.
+
+    char r1[30] = "University of C Programming";
+    char* p;
+    p = strchr(r1, 'v'); // p points to the address of v within r1
+    // hence you could say p is a substring of r1
+    printf("%s\n", p); // will print "versity of C Programming"
+    // since p is the offset address of v in r1, we can use arithmetic to find the offset from s1 to p which represents the index.
+    // offset = p - r1
+    printf("index of the character v in r1 is %d\n", p-r1);
+    // this works because each char is a byte
+
+    // for searching for an entire substring within a string we use strstr()
+    // char* s strstr(const char* s1, const char* s2)
+    // strstr searches left to right in s1 for the first occurence of the substring s2
+    // just like strchr, strstr returns a pointer to the first character which begins the match to the substring s2
+
+    p = strstr(r1, "sity");
+    if (p == NULL) {
+        printf("substring not found");
+    }
+    else { // we end up finding it since sity is indeed in r1
+        printf("substring found starting at index: %d\n", p-s1);
+    }
+    printf("substring is %s\n", p); // prints "sity of C Programming"
+
     return 0;
 }
