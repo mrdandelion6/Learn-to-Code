@@ -77,7 +77,8 @@ int main(int argc, char* argv[]) {
     int linkedStructures();
     int processModels();
     int creatingProcesses();
-    creatingProcesses();
+    int relationshipOfProcesses();
+    relationshipOfProcesses();
     
 
     return 0;
@@ -2555,4 +2556,72 @@ int creatingProcesses() {
     // we cant determine their order. ya 7 corresponds to parent's diverged process and ya 3 corresponds to child's diverged process
     // remember that the child and parent processes are 2 separate processes, and dont share memory
     return 0;
+}
+
+int relationshipOfProcesses() {
+
+    // cant be bothered to explain all this, just run it from main() and see cool stuff
+
+    int result;
+    int i, j;
+
+    printf("[%d] original process.  (my parent is %d)\n", getpid(), getppid());
+
+    for (i = 0; i < 5; i++) {
+        result = fork();
+
+        if (result == -1) {
+            perror("fork:");
+            exit(1); // whats the diff between this and return - 1 ??
+        }
+
+        else if (result == 0) { // child process
+            for (j = 0; j < 5; j++) {
+                printf("[%d] Child %d %d\n", getpid(), i, j);
+                usleep(100);
+            }
+            exit(0); // children exit before continuing loop, else we would get grandchildren etc.
+        }
+    }
+
+    printf("[%d] Parent about to terminate\n", getpid());
+
+    return 0;
+
+    // we get something like:
+    // >$ ./notes
+    // started main
+    // [2258] original process.  (my parent is 374)
+    // [2259] Child 0 0
+    // [2260] Child 1 0
+    // [2261] Child 2 0
+    // [2262] Child 3 0
+    // [2258] Parent about to terminate
+    // [2263] Child 4 0
+    // [2259] Child 0 1
+    // [2261] Child 2 1
+    // [2260] Child 1 1
+    // [2262] Child 3 1
+    // [2263] Child 4 1
+    // >$ [2259] Child 0 2
+    // [2261] Child 2 2
+    // [2260] Child 1 2
+    // [2262] Child 3 2
+    // [2263] Child 4 2
+    // [2259] Child 0 3
+    // [2261] Child 2 3
+    // [2260] Child 1 3
+    // [2262] Child 3 3
+    // [2263] Child 4 3
+    // [2259] Child 0 4
+    // [2261] Child 2 4
+    // [2260] Child 1 4
+    // [2262] Child 3 4
+    // [2263] Child 4 4
+
+    // note that the parent terminates before children have printed their first message
+    // parent process has no reason to wait for its children to finish executing; they are all equal in the eyes of the OS !!
+    // also it looks like the program hasnt finished running but it actually has. the >$ just comes early and more stuff get printed after it,
+    // so it looks like the processes are still running because the shell doesnt recreate the >$ after all the prints since it already made it before
+    // just type anything in and it works!!
 }
