@@ -78,7 +78,8 @@ int main(int argc, char* argv[]) {
     int processModels();
     int creatingProcesses();
     int relationshipOfProcesses();
-    relationshipOfProcesses();
+    int relationBetweenShellAndProcesses();
+    relationBetweenShellAndProcesses();
     
 
     return 0;
@@ -2578,15 +2579,13 @@ int relationshipOfProcesses() {
         else if (result == 0) { // child process
             for (j = 0; j < 5; j++) {
                 printf("[%d] Child %d %d\n", getpid(), i, j);
-                usleep(100);
+                usleep(100); // usleep slows down processes
             }
             exit(0); // children exit before continuing loop, else we would get grandchildren etc.
         }
     }
 
     printf("[%d] Parent about to terminate\n", getpid());
-
-    return 0;
 
     // we get something like:
     // >$ ./notes
@@ -2624,4 +2623,43 @@ int relationshipOfProcesses() {
     // also it looks like the program hasnt finished running but it actually has. the >$ just comes early and more stuff get printed after it,
     // so it looks like the processes are still running because the shell doesnt recreate the >$ after all the prints since it already made it before
     // just type anything in and it works!!
+    
+    return 0;
+}
+
+int relationBetweenShellAndProcesses() {
+    // relation between the shell and the processes it spawns
+    // can use the wait system call to force the parent process to wait until its children have been terminated
+    // must call wait for each child that was created to wait for all of the child processes:
+
+    // here is the code modified from before:
+
+    int result;
+    int i, j;
+
+    printf("[%d] original process.  (my parent is %d)\n", getpid(), getppid());
+
+    for (i = 0; i < 5; i++) {
+        result = fork();
+
+        if (result == -1) {
+            perror("fork:");
+            exit(1); // whats the diff between this and return - 1 ??
+        }
+
+        else if (result == 0) { // child process
+            for (j = 0; j < 5; j++) {
+                printf("[%d] Child %d %d\n", getpid(), i, j);
+                usleep(100); // usleep slows down processes
+            }
+            exit(0); // children exit before continuing loop, else we would get grandchildren etc.
+        }
+    }
+
+    // modification: now wait for the children:
+    for (i = 0; i < 5; i++) {
+        // TODO
+    }
+
+    printf("[%d] Parent about to terminate\n", getpid());
 }
