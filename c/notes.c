@@ -77,7 +77,8 @@ int main(int argc, char* argv[]) {
     int linkedStructures();
     int typedefInC();
     int macrosInC();
-    macrosInC();
+    int thePreprocessor();
+    thePreprocessor();
 
 
     int processModels();
@@ -2532,6 +2533,11 @@ int macrosInC() {
     // we replace all occurences of MAX_NAME_LENGTH with 40. useful
     // macro language isnt C, we dont need an equal sign or semicolon
 
+    // one might ask, why use this instead of global variables?
+        // no memory allocation: macros are processed by preprocessor before compiling and do not consume memory at runtime. makes code more readable and maintainable without runtime overhead.
+        // for example, having a bunch of global variables would increase runtime overhead by a lot.
+        // global variables can be modified, macros cannot.
+
     // we can also make expressions with macros that are like little functions
     // except macros happen even BEFORE compilation, by the preprocessor. this makes macros much more efficient.
     #define WITH_TAX(x) ((x) * 1.13)
@@ -2540,13 +2546,18 @@ int macrosInC() {
     // this is because () makes the expression evaluate.
 
     // if we dont put () around x when referencing it, it will substitute whatever is in x directly without any evaluations.
-    
-
 
     printf("%f\n", WITH_TAX(100.0));
     return 0;
 }
 
+int thePreprocessor() {
+    // PREPROCESSOR DIRECTIVES
+    // any line that begins with a # symbol is a preprocessor directive
+    // these are used to modify C source code before it is compiled.
+
+    return 0;
+}
 
 int processModels() {
     // what does it mean to run a program?
