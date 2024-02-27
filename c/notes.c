@@ -2814,3 +2814,8 @@ int zombieAndOrphanProcesses() {
 
     return 0;
 }
+
+int runningDifferentPrograms() {
+
+    return 0;
+}
