@@ -2548,6 +2548,15 @@ int macrosInC() {
     // if we dont put () around x when referencing it, it will substitute whatever is in x directly without any evaluations.
 
     printf("%f\n", WITH_TAX(100.0));
+
+    // some further notes:
+    // always use capital letters for macros or else it is bad styling
+    // using macros can lead to difficult to debug errors.
+    // to avoid errors put () around values u expect to be placed in expressions
+    #define MY_INT (42)
+    // not necessary to put () around the 42 for this cause because it is a single int, but its a good habit
+
+
     return 0;
 }
 
@@ -2555,6 +2564,18 @@ int thePreprocessor() {
     // PREPROCESSOR DIRECTIVES
     // any line that begins with a # symbol is a preprocessor directive
     // these are used to modify C source code before it is compiled.
+
+    // the following command executes the preprocessor on notes.c and outputs the preprocessed result in terminal
+    // cpp notes.c 
+    // the preprocessor transforms the code by executing all the directives and expanding all the macros
+    // this creates a "stream of tokens" that are passed to the compiler's parser.
+    
+    #define MEANING_OF_LIFE (42)
+
+    int x = MEANING_OF_LIFE; // this replaces with a STRING "42"
+    // preprocessor doesnt care that 42 is an integer; just replaces text with text
+
+    // CONTINUE - The C Preprocessor Video 1: Simple Macros and Header Files - 1:55
 
     return 0;
 }
