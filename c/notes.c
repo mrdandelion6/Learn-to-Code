@@ -2823,15 +2823,16 @@ int runningDifferentPrograms() {
     // there are several variants of the exec() function.
 
     // execl() is one version of the exec
-    // int execl(const char* path, const char* arg, ...  NULL);
+    // int execl(const char* path, const char* arg0, ...  NULL);
     // note last arg must be NULL which indicates teh end of the arugment list
     // the ... consists of the remaining arguments to the command line executable 
+    // arg0 should specify the name of the program itself, ie the first argument passed into argv[].
 
     // when the process calls execl, control is passed to the OS
     // 
 
     printf("in notes : my PID is %d\n", getpid());
-    execl("./main", NULL); // the called process will have same PID
+    execl("./main", "main", NULL); // the called process will have same PID
 
     // this code is unreachable if execl() is called successfully. this is because execl() will not jump back.
     perror("exec"); // however, if an error occurs then this code will be executed.
@@ -2839,13 +2840,13 @@ int runningDifferentPrograms() {
 
     // more versions of exec, 6 in total.
 
-    // int execl(const char* path, const char* arg, ... NULL)
-    // int execlp(const char* file, const char* arg, ... NULL)
+    // int execl(const char* path, const char* arg0, ... NULL)
+    // int execlp(const char* file, const char* arg0, ... NULL)
     // int execle(const char* path, const char* arg, ... NULL???, char* const envp[])
 
-    // int execv(const char* path, const char* arg, char* const argv[])
-    // int execvp(const char* file, const char* arg, char* const argv[])
-    // int execvpe(const char* file, const char* arg, char* const argv[], char* const envp[])
+    // int execv(const char* path, const char* arg0, char* const argv[])
+    // int execvp(const char* file, const char* arg0, char* const argv[])
+    // int execvpe(const char* file, const char* arg0, char* const argv[], char* const envp[])
 
 
     // the l's (first three) expect a list of command line arguments to be passed into the called program
