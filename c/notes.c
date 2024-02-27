@@ -79,7 +79,8 @@ int main(int argc, char* argv[]) {
     int creatingProcesses();
     int relationshipOfProcesses();
     int relationBetweenShellAndProcesses();
-    relationBetweenShellAndProcesses();
+    int usingMacrosForStat_loc();
+    usingMacrosForStat_loc();
     
 
     return 0;
@@ -2630,9 +2631,20 @@ int relationshipOfProcesses() {
 int relationBetweenShellAndProcesses() {
     // relation between the shell and the processes it spawns
     // can use the wait() system call to force the parent process to wait until its children have been terminated. prototype is:
-    // wait(int* state_loc)
+    // pid_t wait(int* state_loc)
+    // wait() returns the process ID of the terminated child on success, else returns -1
 
-    // information about how the child terminated; ie terminates with error or terminates cleanly, is stored in the integer value of the stat_loc argument
+    // STAT_LOC ARGUMENT
+        // information about how the child terminated; ie terminates with error or terminates cleanly, is stored in the integer value of the stat_loc argument.
+        // after a child process terminates, the exit status is stored in the stat_loc arguement (value returned on termination) 
+        // this value is NOT necessarily equivalent to to the return value on termination
+        // various bits in the state_loc argument are used for different purposes! it is complex.
+        // for example, lowest 8 bits tell us whether the process terminated normally or whether it terminated because it received a signal.
+        // for example, ctrl+C will is a signaled termination.
+        // if the process terminated due to a signal, the lower 8 bits tell us which signal.
+        // the return value of the process is in the next 8 bits.
+        // examples of this can be found below at line 2690.
+
 
     // must call wait for each child that was created to wait for all of the child processes:
 
@@ -2656,17 +2668,105 @@ int relationBetweenShellAndProcesses() {
                 printf("[%d] Child %d %d\n", getpid(), i, j);
                 usleep(100); // usleep slows down processes
             }
-            exit(0); // children exit before continuing loop, else we would get grandchildren etc.
-        }
+            exit(i); // children exit before continuing loop, else we would get grandchildren etc.
+        } // make each child exit with its own unique status value i. cant be return i, should be exit(i)
     }
 
     // modification: now wait for the children:
+    for (i = 0; i < 5; i++) { // we call wait() 5 times, once for every child
+        pid_t pid;
+        int status;
+        if ( (pid = wait(&status)) == -1 ) { // error
+            perror("wait");
+        }
+        else {
+            printf("Child %d terminated with %d\n", pid, status);
+        }
+    }
+    printf("[%d] Parent about to terminate\n", getpid());
+    
+    // now everything terminates at the end:
+        // Child 1118 terminated with 0
+        // Child 1119 terminated with 256
+        // Child 1120 terminated with 512
+        // Child 1121 terminated with 768
+        // Child 1122 terminated with 1024
+        // [1117] Parent about to terminate
+    
+    // note that the parent terminates last.
+    // recall, the lower 8 bits tell us what signal the process was ended by (in all of our processes, there was no signal so its al 00000000). 
+    // the next 8 bits give us the return value. so for child 0 we have, 0000 0000 0000 0000
+    // for child 1, 0000 0001 0000 0000 = 2^8 = 256 since the return value was 1
+    // for child 2, 0000 0010 0000 0000 = 2^9 = 512 since the return value was 2
+    // for child 3, 0000 0011 0000 0000 = 2^8 + 2^9 = 256 + 512 = 768 since the return value was 3
+    // for child 4, 0000 0100 0000 0000 = 2^10 = 1024 since return value was 4
+        // for each child, focus on the upper 8 bits, and notice that they are just 1, 2, 3, 4 in binary for each child respectively.
+
+    // the man page for wait gives us info about how to extract specific data from the stat_loc argument using MACROS.
+        // macros are stuff like #define PI 3.14159. these are not stored in global data / heap / stack, they are stored in code area of memory model.
+        // when we use a macro in our source code, the preprocessor replaces instances of the macro with its definition before the compiler begins compiling assembly code and object code.
+
+    // so we dont rlly need to know how to bits themselvess are arranged, just used the macros to correctly extract data.
+    // will show how to use macros in next function
+
+    return 0;
+}
+
+int usingMacrosForStat_loc() {
+    int result;
+    int i, j;
+
+    printf("[%d] original process.  (my parent is %d)\n", getpid(), getppid());
+
     for (i = 0; i < 5; i++) {
-        // TODO
+        result = fork();
+
+        if (result == -1) {
+            perror("fork:");
+            exit(1); 
+        }
+
+        else if (result == 0) { 
+            for (j = 0; j < 5; j++) {
+                printf("[%d] Child %d %d\n", getpid(), i, j);
+                usleep(100); 
+            }
+
+            if (i == 2) { // force child 2 to abort abnormally. produces a signaled termination with exit value 6
+                abort();
+            }
+            exit(i); 
+        } 
     }
 
+    for (i = 0; i < 5; i++) {
+        pid_t pid;
+        int status;
+        if ( (pid = wait(&status)) == -1 ) { 
+            perror("wait");
+        }
+        else {
+            if (WIFEXITED(status)) { // WIFEXITED, read as W: if exited. returns true if the process exited normally (not signalled)
+                printf("Child %d terminated with %d\n", pid, WEXITSTATUS(status));  //WEXITSTATUS, read as W: exit status. returns the exit status program terminated with. so with return 0, 1, 2, 3, 4.
+            } else if (WIFSIGNALED(status)) { // WIFSIGNALED, read as W: if signaled. returns true if the process ended from a signal.
+                printf("Child %d terminated with a signal %d\n", pid, WTERMSIG(status)); // WTERMSIG, read as W: termination signal. returns the signal's status the program terminated with
+            } else {
+                perror("abnormal exit: neither signaled nor normal termination");
+            }
+        }
+    }
     printf("[%d] Parent about to terminate\n", getpid());
 
+    // note that when we are waiting for child processes, we are just calling wait() 5 times abritrarily. if we want to specify the child to wait for we can use:
+        // pid_t waitpid(pid_t pid, int* stat_loc, int options)
 
+    // note that our wait() and waitpid() functions block the calling process until wait() returns the value, ie) until the child process terminates.
+    // if we dont want a block like this, we can use WNOHANG in waitpid().
+        // WNOHANG option can be passed to waitpid as an argument for the options parameter.
+        // WNOHANG disables the calling process from being blocked. this is used when the parent process just wants to check if a child has terminated but not block code execution.
+        // in the case that the child process has not yet terminated, WNOHANG will return 0. 
+        // so basically use WNOHANG in waitpid() if you just want to check if a child process has terminated at the given time and not wait for it to actually finish terminating.
 
+    // note that both wait() and waitpid() are limited to only a process' child functions. we cannot use wait() or waitpid() to wait for any other processes aside from direct children. so no grandchildren either.
+    return 0;
 }

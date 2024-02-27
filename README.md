@@ -1,6 +1,6 @@
 # Learn C and Shell Script!
 
-Welcome to my C and Shell Script learning repository! 🚀 This repository is a collection of my notes and code snippets as I embark on the journey of learning C and shell scripting.
+Welcome to my C and Shell Script learning repository! This repository is a collection of my notes and code snippets as I embark on the journey of learning C and shell scripting. 🚀
 
 I will be using Ubuntu through WSL.  
 
@@ -12,7 +12,7 @@ I will be using Ubuntu through WSL.
 - `shell-script`: This directory contains everything pertaining to Shell Script.
     - `notes.sh`: Dive into my detailed notes on various shell scripting concepts.
 
-- `other`: All other files whether in `c` or `shell-script` will not contain any notes. These files are related to chapters in the notes and help with demonstration. For example, Makefile is related to the chapter on Makefiles in notes.c
+- `other`: All other files whether in `c` or `shell-script` will not contain any notes. These files are related to chapters in the notes and help with demonstration. For example, `Makefile` is related to the chapter on Makefiles in `notes.c`.
 
 ## Usage
 ### notes.c
@@ -26,14 +26,13 @@ gcc -o notes notes.c
 ```
 
 ### notes.sh
-
 `notes.sh` is not intended to be ran as a script. Rather, users may read through `notes.sh` and test commands in a bash terminal or create their own script in `myscript.sh`. To execute `myscript.sh` from shell, cd to the directory containing my script.sh and run the following command:
 ```
 chmod a+x myscript.sh
 ./myscript.sh
 ```
-## Feedback
 
+## Feedback
 Feel free to clone the repository and experiment with the code. If you have any suggestions or find areas for improvement, don't hesitate to open an issue or pull request.
 
 Happy coding.
