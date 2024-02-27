@@ -80,7 +80,8 @@ int main(int argc, char* argv[]) {
     int relationshipOfProcesses();
     int relationBetweenShellAndProcesses();
     int usingMacrosForStat_loc();
-    usingMacrosForStat_loc();
+    int zombieAndOrphanProcesses();
+    zombieAndOrphanProcesses();
     
 
     return 0;
@@ -2522,7 +2523,7 @@ int creatingProcesses() {
     // the new process will have a different PID however, and the return value of fork is different
     // we say the original process is the parent and the newly created process is the child
 
-    // child process starts executing just after fork returns
+    // child process starts executing just after fork returns`
     // however, we cant say whether the parent process or child process will begin executing first
         // when OS is finished creating new process, control can be returned to either parent or child process.
     
@@ -2768,5 +2769,48 @@ int usingMacrosForStat_loc() {
         // so basically use WNOHANG in waitpid() if you just want to check if a child process has terminated at the given time and not wait for it to actually finish terminating.
 
     // note that both wait() and waitpid() are limited to only a process' child functions. we cannot use wait() or waitpid() to wait for any other processes aside from direct children. so no grandchildren either.
+    return 0;
+}
+
+int zombieAndOrphanProcesses() {
+    // recall processes can only wait for its direct children
+    
+    // what happens if a child process terminates before a parent calls wait?
+
+    // ZOMBIE
+    // any child process that has already terminated while it's parent process has not is called a zombie.
+    // this is because even though the child has exited, the OS needs to keep the exit info of the process somewhere, in case parent calls wait() to get this value
+    // so the OS cant delete the process control block of the terminated child process until it knows it is safe to clean it up.
+    // so a zombie process is a process that is dead but is still hanging around to collect its termination status.
+
+    // PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND                                                                                                                                                                                       
+    // 342 root      20   0 1115092  87804  27652 S   0.3   0.6   0:13.00 python3.10
+    //   1 root      20   0  165852  11212   8232 S   0.0   0.1   0:00.41 systemd
+    //   2 root      20   0    2456   1348   1232 S   0.0   0.0   0:00.02 init-systemd(Ub
+    //   5 root      20   0    2456      4      0 S   0.0   0.0   0:00.00 init
+    //  34 root      19  -1   47808  15480  14444 S   0.0   0.1   0:00.12 systemd-journal
+    //  52 root      20   0   21960   5856   4472 S   0.0   0.0   0:00.24 systemd-udevd
+    // 920 root      20   0   2260   58562   4472 Z   0.0   0.0   0:00.00 zombie <defunct>
+
+    // note that "zombie <defunct>" in the last row. also note the Z under S in the last row. the S (at top of column) stands for state, and Z stands for zombie. 
+
+    // ORPHANS
+    // what happens to a child process when its parent terminates first?
+    // we call such a process an orphan.
+    // the parent of an orphan process just becomes 1. this is the init process.
+    // so called getppid() from an orphan process just returns 1. so the parent process becomes the init process.
+    // when a process becomes an orphan it is adopted by the init process.
+
+    // INIT PROCESS
+    // the first process that OS launches is the init process
+    // the primary job of the init process is to call wait() continuously in a loop, to collect the termination status of any adopted processes.
+
+
+    // what happens if the parent never calls wait()? why dont we have a clutter of hundreds of zombie processes in the process table? 
+    // zombies are cleared once their parent also terminates (assuming wait() is never called by the parent process).
+    // zombies will become adopted by the init process once their parent process terminates (ie the zombie becomes an orphan).
+    // when this happens, wait() will finally be called from the new parent of the zombie which is the init process.
+    // thus, the zombie processes will be freed.
+
     return 0;
 }
