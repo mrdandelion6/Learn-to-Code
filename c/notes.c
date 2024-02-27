@@ -75,6 +75,10 @@ int main(int argc, char* argv[]) {
     int movingAroundInFiles();
     int stringsInC();
     int linkedStructures();
+    int typedefinC();
+    typedefinC();
+
+
     int processModels();
     int creatingProcesses();
     int relationshipOfProcesses();
@@ -82,7 +86,7 @@ int main(int argc, char* argv[]) {
     int usingMacrosForStat_loc();
     int zombieAndOrphanProcesses();
     int runningDifferentPrograms();
-    runningDifferentPrograms();
+
     
 
     return 0;
@@ -2460,6 +2464,61 @@ void printLinky(Node* node) {
         curr = curr->next;
     }
     printf("NULL\n");
+}
+
+int typedefinC() {
+    // aliases for types.
+    // two ways. 1.) typedef and 2.) macros
+
+    // typedef allows alias for a type and is evaluated at compile time
+
+    // macros allows to define a keyword that is replaced by a specified spring by preprorcessor before being compiled
+
+    typedef unsigned int size_t;
+    // recall how size_t has always been an unsigned int.
+
+    // thiis is how it happens in stddef.h:
+        // #define __SIZE_TYPE__ long unsigned int
+        // typedef __SIZE_TYPE__ size_t;
+
+    typedef int monkey;
+    // monkey is an alias for integer type
+    // typedef <existing_type> <alias_type>
+
+    // typedef is particularly useful for aliasing structs
+
+    struct student {
+        char first_name[20];
+        char last_name[20];
+        int year;
+        float gpa;
+    };
+
+    // everytime we want declar a struct student we need to call struct student every time. a lot to type
+    struct student s;
+    // even worse for pointers
+    struct student* p;
+
+    // so we can just typdef it:
+    typedef struct student Student;
+    // and we can do
+    Student s2;
+    Student* p2;
+
+    // could also do it like this
+    typedef struct blah {
+        char blah[20];
+    } Blah;
+
+    // and we can even omit the initial name like this
+
+    typedef struct {
+        char BONG[20];
+    } Bong;
+
+    // tho oftentimes, we will still want the initial name.
+
+    return 0;
 }
 
 
