@@ -75,8 +75,9 @@ int main(int argc, char* argv[]) {
     int movingAroundInFiles();
     int stringsInC();
     int linkedStructures();
-    int typedefinC();
-    typedefinC();
+    int typedefInC();
+    int macrosInC();
+    macrosInC();
 
 
     int processModels();
@@ -2466,13 +2467,14 @@ void printLinky(Node* node) {
     printf("NULL\n");
 }
 
-int typedefinC() {
+int typedefInC() {
     // aliases for types.
     // two ways. 1.) typedef and 2.) macros
 
     // typedef allows alias for a type and is evaluated at compile time
 
     // macros allows to define a keyword that is replaced by a specified spring by preprorcessor before being compiled
+    // will do macros in next function
 
     typedef unsigned int size_t;
     // recall how size_t has always been an unsigned int.
@@ -2518,6 +2520,30 @@ int typedefinC() {
 
     // tho oftentimes, we will still want the initial name.
 
+    return 0;
+}
+
+int macrosInC() {
+    // we can alias things other than types with macros
+    // macros are very powerful in C, but we'll only go over replacing constant values and evaluating simple expressions.
+
+    // we start macros with a #define
+    #define MAX_NAME_LENGTH 40
+    // we replace all occurences of MAX_NAME_LENGTH with 40. useful
+    // macro language isnt C, we dont need an equal sign or semicolon
+
+    // we can also make expressions with macros that are like little functions
+    // except macros happen even BEFORE compilation, by the preprocessor. this makes macros much more efficient.
+    #define WITH_TAX(x) ((x) * 1.13)
+    // note: should not have any space between WITH_TAX and parameter (x).
+    // also we must put x inside () each time we reference it in our expression. moreover, our entire expression should be inside ().
+    // this is because () makes the expression evaluate.
+
+    // if we dont put () around x when referencing it, it will substitute whatever is in x directly without any evaluations.
+    
+
+
+    printf("%f\n", WITH_TAX(100.0));
     return 0;
 }
 
