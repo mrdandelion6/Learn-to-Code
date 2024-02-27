@@ -81,7 +81,8 @@ int main(int argc, char* argv[]) {
     int relationBetweenShellAndProcesses();
     int usingMacrosForStat_loc();
     int zombieAndOrphanProcesses();
-    zombieAndOrphanProcesses();
+    int runningDifferentPrograms();
+    runningDifferentPrograms();
     
 
     return 0;
@@ -2816,6 +2817,57 @@ int zombieAndOrphanProcesses() {
 }
 
 int runningDifferentPrograms() {
+    // so far we have been duplicated the same program as a child process with wait() calls
+    // but we can run a different program entirely using exec()
+    // exec() replaces the currently running processes with a different executable.
+    // there are several variants of the exec() function.
 
-    return 0;
+    // execl() is one version of the exec
+    // int execl(const char* path, const char* arg, ...  NULL);
+    // note last arg must be NULL which indicates teh end of the arugment list
+    // the ... consists of the remaining arguments to the command line executable 
+
+    // when the process calls execl, control is passed to the OS
+    // 
+
+    printf("in notes : my PID is %d\n", getpid());
+    execl("./main", NULL); // the called process will have same PID
+
+    // this code is unreachable if execl() is called successfully. this is because execl() will not jump back.
+    perror("exec"); // however, if an error occurs then this code will be executed.
+    return 1;
+
+    // more versions of exec, 6 in total.
+
+    // int execl(const char* path, const char* arg, ... NULL)
+    // int execlp(const char* file, const char* arg, ... NULL)
+    // int execle(const char* path, const char* arg, ... NULL???, char* const envp[])
+
+    // int execv(const char* path, const char* arg, char* const argv[])
+    // int execvp(const char* file, const char* arg, char* const argv[])
+    // int execvpe(const char* file, const char* arg, char* const argv[], char* const envp[])
+
+
+    // the l's (first three) expect a list of command line arguments to be passed into the called program
+    // the v's expect a vector, ie) an array of command line arguments instead of a list
+    // p stands for path, which means the path environment variable is searched to find the executable
+        // the executable is just given as the file name, not the full path.
+        // without the p, exec will expect that the full path is given as the first argument rather than just the file name
+    // e stands for environment. you can pass in an array of environment variables and their values
+        // so the program executes within a specific environment.
+
+
+    // execvp and execlp are used most often.
+
+    // SHELL CONNECTING TO C CODE:
+    // this entire logic explains how the shell executes the our executable c code files.
+    // the shell is just a process, and it uses fork() and exec(). 
+
+    // how the shell runs c code:
+        // first the shell calls fork() to dupelicate itself as a process
+        // then that child processes calls exec() to load a different program into its memory
+        // the parent shell process then calls wait() and blocks until the child process finishes
+        // when wait() call returns, shell prints the >$ to indicate it is ready to receive the next command
+
+    // pretty cool. so it basically dupelicates itself, then the clone (child) morphs itself (using exec) into a different program; our c executable.
 }
