@@ -78,7 +78,8 @@ int main(int argc, char* argv[]) {
     int typedefInC();
     int macrosInC();
     int thePreprocessor();
-    thePreprocessor();
+    int functionLikeMacros();
+    functionLikeMacros();
 
 
     int processModels();
@@ -2574,8 +2575,238 @@ int thePreprocessor() {
 
     int x = MEANING_OF_LIFE; // this replaces with a STRING "42"
     // preprocessor doesnt care that 42 is an integer; just replaces text with text
+    // preproccesor will even replace text that matches the macro that is in a comment.
+    // for example, the following will be replaced by (42) by the preprocessor: MEANING_OF_LIFE
+        // not sure how to show this, as using the preprocessor through cpp notes.c will just end up cleaning all comments.
+        // the only occurences of macros the c preprocessor wont replace are those within "". so "MEANING_OF_LIFE" wont get replaced.
 
-    // CONTINUE - The C Preprocessor Video 1: Simple Macros and Header Files - 1:55
+    // we can use macros within macros
+
+    #define ANSWER (2 * MEANING_OF_LIFE)
+     
+    // preprocessor also includes several predefined macros
+    printf("%d\n", __LINE__); // integer for line. will print 2587 (unless i changed the current line of this code)
+    __FILE__; // name of the C source file
+    __DATE__;
+    __TIME__;
+    // double underscores are a convention for system defined. __init__
+
+    // some macros are defined by specific systems.
+    // printf("Compiled on linux? %d\n", __APPLE__); // code produces an error for non mac
+
+    // if we want to check macros that may potentially be undefined we can use conditional directive checks 
+    
+    #if __APPLE__
+    const char OS_STR[] = "OS/X";
+    #elif __gnu_linux__
+    const char OS_STR[] = "gnu/linux";
+    #elif __WIN32__ || _WIN32 || WIN32
+    const char OS_STR[] = "win32";
+    #elif __WIN64__ || _WIN64 || WIN64
+    const char OS_STR[] = "win64";
+    #elif __linux__
+    const char OS_STR[] = "linux";
+    #elif __unix__
+    const char OS_STR[] = "unix";
+    #else
+    const char OS_STR[] = "unknown";
+    #endif
+    printf("1: Compiled on %s\n", OS_STR);
+
+    // another way is to use ifdef
+
+    #ifdef __APPLE__
+    const char OS_STR2[] = "OS/X";
+    #elif defined(__gnu_linux__)
+    const char OS_STR2[] = "gnu/linux";
+    #elif defined(__WIN32__) || defined(_WIN32) || defined(WIN32)
+    const char OS_STR2[] = "win32";
+    #elif defined(__WIN64__) || defined(_WIN64) || defined(WIN64)
+    const char OS_STR2[] = "win64";
+    #elif defined(__linux__)
+    const char OS_STR2[] = "linux";
+    #elif defined(__unix__)
+    const char OS_STR2[] = "unix";
+    #else
+    const char OS_STR2[] = "unknown";
+    #endif
+    printf("2: Compiled on %s\n", OS_STR2);
+
+    // this is extremely helpful for determining the system the source code is being compiled on
+
+    // defining macros from command line before compiling into an executable:
+    // use -D flag (stands for define im guessing)
+        // gcc -D DEBUG=3 notes.c -o notes
+    // the above defines a macro DEBUG and gives it a value 3
+    // if we omit the =3, the default value given to DEBUG is 1
+        // gcc -D DEBUG notes.c -o notes
+    
+    // this way, we can also use macros for debugging
+    #ifdef DEBUG
+    printf("Running in debug mode at level %d\n", DEBUG);
+    #endif
+    // combining this technique with a build system like Make, this allows us to easily reconfigure systems for debugging
+
+    // be careful. macros can be abused!
+    // preprocessor directives can usually be replaced with just C language like global variables etc. but one thing we need them for always including header files.
+
+    // lastly, recall guarding header files.
+    // let us show an example first where the same header file code be accidentally copied twice
+
+    // file1.c:
+    // #include "sorts.h"
+    // #include "sorts2.h"
+
+    // sorts2.h
+    // #include "sorts.h"
+
+    // we see in file1.c, we include sorts.h and sorts2.h, and when we do this everything in sorts2.h basically gets copied over by the preprocessor.
+    // hence, we end up with two includes for include sorts.h as there was one in sorts2.h as well.
+    // to avoid this we must use header guards (see line 1167 or just word search it)
+
+    // sorts 2.
+    // if
+
+    return 0;
+}
+
+int functionLikeMacros(){
+    // many of the features in this section are SYSTEM SPECIFIC
+    // also remark: using function like macros is rarely a good idea. recommended to avoid using.
+
+    #define PAGE_PRESENT  0
+    #define PAGE_PROT     1
+    #define PAGE_RW       2
+    #define PAGE_USER     3
+    #define PAGE_DIRTY    4
+    #define PAGE_ACCESSED 5
+    // macros with simple values like integers dont need () wrapped around them
+
+    #define SET(var, flag) ((var) |= 1 << (flag))
+    // we SLLI 1 by (flag), so if flag is 3, then 1000 is whaht we get (shifted 1 by 3 binary digits)
+    // then we do a bitwise OR on var and set it equal to it, |= like +=.
+
+    int page_flag = 0;
+    SET(page_flag, PAGE_USER);
+    // we see that the macro changed the value of page_flag, unlike a function that wouldn't have done this
+    // this is because the macro literally just gets added into the code by the preprocessor, it doesnt create a stack.
+
+        // SET(page_flag, PAGE_USER);
+        // expands to
+        // ((page_flag) |= 1 << (3))
+
+    // note that PAGE_USER gets expanded to 3.
+
+    printf("PAGE_FLAG VALUE IS: %d\n", page_flag); // we get 8, since 8 = 1000 (slli it by 3 which is PAGE_USER)
+
+    // more comlex
+
+    #define WARN(cond) \
+        do { \
+            if (cond) fprintf(stderr, "Warning (%s:%d): %s\n", __FILE__, __LINE__, #cond); \
+        } while (0)
+    // note the do while(0) loop just runs 1 single iteration
+    // this is common defensive coding practice to avoid issues related to macro expansion in complex code structions
+    // this allows us to include multiple statements
+  
+    // also enforces the requirement that the warn macro is used a statement
+    // for example, the following does not have ; at the end unlike our WARN which does
+    #define WARN2(cond) if (cond) fprintf(stderr, "BARS??")
+    // the compiler is fine with this not having a ;, but this can lead to errors during runtime.'
+    // on the other hand, if we try removing the ; from our inside our do-while, we see we can a compile time error, the compiler complains.
+    // theres more to it probably.
+
+    // also note that # on #cond. this is the STRINGIFICATION operator. it preserves the argument as a string.
+
+    // note that the backslashes \, signal that the macro continues over to the next line
+    // this lets us create macros that span multiple lines.
+    // in a way, this allows us to create "nested functions" since we cannot do that in C with regular functions. but still, this is rarely a good idea to do.
+
+    #define ISSET(var, flag) ((var) & (1 << (flag)))
+    // returns the bitwise operation of var with the bitmask 1 << flag
+    // note the bitmask will have all zeroes except for the at the "binary place" (flag + 1), eg 1 << (3) = 1000. we have 1 in the 4th binary place
+    // so var & (1 << flag) will only evaluate to true if var has a 1 at the (flag + 1) binary place.
+    // in other words ISSET() checks if the binary value at the (flag + 1) decimal place IS SET to 1. (the SET function basically ensures this, it sets it to 1)
+
+    page_flag = 0;
+    SET(page_flag, PAGE_USER);
+    WARN(ISSET(page_flag, PAGE_USER));
+
+    // now we will give examples why macros are bad to use
+
+    #define GREATER(a, b) ((a) > (b) ? (a) : (b))
+    // remember ternary operator:
+    // (condition) ? (expression_if_true) : (expression_if_false)
+
+    int x = 2;
+    int y = 1;
+    
+    y ++;
+
+    printf("%d\n", GREATER(x, y)); // this prints 2 as expected
+
+    y = 1;
+    printf("%d\n", GREATER(x, ++y)); // prints 3
+    // preprocessor takes it in like this:
+    // ((x) > (++y) ? (x) : (++y))
+    // and this makes the ++y happen twice.
+    // this is why its risky to use macros. a function wouldnt do this.
+    // we cant expect the macro the act like a function
+
+    // now we show issues with nesting macros
+    // the following works fine
+    page_flag = 0;
+    printf("%d\n", SET(page_flag, PAGE_DIRTY));
+
+    // just like how this works
+    page_flag = 0;
+    printf("%d\n", page_flag += 16);
+
+    // note that this works
+    page_flag = 0;
+    SET(page_flag, PAGE_USER);
+    SET(page_flag, PAGE_DIRTY);
+
+    // but trying to combine the step like this doesnt work:
+    page_flag = 0;
+    // SET(SET(page_flag, PAGE_USER), PAGE_DIRTY);  
+    // we get a compiler error. uncomment and see ur IDE complain.
+    // this is because in C, we cannot assign to expressions
+    int x = 0;
+    // cannot assign expression to a value
+    // (x += 1) = 2;
+    // same for java
+
+    // so why use macros ?
+    // just dont unless u want to just have global constant data like simple integers.
+    
+    // some arguments to why macros are good:
+        // removes function call overhead
+        // counter argument: just use inline keyword on functions
+        // inline int add(int a, int b) {}
+
+        // macros are type neutral
+        // counter argument: thats also a weakness
+    
+    // INLINE KEYWORD
+    // a quick intro to the inline keyword
+    // suggests the compiler to perform inlining for a function.
+    // inlining is a compiler optimization  where the compiler replaces a function call with the actual body of the function at the call site.
+    // important to note that this isn't like macros, ie; we still create a stack frame for the function call as normal.
+    // only removes overhead cost of function calls.
+
+    // FUNCTION OVERHEAD COST
+    // refers to additional work and resources consumed when functions are invoked
+    // includes:
+        // pushing and popping parameters onto and from stacks
+        // managing return address
+        // setting up and tearing down a new stack frame
+
+    // when a function is inlined, the overhead from pushing and popping parameters is eliminated.
+
+    // key take away:
+    // almost anything that can be done with defines can be done with C directly. just use C.
+    // useful to be able to read macros bc legacy code uses them.
 
     return 0;
 }
