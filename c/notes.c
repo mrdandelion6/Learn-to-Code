@@ -14,6 +14,7 @@
 // these libraries are for forking processes
 #include <unistd.h>
 #include <signal.h>
+#include <errno.h>
 
 // use define to define a constant global value! these are stored in global data
 
@@ -80,7 +81,9 @@ int main(int argc, char* argv[]) {
     int thePreprocessor();
     int functionLikeMacros();
     int functionPointers();
-    functionPointers();
+    int systemCalls();
+    int errorsAndErrno();
+    errorsAndErrno();
 
 
     int processModels();
@@ -2884,6 +2887,69 @@ void (*funcx(int argc, int argv[]))(int*, int) {}
 
 typedef (*sort_funcy)(int*, int); 
 sort_funcy funcy(int argc, int argv[]) {}
+
+int systemCalls() {
+    // a system call is a a function that requests a service from the OS
+    // for example exit(). requests OS to terminate program
+
+    // more examples are low level IO calls.
+    // high level IO functions like scanf and printf are not system calls.
+    // they are library functions instead, that use low level IO functions which are system calls.
+    // library functions:
+        // fgets
+        // fopen
+        // fclose
+        // scanf
+        // printf
+    
+    // system calls
+        // write
+        // read
+        // exit
+
+    return 0;
+}
+
+int errorsAndErrno() {
+    // when system calls dont work correctly
+    
+    // system calls or library functions that use system calls return certain values if error occurs
+    // ones that return int type will return -1 to indicate error
+    // ones that return pointer type will return NULL to indicate error
+
+    // we would also like to know what kind of error occured
+    // the return value does not suffice for this; it just tells us if an error occurs, not what kind
+    // we get around this using errno
+
+    // errno
+    // we use a global variable known as ERRNO, which stores the kind of error that occured
+    // it has a type of int.
+    // the integer value of ERRNO correponds with different errors as specified by errno.h header file
+    errno;
+    #include <errno.h>
+    // we can ctrl click errno.h to see all these errors.
+
+    // however we dont need to memorize this mapping.
+    // we have functions that explain error codes for us.
+    // one such function is perror:
+    // void perror(const char* s);
+
+    // we can put a custom string s in perror, and it will print that error message along with our error it parses from errno:
+    // perror("error");
+    // output: error: <errno_parsed_error>
+    
+    // for example
+    FILE* x = fopen("BARSS", "r");
+    if (x == NULL) {
+        perror("error opening file");
+    }
+    // this will print:
+    // error opening file: No such file or directory
+
+    // when no errors occur, perror will just print "<your_stuff>: Undefined error: 0"
+
+    return 0;
+}
 
 
 int processModels() {
