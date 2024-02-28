@@ -2854,8 +2854,37 @@ int functionPointers(){
     // note that functions and any code in general is stored in the code segment area in the memory model
     // hence function pointers point to memory in code segment where the function is (i think).
 
+    // FUNCTIONS THAT RETURN FUNCTION POINTERS
+    // the syntax can get really ugly from this one
+    // supposed i have a function point of the following type:
+    void (*f_ptr)(int*, int);
+    // now supposed i have a function func_x() which takes some args (int argc, int argv[]),
+    // and returns void (*f_ptr)(int*, int) that type
+
+    // to do this it gets rlly messy. 
+    // must make it like this:
+    // void (*funcx(int argc, int argv[]))(int*, int) {}
+        // see the example below after this section
+
+    // basically it is just void (*f_ptr)(int*, int), but we add (int argc, int argv[]) after f_ptr, 
+    // so we make it f_ptr(int argc, int argv[]) and add all the other stuff as well.
+
+    // but we can make this a lot more clean just using typedef
+
+    typedef (*sort_func)(int*, int); 
+    // now sort_func is a type for stuff like f_ptr
+    // we can just do what we are familiar with now:
+    // sort_funcy funcy(int argc, int argv[]) {}
+    // a lot cleaner now.
+
     return 0;
 }
+
+void (*funcx(int argc, int argv[]))(int*, int) {}
+
+typedef (*sort_funcy)(int*, int); 
+sort_funcy funcy(int argc, int argv[]) {}
+
 
 int processModels() {
     // what does it mean to run a program?
