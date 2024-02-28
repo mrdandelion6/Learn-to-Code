@@ -79,7 +79,8 @@ int main(int argc, char* argv[]) {
     int macrosInC();
     int thePreprocessor();
     int functionLikeMacros();
-    functionLikeMacros();
+    int functionPointers();
+    functionPointers();
 
 
     int processModels();
@@ -627,7 +628,7 @@ int cDeclarationSynax() {
     // this means array of ten pointers to functions returning int
 
     // simpler:
-    int *g[10]; // an array of 10 pointers that point to int 
+    int* g[10]; // an array of 10 pointers that point to int 
 
     // CASTS
     // syntax for cast is derived from the corresponding declaration
@@ -2772,7 +2773,7 @@ int functionLikeMacros(){
     // SET(SET(page_flag, PAGE_USER), PAGE_DIRTY);  
     // we get a compiler error. uncomment and see ur IDE complain.
     // this is because in C, we cannot assign to expressions
-    int x = 0;
+    x = 0;
     // cannot assign expression to a value
     // (x += 1) = 2;
     // same for java
@@ -2807,6 +2808,51 @@ int functionLikeMacros(){
     // key take away:
     // almost anything that can be done with defines can be done with C directly. just use C.
     // useful to be able to read macros bc legacy code uses them.
+
+    return 0;
+}
+
+int functionPointers(){
+    // we do not need to differentiate between data and functions
+    // we can capture functions in variables! we do this with function pointers.
+    // i comment a lot of stuff out here cus i use imported functions which needs a combined compile with sorting.c
+
+    // motivation: consider that we have some several different functions with same signature
+    int arr[10] = {91, 22, 11, 14, 0, 2, 2, 91, -3, 7};
+    // insertion_sort(arr, 10); //  works fine as long as we compile sorting.c with it
+    // print_array(arr, 10);
+
+    int arr2[10] = {91, 22, 11, 14, 0, 2, 2, 91, -3, 7};
+    // bubble_sort(arr2, 10); 
+    // print_array(arr2, 10);
+
+    // now say we want to change all of the bubble_sort calls to insertion_sort calls or vice versa.
+    // we would need to change every line of code where the function was being called and change it.
+    // what if we could just capture the function being used in a variable and just use that over and over again.
+    // that way we would only need to change one variable; simple concept.
+
+    // we can do this using function pointers!
+    void (*ptr)(int*, int);
+    // since all the functions have the same signature we can do any of the following:
+    // ptr = selection_sort;
+    // ptr = bubble_sort;
+    // ptr = insertion_sort;
+
+    // we can now simply call the function like this
+    // ptr(arr2, 10);
+    // print_array(arr2, 10);
+
+    // this adds an insane amount of flexibility.
+    // we can now freely pass functions as parameters
+    // just need proper type, for example
+        // void funcx(void (*sort_func)(int*, int)) {}
+    // just pass in a function as the arg into funcx.
+
+    // just like an array variable is treated as a pointer to its first element,
+    // a function pointer is treated like a pointer to that function
+
+    // note that functions and any code in general is stored in the code segment area in the memory model
+    // hence function pointers point to memory in code segment where the function is (i think).
 
     return 0;
 }
