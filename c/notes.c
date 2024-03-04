@@ -83,9 +83,6 @@ int main(int argc, char* argv[]) {
     int functionPointers();
     int systemCalls();
     int errorsAndErrno();
-    errorsAndErrno();
-
-
     int processModels();
     int creatingProcesses();
     int relationshipOfProcesses();
@@ -93,7 +90,9 @@ int main(int argc, char* argv[]) {
     int usingMacrosForStat_loc();
     int zombieAndOrphanProcesses();
     int runningDifferentPrograms();
-
+    int signalsInC();
+    int handlingSignals();
+    handlingSignals();
     
 
     return 0;
@@ -3360,4 +3359,103 @@ int runningDifferentPrograms() {
         // when wait() call returns, shell prints the >$ to indicate it is ready to receive the next command
 
     // pretty cool. so it basically dupelicates itself, then the clone (child) morphs itself (using exec) into a different program; our c executable.
+}
+
+int signalsInC() {
+    // some examples of signals: 
+        // CTRL + C: ends program
+        // CTRL + Z: pauses program (type fg to wake it up)
+        // Segmentation Fault: a signal sent by the OS to the process, terminates the process
+
+    // in general: signals are a mechanism that allow a process or the OS to interrupt a currently running process and notify it that an event has occured.
+
+    // how signals work?
+    // each signal is identified by a number between 1 and 31.
+    // type man 7 signal to see list of signals 
+    // eg: SIGINT has a integer value of 2 and it is the signal sent when we type ctrl + c in temrinal, which interrupts program.
+    // ctrl + z sends SIGSTOP: has value of 17
+
+    // how do we send arbitrary signals to the process?
+    // can use a library function called kill() or from command line using a program also called kill
+
+    // USING KILL FROM TERMINAL:
+    // to send arbitrary signals to a process from terminal using kill, must know the PID of the process
+    // type:
+        // kill -<signal_name> <PID>
+    // eg:
+        // kill -STOP 3819
+        // kill -INT 3819
+
+    // note we didnt type SIGSTOP, just STOP.
+    // can also type in the numbers directory
+
+    // library function kill uses the same idea.
+        // kill(pid_t pid, int sig);
+    // pid is the process id to send the signal to and sig is the integer value of the signal we want to send.
+    // recall we can get pid's of children from return value of fork()
+
+    // note, kill() requires signal.h
+
+    return 0;
+}
+
+int handlingSignals() {
+    // change default behaviour of signal, eg:
+        // print a msg
+        // save some state
+        // ignore signal 
+
+    // we can write a function to be executed when the signal is received by the process
+    // how does this function get called?
+
+    // well lets consider what happens when a process receives a signal.
+    // the PCB (process control block) has a signal table which similiar to the open file table
+    // each entry in the signal table contains a pointer to code that will be executed when the OS delivers the signal to the process
+    // this is known as the signal handling function
+    
+    // we can change the behaviour of a signal by installing a new signal handling function
+    // the sigaction() system call will modify the signal table so that our function is called instead of the default function.
+
+        // int sigaction(int signum, const struct sigaction* act, struct sigaction* oldact);
+
+        // signum is the signal being modifed.
+        // act is a pointer to a struct that we need to initialize ourselves before we call sigaction
+        // oldact is a pointer to a struct that will hold the previous state of the signal after sigaction is called (we dont initialize this)
+
+    // we wont use oldact arg in our examples, but it sometimes helps to save the previous state of the signals.
+
+    // sigaction struct: (getting an error when i uncomment not sure why)
+
+    // struct sigaction {
+    //     void (*sa_handler)(int);
+    //     void (*sa_sigaction)(int, siginfo_t*, void*);
+    //     sigset_t sa_mask;
+    //     int sa_flags;
+    //     void (*sa_restorer)(void);
+    // };
+
+
+    // void handler(int code);
+    // void (*f_ptr)(int) = &handler;
+
+    // struct sigaction newact;
+    // newact.sa_handler = f_ptr;
+    // newact.sa_flags = 0; // default flags
+    // sigemptyset(&newact.sa_mask); // set sa_mask to empty so no signals are blocked during handler
+    // // newact is set up at this point.
+
+    // sigaction(SIGINT, &newact, NULL); // call sigaction system call to install our new handler for the SIGINT signal.
+
+
+    // for some reason the code above is producing errors when i compile it.. will investigate later.
+    
+    // remark:
+    // two signals cant be changed with sigaction: SIGKILL and SIGSTOP. 
+    // SIGKILL will always cause process to terminate and SIGSTOP will always suspend the process.
+
+    return 0;
+}
+
+void handler(int code) { // our handler for signal 
+    fprintf(stderr, "Signal %d caught\n", code);
 }
