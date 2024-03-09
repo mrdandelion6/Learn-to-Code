@@ -107,11 +107,11 @@ int theMainMethod(int argc, char* argv[]) {
     // argc represents the number of arguments passed into the main method when ran. users cant manually pass in an argc argument, it automatically knows 
     // example: ./main arg1 arg2 will pass the 2 args into main and, along with the program itself as the first argument, hence the value of argc will be 3.
 
-    // char* argv[] stands for argument vector. its an array of "strings", char* refers to a string, ie an array of chars
+    // char* argv[] stands for argument vector. its an array of "strings", char* refers to a string, ie a string literal since we have char*. (char[] would be a mutable C string, more on this later).
     // the first element of argv, argv[0] is the program itself. the other arguments are the strings. argv[1] points to "arg1", argv[2] points "arg2".
     // to see this being demonstrated, compile and run notes.c through terminal and pass arguments
 
-    // consequently, main only takes in strings as arguments. of course these strings can be cleverly converted to other data types
+    // consequently, main only takes in strings as arguments. of course these strings can be cleverly converted to other data types.
     if (argc > 1) {
         for (int i=1; i < argc; i++) {
             printf("arg %d is %s\n", i, argv[i]);
