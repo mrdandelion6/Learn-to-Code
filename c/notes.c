@@ -111,7 +111,7 @@ int theMainMethod(int argc, char* argv[]) {
     // the first element of argv, argv[0] is the program itself. the other arguments are the strings. argv[1] points to "arg1", argv[2] points "arg2".
     // to see this being demonstrated, compile and run notes.c through terminal and pass arguments
 
-    // consequently, main only takes in strings as arguments. of course these strings can be cleverly converted to other data types.
+    // consequently, main only takes in strings as arguments. of course these strings can be cleverly converted to other data types. 
     if (argc > 1) {
         for (int i=1; i < argc; i++) {
             printf("arg %d is %s\n", i, argv[i]);
