@@ -3130,7 +3130,7 @@ int relationBetweenShellAndProcesses() {
         // this value is NOT necessarily equivalent to to the return value on termination
         // various bits in the state_loc argument are used for different purposes! it is complex.
         // for example, lowest 8 bits tell us whether the process terminated normally or whether it terminated because it received a signal.
-        // for example, ctrl+C will is a signaled termination.
+        // for example, ctrl+C is a signaled termination.
         // if the process terminated due to a signal, the lower 8 bits tell us which signal.
         // the return value of the process is in the next 8 bits.
         // examples of this can be found below at line 2690.
@@ -3317,7 +3317,6 @@ int runningDifferentPrograms() {
     // arg0 should specify the name of the program itself, ie the first argument passed into argv[].
 
     // when the process calls execl, control is passed to the OS
-    // 
 
     printf("in notes : my PID is %d\n", getpid());
     execl("./main", "main", NULL); // the called process will have same PID
