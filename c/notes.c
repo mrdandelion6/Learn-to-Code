@@ -587,7 +587,7 @@ void find_largest2(int **A, int A_size, int *largest_pt) {
     // set *largest_pt to largest element in array of POINTERS!!
     *largest_pt = **A; // start by pointer to first pointer
 
-    for (int i = 0; i < A_size; i++) {
+    for (int i = 0; i < A_size; i++) { // bars
         if (*largest_pt < *A[i]) {
             *largest_pt = *A[i];
         }
