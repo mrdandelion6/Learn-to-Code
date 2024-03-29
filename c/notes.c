@@ -2181,9 +2181,11 @@ int everyIO() {
         // same as fread() except ptr is where the place we are writing the data from
 
     // int fseek(FILE* stream, size_t offset, int whence)
+        // fseek moves around in a file from a specfies offset from a starting position (whence).
+        // whence can either be the start of file (SEEK_SET), the current position of file pointer (SEEK_CUR), or relative to the end of the file (SEEK_END)
         // SEEK_SET = 0
         // SEEK_CUR = 1
-        // SEEK_END = 2
+        // SEEK_END = 2. remark for SEEK_END, if we wanna move backwards from the end (ie, left <--), then use a negative offset.
     return 0;
 }
 
@@ -2226,7 +2228,7 @@ int stringsInC() {
     // shorthand for doing the same as creating Cstring1
 
     // the following is not a legal string
-    // char Cstring4[6] = "BABABABOEEEEEYYYYY AHHHHHHHH THIS STRING IS TOO LONG";
+    char Cstring4[6] = "BABABABOEEEEEYYYYY AHHHHHHHH THIS STRING IS TOO LONG";
     // printf(Cstring4);
     // does not crash program, but only prints:BABABA + gibberish
 
@@ -2287,7 +2289,7 @@ int stringsInC() {
 
     // there are often safe counterparts to unsafe functions like these in the C standard library
     // safe versions often add an 'n' somewhere in the name of the unsafe ones
-    // the n in the name indicates therre is a new n parameter in the function which will indicate
+    // the n in the name indicates there is a new n parameter in the function which will indicate
     // how much activity the function is allowed to do before it stops.
 
     // strncpy() is the safe counterpart to strcpy(). here is prototype:
@@ -2323,6 +2325,7 @@ int stringsInC() {
     strncpy(q1, q2, sizeof(q1));
     strcat(q1, q3); // adds q3 to the end of q1
     printf("%s\n", q1); // prints good because we have enough space
+
     // just like strcpy(), strcat() is an unsafe function. 
     // q1 couldve had too little space for having everything from q3 appended to it
     
@@ -2794,12 +2797,13 @@ int functionLikeMacros(){
         // macros are type neutral
         // counter argument: thats also a weakness
     
+    // FUNCTION OVERHEAD
+        // extra cost such as pushing arguments onto the stack, jumping to the function code, and returning
+    
     // INLINE KEYWORD
     // a quick intro to the inline keyword
     // suggests the compiler to perform inlining for a function.
     // inlining is a compiler optimization  where the compiler replaces a function call with the actual body of the function at the call site.
-    // important to note that this isn't like macros, ie; we still create a stack frame for the function call as normal.
-    // only removes overhead cost of function calls.
 
     // FUNCTION OVERHEAD COST
     // refers to additional work and resources consumed when functions are invoked
