@@ -1166,7 +1166,7 @@ int headerFileVariables() {
     print_array(arr, 6);
 
     // STATIC VARIABLES
-    // conversely.. (continue below about this below this function)
+    // conversely.. (continue about this below this function)
 
     // we should use header guards to prevent multiple inclusions of the same header file which can lead to errors and duplicated code
     // HEADER GUARDS:
@@ -1315,7 +1315,7 @@ int makeFiles() {
         // here the target is %.o and the dependencies are %.c (a source file of the same name) and sorts.h
 
         // gcc -c $< -o $@
-        // here we create an object file from $< which symbolizes the first name in the last of dependencies, ie; $.c
+        // here we create an object file from $< which symbolizes the first name in the list of dependencies, ie; $.c
         // and $@ just means the target's name, so we give it the name of the target
 
     // one last thing is that Makefiles can include variables.
@@ -2157,7 +2157,7 @@ int movingAroundInFiles() {
 
 int everyIO() {
     // PROTOTYPES:
-    // FILE* fopen(const char* path,const char* type)
+    // FILE* fopen(const char* path, const char* type)
         // returns a file pointer if successfully opened
     // int fclose(FILE* stream)
         // returns 0 if file successfully closed. returns E0F if file not closed (E0F is defined in stdio.h, usually as -1)
@@ -2175,7 +2175,10 @@ int everyIO() {
         // returns s on success. n specifies number of characters to read. reads characters from stream and stores it into *s
     // size_t fread(void* ptr, size_t size, size_t nmemb, FILE* stream)
         // for low level reading. returns size_t which is basically unsigned integers, ie) no negative values.
+        // ptr is address where read data is stored. size specifies the size of each element to reach in the file. nmemb specifies number of elements to read.
+        // the fread() function reads nmemb elements of data, each size bytes long, from the stream pointed to by stream, storing them at the location given by ptr.
     // size_t fwrite(void* ptr, size_t size, size_t nmemb, FILE* stream)
+        // same as fread() except ptr is where the place we are writing the data from
 
     // int fseek(FILE* stream, size_t offset, int whence)
         // SEEK_SET = 0
