@@ -3357,12 +3357,12 @@ int runningDifferentPrograms() {
     // the shell is just a process, and it uses fork() and exec(). 
 
     // how the shell runs c code:
-        // first the shell calls fork() to dupelicate itself as a process
+        // first the shell calls fork() to duplicate itself as a process
         // then that child processes calls exec() to load a different program into its memory
         // the parent shell process then calls wait() and blocks until the child process finishes
         // when wait() call returns, shell prints the >$ to indicate it is ready to receive the next command
 
-    // pretty cool. so it basically dupelicates itself, then the clone (child) morphs itself (using exec) into a different program; our c executable.
+    // pretty cool. so it basically duplicates itself, then the clone (child) morphs itself (using exec) into a different program; our c executable.
 }
 
 int signalsInC() {
@@ -3403,6 +3403,10 @@ int signalsInC() {
     return 0;
 }
 
+void handler(int code) { // our handler for signal 
+    fprintf(stderr, "Signal %d caught\n", code);
+}
+
 int handlingSignals() {
     // change default behaviour of signal, eg:
         // print a msg
@@ -3428,30 +3432,27 @@ int handlingSignals() {
 
     // we wont use oldact arg in our examples, but it sometimes helps to save the previous state of the signals.
 
-    // sigaction struct: (getting an error when i uncomment not sure why)
+    // sigaction struct below. rmk: i was getting errors when i had siginfo_t* instead of void* so i changed it into void*. not sure why!!
 
-    // struct sigaction {
-    //     void (*sa_handler)(int);
-    //     void (*sa_sigaction)(int, siginfo_t*, void*);
-    //     sigset_t sa_mask;
-    //     int sa_flags;
-    //     void (*sa_restorer)(void);
-    // };
-
-
-    // void handler(int code);
-    // void (*f_ptr)(int) = &handler;
-
-    // struct sigaction newact;
-    // newact.sa_handler = f_ptr;
-    // newact.sa_flags = 0; // default flags
-    // sigemptyset(&newact.sa_mask); // set sa_mask to empty so no signals are blocked during handler
-    // // newact is set up at this point.
-
-    // sigaction(SIGINT, &newact, NULL); // call sigaction system call to install our new handler for the SIGINT signal.
+    struct sigaction {
+        void (*sa_handler)(int);
+        void (*sa_sigaction)(int, void*, void*); // should be (int, siginfo_t*, void*) !!!
+        sigset_t sa_mask;
+        int sa_flags;
+        void (*sa_restorer)(void);
+    };
 
 
-    // for some reason the code above is producing errors when i compile it.. will investigate later.
+    void handler(int code);
+    void (*f_ptr)(int) = &handler;
+
+    struct sigaction newact;
+    newact.sa_handler = f_ptr;
+    newact.sa_flags = 0; // default flags
+    sigemptyset(&newact.sa_mask); // set sa_mask to empty so no signals are blocked during handler
+    // newact is set up at this point.
+
+    sigaction(SIGINT, &newact, NULL); // call sigaction system call to install our new handler for the SIGINT signal.
     
     // remark:
     // two signals cant be changed with sigaction: SIGKILL and SIGSTOP. 
@@ -3460,6 +3461,3 @@ int handlingSignals() {
     return 0;
 }
 
-void handler(int code) { // our handler for signal 
-    fprintf(stderr, "Signal %d caught\n", code);
-}
