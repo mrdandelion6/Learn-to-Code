@@ -92,7 +92,8 @@ int main(int argc, char* argv[]) {
     int runningDifferentPrograms();
     int signalsInC();
     int handlingSignals();
-    handlingSignals();
+    int bitwiseOperations();
+    bitwiseOperations();
     
 
     return 0;
@@ -3434,29 +3435,62 @@ int handlingSignals() {
 
     // sigaction struct below. rmk: i was getting errors when i had siginfo_t* instead of void* so i changed it into void*. not sure why!!
 
-    struct sigaction {
-        void (*sa_handler)(int);
-        void (*sa_sigaction)(int, void*, void*); // should be (int, siginfo_t*, void*) !!!
-        sigset_t sa_mask;
-        int sa_flags;
-        void (*sa_restorer)(void);
-    };
+    // struct sigaction {
+    //     void (*sa_handler)(int);
+    //     void (*sa_sigaction)(int, void*, void*); // should be (int, siginfo_t*, void*) !!!
+    //     sigset_t sa_mask;
+    //     int sa_flags;
+    //     void (*sa_restorer)(void);
+    // };
 
 
-    void handler(int code);
-    void (*f_ptr)(int) = &handler;
+    // void handler(int code);
+    // void (*f_ptr)(int) = &handler;
 
-    struct sigaction newact;
-    newact.sa_handler = f_ptr;
-    newact.sa_flags = 0; // default flags
-    sigemptyset(&newact.sa_mask); // set sa_mask to empty so no signals are blocked during handler
-    // newact is set up at this point.
+    // struct sigaction newact;
+    // newact.sa_handler = f_ptr;
+    // newact.sa_flags = 0; // default flags
+    // sigemptyset(&newact.sa_mask); // set sa_mask to empty so no signals are blocked during handler
+    // // newact is set up at this point.
 
-    sigaction(SIGINT, &newact, NULL); // call sigaction system call to install our new handler for the SIGINT signal.
+    // sigaction(SIGINT, &newact, NULL); // call sigaction system call to install our new handler for the SIGINT signal.
     
     // remark:
     // two signals cant be changed with sigaction: SIGKILL and SIGSTOP. 
     // SIGKILL will always cause process to terminate and SIGSTOP will always suspend the process.
+
+    return 0;
+}
+
+int bitwiseOperations() {
+    // the power of C is that since it is a low level language, we can just directly manipulate the bit values of stuff, ignoring whatever type it is.
+    // i wont go into much detail about the definitions, but make sure u understand OR, AND, XOR, and NOT operators.
+
+    // bitwise operators: & and | 
+    int x = 2; // binary 10
+    int y = 1; // binary: 01
+
+    printf("1 and 2: %d\n", x & y); // expect 00, so 0
+    printf("1 or 2: %d\n", x | y); // expect 11, so 3
+
+    // bitwise XOR given by ^
+    x = 2; // 10
+    y = 3; // 11
+
+    printf("2 xor 3: %d\n", x ^ y); // 10 xor 11 should give 01.
+
+    // bitwise NOT given by ~
+    x = 2; // 10, well actually 0000 0000 0000 0010
+
+    printf("not 2: %d\n", ~x); // not 10 gives 1111 1111 1111 1101. in 2's compliment this is just (-1) - 2 = -3. 
+    // that is because, 1111 1111 1111 1111 is negative 1, and then we turn the second rightmost bit to 0, so -2.
+
+    // 2's compliment referesher!
+    // recall 2's compliment, the highest (leftmost) is equal to whatever it's regular value would be, times -1.
+    // so 1000 0000 0000 0000 is the most negative value we can get with 16 bits, which is -2^15 = -32768
+    // for an integer, it can be 16 bits or 32 bits depending on ur OS.
+    // if it's 32 bits like it is for mine, then the most negative value you can have is:
+        // 1000 0000 0000 0000 0000 0000 0000 0000, which is -2^31 = -2147483648
 
     return 0;
 }
