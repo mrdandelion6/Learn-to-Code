@@ -2797,9 +2797,6 @@ int functionLikeMacros(){
         // macros are type neutral
         // counter argument: thats also a weakness
     
-    // FUNCTION OVERHEAD
-        // extra cost such as pushing arguments onto the stack, jumping to the function code, and returning
-    
     // INLINE KEYWORD
     // a quick intro to the inline keyword
     // suggests the compiler to perform inlining for a function.
@@ -2815,7 +2812,7 @@ int functionLikeMacros(){
     // when a function is inlined, the overhead from pushing and popping parameters is eliminated.
 
     // key take away:
-    // almost anything that can be done with defines can be done with C directly. just use C.
+    // almost anything that can be done with macros can be done with C directly. just use C.
     // useful to be able to read macros bc legacy code uses them.
 
     return 0;
@@ -2943,6 +2940,7 @@ int errorsAndErrno() {
     // we can put a custom string s in perror, and it will print that error message along with our error it parses from errno:
     // perror("error");
     // output: error: <errno_parsed_error>
+    // note that we dont need to pass ERRNO into perror
     
     // for example
     FILE* x = fopen("BARSS", "r");
@@ -2960,16 +2958,16 @@ int errorsAndErrno() {
 
 int processModels() {
     // what does it mean to run a program?
-    // define a program, processes, and understand how an OS works with them.
+    // in this section we define a program, processes, and understand how an OS works with them.
 
     // program:
-        // the executable instructions of a program, either source code or compiled machine code.
+        // the executable instructions of either source code or compiled machine code.
 
     // process:
         // running instance of a program
         // a process includes the machine code of the program + info about the current state of the process, ie) what to step to execute next
         
-    // when a program is loaded into memory, it is loaded into a contiguous piece
+    // when a program is loaded into memory, it is loaded as a contiguous piece
     // the contiguous piece is the memory model we are familiar with:
         
         // 0 (buffer area)
@@ -3071,8 +3069,8 @@ int relationshipOfProcesses() {
 
         if (result == -1) {
             perror("fork:");
-            exit(1); // whats the diff between this and return - 1 ??
-        }
+            exit(1); // whats the diff between this and return - 1 ?? ANS: exit() will terminate the entire program, whereas return -1 just ends the current function and returns a value!
+        } // furthermore exit() pcarries out addition tasks such as closing files and freeing memoryu allocated by program.
 
         else if (result == 0) { // child process
             for (j = 0; j < 5; j++) {
@@ -3191,7 +3189,7 @@ int relationBetweenShellAndProcesses() {
         // [1117] Parent about to terminate
     
     // note that the parent terminates last.
-    // recall, the lower 8 bits tell us what signal the process was ended by (in all of our processes, there was no signal so its al 00000000). 
+    // recall, the lower 8 bits tell us what signal the process was ended by (in all of our processes, there was no signal so its all 00000000). 
     // the next 8 bits give us the return value. so for child 0 we have, 0000 0000 0000 0000
     // for child 1, 0000 0001 0000 0000 = 2^8 = 256 since the return value was 1
     // for child 2, 0000 0010 0000 0000 = 2^9 = 512 since the return value was 2
@@ -3244,7 +3242,7 @@ int usingMacrosForStat_loc() {
         }
         else {
             if (WIFEXITED(status)) { // WIFEXITED, read as W: if exited. returns true if the process exited normally (not signalled)
-                printf("Child %d terminated with %d\n", pid, WEXITSTATUS(status));  //WEXITSTATUS, read as W: exit status. returns the exit status program terminated with. so with return 0, 1, 2, 3, 4.
+                printf("Child %d terminated with %d\n", pid, WEXITSTATUS(status));  //WEXITSTATUS, read as W (wait): exit status. returns the exit status program terminated with. so with return 0, 1, 2, 3, 4.
             } else if (WIFSIGNALED(status)) { // WIFSIGNALED, read as W: if signaled. returns true if the process ended from a signal.
                 printf("Child %d terminated with a signal %d\n", pid, WTERMSIG(status)); // WTERMSIG, read as W: termination signal. returns the signal's status the program terminated with
             } else {
@@ -3294,7 +3292,7 @@ int zombieAndOrphanProcesses() {
     // what happens to a child process when its parent terminates first?
     // we call such a process an orphan.
     // the parent of an orphan process just becomes 1. this is the init process.
-    // so called getppid() from an orphan process just returns 1. so the parent process becomes the init process.
+    // so called getppid() from an orphan process just returns 1.
     // when a process becomes an orphan it is adopted by the init process.
 
     // INIT PROCESS
@@ -3312,9 +3310,9 @@ int zombieAndOrphanProcesses() {
 }
 
 int runningDifferentPrograms() {
-    // so far we have been duplicated the same program as a child process with wait() calls
+    // so far we have been duplicating the same program as a child process with wait() calls
     // but we can run a different program entirely using exec()
-    // exec() replaces the currently running processes with a different executable.
+    // exec() replaces the currently running process with a different executable.
     // there are several variants of the exec() function.
 
     // execl() is one version of the exec
@@ -3336,7 +3334,7 @@ int runningDifferentPrograms() {
 
     // int execl(const char* path, const char* arg0, ... NULL)
     // int execlp(const char* file, const char* arg0, ... NULL)
-    // int execle(const char* path, const char* arg, ... NULL???, char* const envp[])
+    // int execle(const char* path, const char* arg, ... NULL, char* const envp[])
 
     // int execv(const char* path, const char* arg0, char* const argv[])
     // int execvp(const char* file, const char* arg0, char* const argv[])
@@ -3349,7 +3347,7 @@ int runningDifferentPrograms() {
         // the executable is just given as the file name, not the full path.
         // without the p, exec will expect that the full path is given as the first argument rather than just the file name
     // e stands for environment. you can pass in an array of environment variables and their values
-        // so the program executes within a specific environment.
+        // so the program executes within a specific environment. tbh not really sure how this works.
 
 
     // execvp and execlp are used most often.
