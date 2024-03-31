@@ -3530,10 +3530,18 @@ int bitShiftLogic() {
 
     // my tip: just memorize A is 1010, C is 1100, and F is 1111.
 
+
+    // BIT PLACE CONVENTION
+    // we say that bit 0 is the rightmost (least significant bit)
+    // we say the k'th bit is the bit k'th bit to the left of the zero'th bit
+
+    // eg)
+    // for the bit: 0000 0100, the second bit is 1. ie) bit two is one.
+
+
     // now lets explore some bitwise operator problems
-    
     // eg 1)
-        // given a variable b, set the fourth bit to 1 and leave the other bits unchanged.
+        // given a variable b, set the third bit to 1 and leave the other bits unchanged.
 
         char b = 0xC1; // this is 1100 0001 in binary
 
@@ -3543,12 +3551,12 @@ int bitShiftLogic() {
     // eg 2)
         // check if the third bit of b has value 1
         b = 0xC1;
-        bool second_bit_is_one = b & 4;
-        printf("%d\n", second_bit_is_one); // will be 0
+        bool third_bit_is_one = b & 4;
+        printf("%d\n", third_bit_is_one); // will be 0
 
         b |= 4; // gives 1100 0101
-        second_bit_is_one = b & 4;
-        printf("%d\n", second_bit_is_one); // will be 1
+        third_bit_is_one = b & 4;
+        printf("%d\n", third_bit_is_one); // will be 1
 
     
     // we can make these problems more general using slli << (shift left logic immediate)
@@ -3562,8 +3570,8 @@ int bitShiftLogic() {
     unsigned int x = 0xC1; // 1100 0001 which is 128 + 64 + 1 = 193
     printf("%u\n", x);
 
-    set_K(&x, 3); // should give us 1100 0101, which is 193 + 4 = 197
-    printf("%u\n", x); // gives 197
+    set_K(&x, 3); // should give us 1100 1001, which is 193 + 8 = 201
+    printf("%u\n", x); // gives 201
 
 
     // overflow with shifting
@@ -3578,9 +3586,8 @@ int bitShiftLogic() {
     return 0;
 }
 
-void set_K(int* b, int k) { // k is required > 0.
+void set_K(int* b, int k) { // k is required >= 0.
     // slli shifts 1 to the left by k binary places,
     // so for example: 1 << 3 , this will return 1000
-    k--;
     *b |= (1 << k); 
 }
