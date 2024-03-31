@@ -93,7 +93,8 @@ int main(int argc, char* argv[]) {
     int signalsInC();
     int handlingSignals();
     int bitwiseOperations();
-    bitwiseOperations();
+    int bitManipulationAndFlags();
+    bitManipulationAndFlags();
     
 
     return 0;
@@ -3491,6 +3492,49 @@ int bitwiseOperations() {
     // for an integer, it can be 16 bits or 32 bits depending on ur OS.
     // if it's 32 bits like it is for mine, then the most negative value you can have is:
         // 1000 0000 0000 0000 0000 0000 0000 0000, which is -2^31 = -2147483648
+
+    // BITS IN DIFFERENT BASES
+    unsigned char a = 0b00010011; // binary constant
+    unsigned char b = 0x14; // hex constant
+
+    return 0;
+}
+
+
+int bitManipulationAndFlags() {
+
+    // lets have a refresher on converting hex to binary first.
+    // from 0 - 9, conversion is just same as decimal to binary
+
+    // HEX               BINARY
+
+    // 0                 0000
+    // 1                 0001
+    // 2                 0010
+    // 3                 0011
+    // 4                 0100
+    // 5                 0101
+    // 6                 0110
+    // 7                 0111
+    // 8                 1000
+    // 9                 1001
+
+    // A                 1010
+    // B                 1011
+    // C                 1100
+    // D                 1101
+    // E                 1110
+    // F                 1111
+
+    // my tip: just memorize A is 1010, C is 1100, and F is 1111.
+
+    // now lets explore some bitwise operator problems
+    
+    // eg 1)
+        // given a variable b, set the third bit to 1 and leave the other bits unchanged.
+
+    char b = 0xC1; // this is 1100 0001 in binary
+
 
     return 0;
 }
