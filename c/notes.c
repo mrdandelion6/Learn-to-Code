@@ -3693,5 +3693,10 @@ int bitFlags() {
     // similiar could check modes like this:
     mode_t check = mode & (OWNER_READ | GROUP_READ | OTHER_READ);
 
+    // bit flags are nice because they save space abnd operations on them are very fast.
+    // also note that bit flags used in system calls are defined in library files.
+
     return 0;
 }
+
+
