@@ -95,9 +95,9 @@ int main(int argc, char* argv[]) {
     int bitwiseOperations();
     int bitShiftLogic();
     int bitFlags();
-    bitFlags();
+    int bitVectors();
+    bitVectors();
     
-
     return 0;
 }
 
@@ -3699,4 +3699,101 @@ int bitFlags() {
     return 0;
 }
 
+int bitVectors() {
+    // we explore the use of flag bits to implement a set
+    // simple idea: each bit denotes presence or absence of particular element in a set.
 
+    // can quickly perform set operations with bitwise operators
+
+    // consider the simple case where a set consists of just small positive integers
+    // eg) x = {0, 1, 2, 3, 4,, 5, 6, 7, 8, 9, 10, 11} 
+    #define white 0
+    #define black 1
+    #define red 2
+    #define orange 3
+    #define yellow 4
+    #define green 5
+    #define blue 6
+    #define purple 7
+    #define brown 8
+    #define pink 9
+    #define silver 10
+    #define gold 11
+    // can make a bijective map to the set {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} with bit flags
+
+    unsigned short bit_array; // recal short is 2 bytes, so 0000 0000 0000 0000, 16 bits
+    // say we our set only has {7, 5, 3, 2}, mapps to array 0000 0000 1010 1100
+    bit_array = 0b000000010101100;
+
+    // to add now, so if we want {10, 7, 5, 3, 2}, can simply use slli
+
+    bit_array |= (1 << 10);
+
+    // this technique is known as BIT MASKING
+    // we create a bitmask: a carefully constructed value where specific elements are set or not set
+    // we apply the mask to set or unset those values
+
+    // to remove 10 we can do the following
+
+    bit_array &= ~(1 << 10); // we want to make something like 011 1111 1111 and do &= on it.
+
+    // in this example the reason we use a short to contain the bit array because it is large enough to encapsulate our set size.
+    // if we wanted more bits, then we can just use an unsigned int instead, giving us 32. 
+
+    // if we want a custom sized bit map, something larger than int etc, then we can just man an actual array of something (like unsigned ints):
+
+    int N = 4;
+    unsigned int bit_array2[N];
+
+    // note the array isn't of N bits, it's of N unsigned ints, giving us 32*N bits to work with.
+    // hence the operations will be a little more complicated.
+
+    // eg) suppose we want to set a bit at index 34 to 1.
+    int bit = 34;
+
+    // we can use integer division to find the index in bit_array2 that contains the integer with the 34th bit.
+    // naturally we know the first one is gonna contain 32 bits (bits 0 to 31), so the second one will contain the 34th bit.
+    // using integer division:
+    int index = bit / 32;
+
+    // now to find how much we need to offset from the 0'th bit of the integer at index 1. we can just do this with mod
+    int bit_place = bit % 32; // gives us 2, so bit-2 of the second integer holds the 34'th bit (remember the 0'th bit is the gonna be the "actual first" bit of the integer)
+
+    // so now to set the bit at index 34 to one, we combine the above steps:
+
+    bit_array2[index] |= (1 << bit_place);
+
+    // now lets make a bunch of abitrary bit masking stuff below this function.
+    return 0;
+}
+
+#define N 4
+#define INT_SIZE 32 
+
+typedef struct {
+    unsigned int field[N];
+} Bitarray;
+
+// having our bitarry inside a struct is useful because it hides the implementation of our set and allows us to use a simple assignment statement to make a copy of the set
+
+// we will now implement functions such as setting the bitarry to be all zero, turning a particular bit on, turning a particular bit off, and checking if particular bit is on or off
+
+int setzero(Bitarray* b) {
+    return memset(b, 0, sizeof(Bitarray)) == NULL;
+    // sets everything starting from address b to 0 up to sizeof(Bitarray)
+}
+
+void set(unsigned int value, Bitarray* b) {
+    int index = value / INT_SIZE;
+    b->field[index] |= (1 << value % INT_SIZE); 
+}
+
+void unset(unsigned int value, Bitarray* b) {
+    int index = value / INT_SIZE;
+    b->field[index] &= ~(1 << value % INT_SIZE);
+}
+
+int ifset(unsigned int value, Bitarray* b) {
+    int index = value / INT_SIZE;
+    return b->field[index] & (1 << value % INT_SIZE) ? 1 : 0;
+} 
