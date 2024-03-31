@@ -94,7 +94,8 @@ int main(int argc, char* argv[]) {
     int handlingSignals();
     int bitwiseOperations();
     int bitShiftLogic();
-    bitShiftLogic();
+    int bitFlags();
+    bitFlags();
     
 
     return 0;
@@ -3496,6 +3497,7 @@ int bitwiseOperations() {
     // BITS IN DIFFERENT BASES
     unsigned char a = 0b00010011; // binary constant
     unsigned char b = 0x14; // hex constant
+    unsigned char c = 07; // octal constant (preceed with 0)
 
     return 0;
 }
@@ -3533,7 +3535,7 @@ int bitShiftLogic() {
 
     // BIT PLACE CONVENTION
     // we say that bit 0 is the rightmost (least significant bit)
-    // we say the k'th bit is the bit k'th bit to the left of the zero'th bit
+    // we say the k'th bit is the k'th bit to the left of the zero'th bit
 
     // eg)
     // for the bit: 0000 0100, the second bit is 1. ie) bit two is one.
@@ -3590,4 +3592,106 @@ void set_K(int* b, int k) { // k is required >= 0.
     // slli shifts 1 to the left by k binary places,
     // so for example: 1 << 3 , this will return 1000
     *b |= (1 << k); 
+}
+
+
+int bitFlags() {
+    // flag bits are commonly used by system calls when a single argument is used to transmit data about multiple options
+    // that argument variable is treated as an array of bits, where each bit represents an option/flag that can be turned on and off
+    // {0, 1, 0, 0, 1} kind of like json object but values are bits.
+
+    // this concept is used to implement file permissions
+
+    // review of file permissions in linux:
+    // each file has an owner and a group. run ls -l to see.
+        // drwxrwxrwx 1 mrdandelion mrdandelion 4.0K Mar 31 01:50 .
+        // drwxrwxrwx 1 mrdandelion mrdandelion 4.0K Mar 18 18:23 ..
+        // -rwxrwxrwx 1 mrdandelion mrdandelion  309 Feb 11 23:06 Makefile
+        // -rwxrwxrwx 1 mrdandelion mrdandelion    9 Feb  8 23:34 binary_data
+        // -rwxrwxrwx 1 mrdandelion mrdandelion   20 Feb  8 23:34 binary_data2
+        // -rwxrwxrwx 1 mrdandelion mrdandelion  15K Feb 13 12:47 igcc-0.2.tar.gz
+        // drwxrwxrwx 1 mrdandelion mrdandelion 4.0K Feb 10 22:15 io-stuff
+        // -rwxrwxrwx 1 mrdandelion mrdandelion  16K Mar 29 02:10 main
+        // -rwxrwxrwx 1 mrdandelion mrdandelion  415 Mar 29 01:45 main.c
+        // -rwxrwxrwx 1 mrdandelion mrdandelion 2.3K Feb  6 22:12 main.s
+        // -rwxrwxrwx 1 mrdandelion mrdandelion  46K Mar 31 01:50 notes
+        // -rwxrwxrwx 1 mrdandelion mrdandelion 141K Mar 31 01:59 notes.c
+        // -rwxrwxrwx 1 mrdandelion mrdandelion  32K Feb  9 02:13 notes.o
+        // -rwxrwxrwx 1 mrdandelion mrdandelion  32K Feb  9 02:13 notes_sort
+        // -rwxrwxrwx 1 mrdandelion mrdandelion 1.3K Feb  8 00:59 sorting.c
+        // -rwxrwxrwx 1 mrdandelion mrdandelion  718 Mar 28 23:57 sorting.h
+        // -rwxrwxrwx 1 mrdandelion mrdandelion 3.0K Feb  8 01:34 sorting.o
+        // -rwxrwxrwx 1 mrdandelion mrdandelion   89 Feb 25 19:05 tempCodeRunnerFile.c
+        // drwxrwxrwx 1 mrdandelion mrdandelion 4.0K Feb 10 19:00 wav-stuff
+
+    // first column is permission string: (-)(---)(---)(---) like (file type)(user)(group)(other)
+    // third column is owner of the file and the fourth is the group
+
+    // the first (-) is either - or d. it's d if it's a directory otherwise it's -
+    // every (---) follows in the order rwx. when a permission is allowed it will show that letter, else its -
+    // r is read, w is write, x is execute
+    // we can represent these perms with flag bits as each place is either on or off. for now lets just ignore the first file bit.
+
+    // so a nondirectory file with all perms looks like this:
+        // -rwxrwxrwx
+        // flag: 111 111 111 (ignoring first file / directory indicator)
+        // so  1 1111 1111
+
+    // a non directory file where only users can write would look like this:
+        // -rwxr-xr-x
+        // flag: 111 101 101
+        // so 1 1110 1101
+
+    // and a directory with only read perms for everyone would look like this
+        // dr--r--r--
+        // flag: 100 100 100
+        // so 1 0010 0100
+
+    // so we see that we need at least 9 bits to store this bit flag. cant use a byte.
+
+    // one way to change permissions conveniently is using chmod
+    // note that chmod has a thing called MODES which are basically the different file permissions in octal representation:
+    // 0400 : read by owner
+    // 0200 : write by owner
+    // 0100 : execute by owner
+
+    // 0040 : read by group
+    // 0020 : write by group
+    // 0010 : execute by group
+
+    // 0004 : read by others
+    // 0002 : write by others
+    // 0001 : execute by others
+
+    // OCTAL TO BINARY
+    // each octal place is exactly 3 bits in binary. translates just how regular decimals would
+
+    // OCTAL                BINARY
+    // 0                    000
+    // 1                    001
+    // 2                    010
+    // 3                    011
+    // 4                    100
+    // 5                    101
+    // 6                    110
+    // 7                    111
+    // 8                001 000
+
+    // this ends up being useful for a format like rwxrwxrwx, we can just use an octal representation like xyz
+
+    // we can then define constants based on these octals
+
+    // these are our "flags"
+    #define OWNER_READ 000400
+    #define GROUP_READ 000040
+    #define OTHER_READ 000004
+
+    // we could do the same for the other write and execute permissions as well 
+    // then just use bitwise operations,
+    mode_t mode = OWNER_READ | GROUP_READ | OTHER_READ;
+
+    // similiar could check modes like this:
+    mode_t check = mode & (OWNER_READ | GROUP_READ | OTHER_READ);
+
+    return 0;
 }
