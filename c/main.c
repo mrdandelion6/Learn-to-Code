@@ -8,12 +8,10 @@
 
 int main(int argc, char* argv[]) {
     
-    char str1[5] = "hi";
-    char str2[40] = "hhhhhhhhhhhhhhh";
-    strncat(str1, str2, sizeof(str1) - strlen(str1) - 1);
-    printf("%s\n", str1);
-    printf("last char is null terminator: %d\n", str1[4] == '\0');
-
+    char s[10];
+    fgets(s, 5, stdin);
+    printf("you typed: %s\n", s);
+    
     return 0;
 }
 

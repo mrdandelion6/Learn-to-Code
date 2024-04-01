@@ -3938,7 +3938,83 @@ int pipesInC() {
     // having arrows denoting the flow of data, we simply get:
     // child --> pipe --> parent
 
+    // we must close the unused file descriptors once we decide the flow of data.
+    // for example if the parent is only reading, then we would close the parent's write file descriptor
+    // if the child is only writing then we close the child's read file descriptor
+
+    // once the pipe is set up, we can use read and write system calls to send and receive data on the pipe.
+
+    // here is an example where the parent writes and child reads
+
+    // IMPORTANT REMARK: the pipe() call must be made before the fork() call because the child process inherits the open file descriptors from the parent.
+
+    #define MAXSIZE 4096
+    char line[MAXSIZE]; // a string line
+    int fd[2];
+
+    if (pipe(fd) == - 1) {
+        perror("pipe");
+        exit(1);
+    }
+
+    int r = fork();
+
+    if (r > 0) { // in parent
+        close(fd[0]); // close reading file descriptor
+
+        printf("Enter a line > ");
+        while (fgets(line, MAXSIZE, stdin) != NULL) { // retrieve line from stdin, review how fgets works!! see a demonstration below this function of how fgets works in stdin.
+
+            printf("[%d] writing to pipe\n", getpid());
+
+            if (write(fd[1], line, MAXSIZE) == -1) { // write line to write file descriptor in fd[1]
+                perror("writing to pipe");
+            }
+
+            printf("[%d] finished writing \n", getpid());
+            printf("enter a line > ");
+        }
+        close(fd[1]); // close writing fd
+
+        printf("[%d] stdin has been closed, waiting for child\n", getpid());
+
+        int status;
+        if (wait(&status) != -1) {
+            if (WIFEXITED(status)) {
+                printf("[%d] child exited with %d\n", getpid(), WEXITSTATUS(status));
+            } else {
+                printf("[%d] child exited abnormally\n", getpid());
+            }
+        }
+    }
+
+    else if (r == 0) { // in child
+        close(fd[1]);
+        printf("[%d] child \n", getpid());
+        char other[MAXSIZE];
+
+        while (read(fd[0], other, MAXSIZE) > 0) { //  reads from read fd
+            printf("[%d] child received %s\n", getpid(), other);
+        }
+
+        printf("[%d] child finished reading",  getpid());
+        close(fd[0]);
+        exit(0); // remark, we didnt need to do close(fd[0]) cause a call to exit() automatically closes all file descriptors for us.
+    } 
+    
+    else {
+        perror("fork");
+        exit(1);
+    }
     
 
+    return 0;
+}
+
+// fgets demsontration from stdin:
+int fgets_stdin() {
+    char s[10];
+    fgets(s, 5, stdin); // program waits for users to type something on keyboard.
+    printf("you typed: %s\n", s);
     return 0;
 }
