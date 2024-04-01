@@ -1,8 +1,2 @@
-Saitama
-King
-Garou
-Sonic
-Genos
-Watchdog
-Blast
-Tornado
+This is one of several calls to fprintf.
+How many write system calls are generated?

@@ -95,8 +95,10 @@ int main(int argc, char* argv[]) {
     int bitwiseOperations();
     int bitShiftLogic();
     int bitFlags();
-    int bitVectors();
-    bitVectors();
+    int bitArrays();
+    int unbufferedIO();
+    int pipesInC();
+    pipesInC();
     
     return 0;
 }
@@ -3699,8 +3701,8 @@ int bitFlags() {
     return 0;
 }
 
-int bitVectors() {
-    // we explore the use of flag bits to implement a set
+int bitArrays() {
+    // we explore the use of flag bits to implement a set, or array
     // simple idea: each bit denotes presence or absence of particular element in a set.
 
     // can quickly perform set operations with bitwise operators
@@ -3797,3 +3799,146 @@ int ifset(unsigned int value, Bitarray* b) {
     int index = value / INT_SIZE;
     return b->field[index] & (1 << value % INT_SIZE) ? 1 : 0;
 } 
+
+
+int unbufferedIO() {
+    // so far we've only been using IO operations that operate on streams, using file objects
+    // fopen, fclose, fgets, fscanf, fprintf, .. etc.
+    // these are all buffered IO operations.
+
+    // these functions are great to use on files because they hide the complexity of some of the IO system calls
+    // we now investigate unbuffered IO calls, ie) we learn about the actual system calls and how they work.
+
+    // we say that buffered IO calls buffer data. ie) the system calls may read or write larger chunks of data than the user has specified.
+    // so our unbuffered IO operations collect data in larger chunks.
+
+    // collecting data in larger chunks helps ammortize the cost of data transfer by reducing the number of system calls we might need to make.
+    // analogy: instead of sailing on a rowboat to trade a few cargos back and forth between islands, just load several cargos on a frigate.
+
+    // this allows the programmer to ignore the details of data transfer (most of the time).
+    // lets look at some file opening and file writing examples
+
+    FILE* f = fopen("io-stuff/write_here.txt", "w"); // recall this returns a pointer to a file struct
+    if (f == NULL) {
+        perror("file open:");
+        exit(1);
+    }
+    
+    fprintf(f, "This is ");
+    fprintf(f, "one of several ");
+    fprintf(f, "calls to fprintf.\n");
+    fprintf(f, "How many write ");
+    fprintf(f, "system calls are generated?\n");
+    fclose(f);
+
+    // the question is how many write() system calls are generated?
+    // on linux we can use a program called strace to run our program and see what system calls are made. do the following in shell:
+        // strace ./notes
+    
+    // we get a lot of output because even simple programs make a lot of system calls:
+    // execve("./notes", ["./notes"], 0x7ffe8e2de990 /* 26 vars */) = 0
+    // brk(NULL)                               = 0x558b12523000
+    // arch_prctl(0x3001 /* ARCH_??? */, 0x7ffe2bf5a9a0) = -1 EINVAL (Invalid argument)
+    // mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff98cdb1000
+    // access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+    // openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+    // newfstatat(3, "", {st_mode=S_IFREG|0644, st_size=20831, ...}, AT_EMPTY_PATH) = 0
+    // mmap(NULL, 20831, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7ff98cdab000
+    // close(3)                                = 0
+    // openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+    // read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0P\237\2\0\0\0\0\0"..., 832) = 832
+    // pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784
+    // pread64(3, "\4\0\0\0 \0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0"..., 48, 848) = 48
+    // pread64(3, "\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\302\211\332Pq\2439\235\350\223\322\257\201\326\243\f"..., 68, 896) = 68
+    // newfstatat(3, "", {st_mode=S_IFREG|0755, st_size=2220400, ...}, AT_EMPTY_PATH) = 0
+    // pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784
+    // mmap(NULL, 2264656, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7ff98cb82000
+    // mprotect(0x7ff98cbaa000, 2023424, PROT_NONE) = 0
+    // mmap(0x7ff98cbaa000, 1658880, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7ff98cbaa000
+    // mmap(0x7ff98cd3f000, 360448, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1bd000) = 0x7ff98cd3f000
+    // mmap(0x7ff98cd98000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x215000) = 0x7ff98cd98000
+    // mmap(0x7ff98cd9e000, 52816, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7ff98cd9e000
+    // close(3)                                = 0
+    // mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff98cb7f000
+    // arch_prctl(ARCH_SET_FS, 0x7ff98cb7f740) = 0
+    // set_tid_address(0x7ff98cb7fa10)         = 292199
+    // set_robust_list(0x7ff98cb7fa20, 24)     = 0
+    // rseq(0x7ff98cb800e0, 0x20, 0, 0x53053053) = 0
+    // mprotect(0x7ff98cd98000, 16384, PROT_READ) = 0
+    // mprotect(0x558b11735000, 4096, PROT_READ) = 0
+    // mprotect(0x7ff98cdeb000, 8192, PROT_READ) = 0
+    // prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+    // munmap(0x7ff98cdab000, 20831)           = 0
+    // newfstatat(1, "", {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0), ...}, AT_EMPTY_PATH) = 0
+    // getrandom("\xa1\xc3\xa6\x2c\x32\x6b\x06\x6b", 8, GRND_NONBLOCK) = 8
+    // brk(NULL)                               = 0x558b12523000
+    // brk(0x558b12544000)                     = 0x558b12544000
+    // write(1, "started main\n", 13started main
+    // )          = 13
+    // openat(AT_FDCWD, "io-stuff/write_here.txt", O_WRONLY|O_CREAT|O_TRUNC, 0666) = 3
+    // newfstatat(3, "", {st_mode=S_IFREG|0777, st_size=0, ...}, AT_EMPTY_PATH) = 0
+    // write(3, "This is one of several calls to "..., 84) = 84
+    // close(3)                                = 0
+    // exit_group(0)                           = ?
+    // +++ exited with 0 +++
+
+    // we are only concerned with the 4'th last line:
+        // write(3, "This is one of several calls to "..., 84) = 84
+
+    // we see only one single write() call is made in this function. we have an addition write call because of our print message in main:
+        // write(1, "started main\n", 13started main
+        // )          = 13
+
+    // however, in this function, even tho we have 5 different fprintf calls, we only did 1 write call for all of them.
+    // the write call wrote 84 bits; exactly the length of our combined string from all fprintf calls.
+
+    // but what is the value "3" in the write call? this value is known as a file descriptor.
+    // FILE DESCRIPTOR: 
+        // an integer that represents an open file or open communication channel
+        // file descriptors are type int because the OS uses them as indexes into a table of open files
+    
+    // but why is it 3? why not 0 or 1?
+    // this is because three files, 0, 1, and 2 are already open for us: stdin, stdout, and stderr
+        // 0: stdin
+        // 1: stdout
+        // 2: stderr
+    return 0;
+}
+
+int pipesInC() {
+    // now we start investigating how to actually utilize multiple processes! very cool stuff.
+
+    // since we can use fork() to make multiple processes, which can then work on the task simultaneously, then we will be able to solve problems faster.
+    // remark: if we have a single processor only, then having more processes does nothing. however, multiple processesors = simultaneous execution of different processes.
+
+    // but now we realize, for these processes to work together, they need communication.
+    // pipes are one form of this communication. 
+
+    // PIPES
+        // used to relay information between two related processes
+        // a pipe is specified by an array of 2 file descriptors: {x, y}. one for reading data from the pipe, and one for writing data to the pipe.
+        // pipe(int arr[2]) is a system call to create a pipe.
+
+    // we can create a pipe by calling the pipe() system call as follows:
+
+    int arr[2];
+    pipe(arr);
+    // this creates a read file descriptor in arr[0] and a write file descriptor in arr[1].
+    // pretty useless to have this for a lone process, the magic happens when we use fork().
+
+    // when calling fork(), the child process inherits the same pipe. ie) it gets a copy of the pipe that can be thought of as a deep copy between the two processes, like this:
+    // parent <--> pipe <--> child
+
+    // however note that pipes are UNI-DIRECTIONAL, ie) one way. so we can choose to either:
+        // 1.) parent writes, child reads
+        // 2.) child writes, parent reads
+    
+    // for example we could have 2.)
+    // child --(write)--> pipe --(read)--> parent
+    // having arrows denoting the flow of data, we simply get:
+    // child --> pipe --> parent
+
+    
+
+    return 0;
+}
