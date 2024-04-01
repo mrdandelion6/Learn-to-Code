@@ -98,7 +98,8 @@ int main(int argc, char* argv[]) {
     int bitArrays();
     int unbufferedIO();
     int pipesInC();
-    pipesInC();
+    int concurrencyAndPipes();
+    concurrencyAndPipes();
     
     return 0;
 }
@@ -4016,5 +4017,37 @@ int fgets_stdin() {
     char s[10];
     fgets(s, 5, stdin); // program waits for users to type something on keyboard.
     printf("you typed: %s\n", s);
+    return 0;
+}
+
+int concurrencyAndPipes() {
+    // some important details of how pipes really work
+    // recall pipes are used to communicate between two separate processes, but it is up to the OS to decide when these processes run
+    // so it is likely that the processes wont run in lock step with each other
+
+    // this is an example of the consumer-producer problem
+
+    // PRODUCER CONSUMER PROBLEM
+    // one process writes data
+    // one process consumes data
+
+    // we can think of this as the consumer being the process that reads stuff from the process that writes stuff
+    // if the consumer doesnt consume fast enough than the data can pile up
+    // we can think of the pipe as a queue, where data is "queued" by producer and dequeed by consumer when it is read
+
+    // supposed the queue has a limited size, then this can be a problem.
+    // we dont want the producer to put data into a full queue
+    // similarly, we want to make sure that the consumer doesnt try to remove data from an empty queue (in the case that the producer produces slower than the consumer consumes)
+
+    // so overall, we are concerned with 3 scnearios
+    // 1.) producer adding to a full queue
+    // 2.) consumer removing from an empty queue
+    // 3.) producer and consumer acting at the exact same time
+
+    // note that the pipe is a queue data structure in the OS.
+    // we dont have to worry about 3 because the OS manages the pipe structure and ensures that the producer and consumer dont act simultaneously
+    // similariy we dont have to worry about reading from and empty pipe as the OS manages this case as well. the read() call will block if the pipe is empty.
+    // and lastly, the OS also takes care of 1.) as it causes write() call to be blocked when pipe is full.
+
     return 0;
 }
