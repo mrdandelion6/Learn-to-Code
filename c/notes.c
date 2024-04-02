@@ -99,8 +99,9 @@ int main(int argc, char* argv[]) {
     int unbufferedIO();
     int pipesInC();
     int concurrencyAndPipes();
-    concurrencyAndPipes();
-    
+    int redirectingInputAndOutputDup2();
+    redirectingInputAndOutputDup2();
+
     return 0;
 }
 
@@ -4048,6 +4049,23 @@ int concurrencyAndPipes() {
     // we dont have to worry about 3 because the OS manages the pipe structure and ensures that the producer and consumer dont act simultaneously
     // similariy we dont have to worry about reading from and empty pipe as the OS manages this case as well. the read() call will block if the pipe is empty.
     // and lastly, the OS also takes care of 1.) as it causes write() call to be blocked when pipe is full.
+
+    return 0;
+}
+
+int redirectingInputAndOutputDup2() {
+    // in this section we learn how to redirect input/output from one file descriptor to another with dup2() system call
+
+    // motivation:
+    // we take a look at the shell's redirection operators.
+    // many useful shell programs read their input from stdin and write to stdout
+    // for example:
+        // grep Saitama io-stuff -r
+        // searches for lines containing "Saitama" in recursively in io-stuff. outputs this:
+        // io-stuff/iostuff.txt:Saitama 999999
+
+    // we this would only print to shell but we can redirect output to save it to a file with redirection operator:
+        // grep Saitama io-stuff -r > temp.txt
 
     return 0;
 }
