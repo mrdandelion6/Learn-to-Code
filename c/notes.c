@@ -100,7 +100,8 @@ int main(int argc, char* argv[]) {
     int pipesInC();
     int concurrencyAndPipes();
     int redirectingInputAndOutputDup2();
-    redirectingInputAndOutputDup2();
+    int implementingShellPipeOperator();
+    implementingShellPipeOperator();
 
     return 0;
 }
@@ -4066,6 +4067,70 @@ int redirectingInputAndOutputDup2() {
 
     // we this would only print to shell but we can redirect output to save it to a file with redirection operator:
         // grep Saitama io-stuff -r > temp.txt
+
+    // we can even use output of one program is the input for another program with pipe |
+        // grep Saitama io-stuff -r | wc
+        // this gives:       1       2      36
+
+    // now supposed we just want to change stdout for the shell process so it writes to a file by default instead of the screen
+    // we use dup2 to do this.
+
+    // DUP2()
+    // dup2 makes a copy of an open file descriptor. 
+    // we will use it to reset the stdout file descriptor, so writes to stdout go to a file instead of screen.
+
+    // a file descriptor is really an index into a table, the "fd table", which is part of the PCB.
+
+    // recall each process has its own PCB. hence, each process has its own unique fd table.
+    // table contains pointers to data structures that contain information about open files.
+    // eg) the 0 index in fd tables usually contain a link to the console (stdin coming from terminal).
+
+    // when a child process is created (using fork), it obtains a copy of the fd table from its parent
+    // even though the file descriptor tables are separate, the pointers in them may point to the same object!
+    // changes to the object (eg a console) will be observed by both processes.
+
+    // the way to use dup2 is as follows:
+
+    // 1.) open file to set stdin to read from or stdout to write to (in our case we are gonna change stdout)
+    FILE* stream;
+    if ((stream = fopen("io-stuff/write_here.txt", "w")) == NULL) { // rmk, its important to add the extra () around: stream = fopen("io-stuff/write_here.txt", "w" or else error.
+        perror("file open");
+        exit(1);
+    }
+
+    // fileno() is a function that extracts the file number of a file pointer. for example stdout is typically 1:
+    printf("%d\n", fileno(stdout));
+
+    // any opened files will usually have a file number 3, 4, 5.. so on depending on the order they were opened. 
+    // recall that 0, 1, and 2 are taken by stdin, stdout, and stderr, so we begin assigning new file numbers to new streams starting from 3. 
+    printf("%d\n", fileno(stream)); // as expected, we get three.
+
+    if (dup2(fileno(stream), fileno(stdout)) == -1) { // set file number of stream to be filenumber of stdout
+        perror("dup2");
+        exit(1);
+    }
+
+    // dup2(fileno(stream), fileno(stdout)); is the call we made in case it is hard to see it surrounding the error check.
+
+    printf("whats up!\n"); // prints to stdout which is now write_here.txt
+
+    // it is good practice to close any file descriptors we are not going to be using.
+    // we should close stream because we are not going to be writing to the file directly with something like fprintf, but we write to it as stdout.
+
+    if (fclose(stream) != 0) {
+        perror("closing file");
+        exit(1);
+    }
+    
+    // closing the file doesnt change anything, it's still our stdout.
+
+    printf("yooo!??!?\n");
+
+    return 0;
+}
+
+int implementingShellPipeOperator() {
+    
 
     return 0;
 }
