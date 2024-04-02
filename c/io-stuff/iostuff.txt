@@ -3,6 +3,8 @@ King 200
 Garou 200000
 Sonic 5000
 Genos 9000
+Genos 9000
 Watchdog 100000
 Blast 140000
 Tornado 110000
+Genos 9000

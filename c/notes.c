@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <errno.h>
+#include <fcntl.h>
 
 // use define to define a constant global value! these are stored in global data
 
@@ -2917,6 +2918,11 @@ int systemCalls() {
         // write
         // read
         // exit
+        // open
+        // close
+        // pipe
+        // fork
+        // wait
 
     return 0;
 }
@@ -4071,6 +4077,10 @@ int redirectingInputAndOutputDup2() {
     // we can even use output of one program is the input for another program with pipe |
         // grep Saitama io-stuff -r | wc
         // this gives:       1       2      36
+    
+    // so | has the following form
+    // <producer> | <consumer>
+    // where <producer> is what produces the input which goes into <consumer> which may produce an output 
 
     // now supposed we just want to change stdout for the shell process so it writes to a file by default instead of the screen
     // we use dup2 to do this.
@@ -4130,7 +4140,121 @@ int redirectingInputAndOutputDup2() {
 }
 
 int implementingShellPipeOperator() {
+    // we will walk through an example that uses pipe and dup2 to implement the shell's pipe operator.
+    // the shell pipe operator | allows us to connect 2 processes such that the stdin for one process becomes the stdout for another process    
+
+    // lets play around on sort and uniq programs.
+    // sort can take a filepath as an argument and print all the lines in the file in a sorted manner.
+    // eg)
+        //$ sort "io-stuff/iostuff.txt"
+        // Blast 140000
+        // Garou 200000
+        // Genos 9000  
+        // Genos 9000  
+        // Genos 9000  
+        // King 200
+        // Saitama 999999
+        // Sonic 5000
+        // Tornado 110000
+        // Watchdog 100000
+
+    // similarly, uniq also takes in a file path and returns everything excluding lines that are exactly same as the previous line.
+    // what if we want everything unique?
+    // something like:
+        // hi
+        // yo
+        // hi
+    // wont get filtered because hi and hi are not adjacent. so we can sort then do a pipe to uniq.
+    // like this sort: "io-stuff/iostuff.txt" | uniq
+    // we will implement in this in C with dup2
+
+    int fd[2], r; // r is going to be the fork() return value
+
+    // first lets make the pipe
+    if (pipe(fd) == -1) {
+        perror("pipe");
+        exit(1);
+    }
     
+    if ( (r = fork()) > 0 ) { // in parent
+        int file = open("io-stuff/iostuff.txt", O_RDONLY); // O_RDONLY imported from fcntl.h
+        // havent went over using open() system call yet, learn it urself kid. doesnt return a pointer to FILE but rather the file descriptor.
+
+        if (dup2(file, fileno(stdin)) == -1) { // set parent's stdin to be the file
+            perror("dup2");
+            exit(1);
+        }
+
+        if (dup2(fd[1], fileno(stdout)) == -1) { // set parent's stdout to be the pipe's write descriptor
+            perror("dup2");
+            exit(1);
+        }
+
+        // close stuff!!
+        if (close(fd[0]) == -1) { // parent's not going to read from pipe so close it
+            perror("close");
+            exit(1);
+        }
+        if (close(fd[1]) == -1) { // the writes go to stdout, which will automatically write to pipe.
+            perror("close");    // recall that we traditionally used write() and read() system calls to communicate over pipe
+            exit(1);            // we wont be doing that anymore since we are just setting the file descriptors as stdin and stdout with dup2 now, so we close the write descriptor as well.
+        }
+        if (close(file) == -1) { // we arent gonna be using the input file directly so close it.
+            perror("close");
+            exit(1);
+        }
+
+        execl("/usr/bin/sort", "sort", NULL); // now we swap the parent process to be sort, which will carry over the same stdin and stdout
+        fprintf(stderr, "ERROR: exec should not return \n");
+    } 
+
+    // rmk: it is very important to do close(fd[1]) or else the read end of the pipe will not know when the pipe queue is empty.
+    
+    else if (r == 0) { // in child
+
+        if (dup2(fd[0], fileno(stdin)) == -1) { // set child's stdin to the pipe's read fd
+            perror("dup2");
+            exit(1);
+        }
+
+        // closing stuff!
+        if (close(fd[1]) == -1) {
+            perror("close");
+            exit(1);
+        }
+        if (close(fd[0]) == -1) {
+            perror("close");
+            exit(1);
+        }
+
+        execl("/usr/bin/uniq", "uniq", NULL); // now we swap the child process to be uniq, which will carry over the same stdin and stdout
+        fprintf(stderr, "ERROR: execl should not return\n");
+    }
+
+    else {
+        perror("fork");
+        exit(1);
+    }
+
+    // so a quick walkthrough:
+    // first we make a pipe
+    // then we work
+    // then in parent process:
+        // open our input text file
+        // set our file to be the stdin
+        // set our pipe write to be stdout
+        // close pipe read, pipe write, and the input txt file
+        // execl to sort
+    // in child process:
+        // set our pipe read to be stdin
+        // dont mess with stdout
+        // close stdin and stdout
+        // execl to uniq
+
+    // understanding how the execl() works:
+    // once the pipes are all setup correctly, our parent process does execl to sort so that sort executes instead.
+    // sort begins to read from stdin then writes to stdout which is passed through the pipe as stdin of the child.
+    // the child calls execl on uniq which also reads from the child's stdin (the pipe). then it outputs the result to stdout which is just the console.
 
     return 0;
 }
