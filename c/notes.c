@@ -102,7 +102,8 @@ int main(int argc, char* argv[]) {
     int concurrencyAndPipes();
     int redirectingInputAndOutputDup2();
     int implementingShellPipeOperator();
-    implementingShellPipeOperator();
+    int introToSockets();
+    introToSockets();
 
     return 0;
 }
@@ -4255,6 +4256,92 @@ int implementingShellPipeOperator() {
     // once the pipes are all setup correctly, our parent process does execl to sort so that sort executes instead.
     // sort begins to read from stdin then writes to stdout which is passed through the pipe as stdin of the child.
     // the child calls execl on uniq which also reads from the child's stdin (the pipe). then it outputs the result to stdout which is just the console.
+
+    return 0;
+}
+
+int introToSockets() {
+    // so far:
+    // pipes to communicate between child and parent processes
+    // signals to communicate between unrelated processes
+    // however both pipes and signals can only be used to communicate with processes that are on the same machine.
+
+    // sockets can be used to communicate over a network; between processes on 2 different machines.
+
+    // we are going to need some background information on the internet:
+    // each machine has an internet protocol: aka an IP address.
+    // this is an address that can be used to send a message to it from any other machine thats connected to the internet.
+
+    // there may be lots of different programs that need to communicate over the internet, but we only have one IP address for each machine.
+    // messages sent across the internet are destined for a particular program; we need PORTS to specify this. 
+
+    // PORTS
+    // if a machine's IP address is like street address, then a PORT is like an apartment number in the building at that address
+    // so the full location of a program running on a machine connected to the internet is its machine address plus the port
+    // 195.67.7.8: 22
+
+    // messages sent from one machine are enclosed as "packets"
+    // think of these as packages; contain both the address and a payload-the contents of the package.
+    // however the packet does not specify the route it travels to get to the destination. the route is determined as the packet moves (dynamically).
+
+    // when packet leaves machine, it is received by another device called a router. a router facillitates the transfer of packets between networks.
+    // routers are connected to multiple networks and know which network the packet should be sent to in order to get it closer to its final destination.
+
+    // Client and Server:
+    // SERVER: 
+    // a server is a program running on a specific port of a certain machine waiting for another program or many other programs to relay data.
+    // many common services have defined ports. eg) web pages are typically served on port 80.
+    // secure webpages use port 443
+
+    // in other cases, the person running the server publishes the machine address and port, basically saying: to run my game join at this address <machine address>:<port>
+    // like hosting a minecraft server with port forwarding.
+
+    // CLIENT:
+    // users run a client program when they want to start interacting with a server.
+    // the client program sends the initial message. in some cases the client sends only a single message. in other cases, the client begins a connection.
+    // a connection is a conversation betweewn the two machines that involves multiple messages.
+    // once the programs have established a communications channel, then either machines can send data to each other.
+
+    // now the question boils down to, "how can we establish a communications channel" ?
+    // to do this we can use SOCKETS!!
+
+    // there are many different kinds of sockets, but the different types all rely on the same system calls. here are some examples:
+        // datagram sockets
+        // stream sockets
+        // raw sockets
+        // domain sockets
+        
+    // as a result, these system calls have many different and sometimes confusing options to allow you to set up the kind of socket that you want.
+
+    // we will just focus on one kid: stream sockets.
+    // stream sockets are built on the TCP protocol. TCP sockets:
+        // are connectetion oriented sockets
+        // guarntee there will be no message loss in transit
+        // messages will be delivered in the order they are sent.
+
+    // the first system call we need is socket()
+    // int socket(int domain, int type, int protocl)
+
+    // this system call is used to create an "endpoint" for communication. 
+    // after having everything set up, we will need one end point in the client program and one end point in the server.
+    // so both programs must independently invoke this system call.
+
+    // the return value of socket() is an int which is -1 if we get an error. 
+    // if the call is successful, the return value is an index to an entry in the file descriptor table 
+
+    // the domain parameter sets the "protocol family", ie the general set of rules used for communications. we will typically set this to the defined constant PF_INET or AF_INET. 
+    // actually AF_INET and PF_INET are defined to be the exact same value. we have 2 definitions of same thing for historical reasons.
+    
+    // the second parameter type which specifies the type of socket. as we are working with stream sockets, we will use SOCK_STREAM.
+
+    // the third parameter protocol configures which protocol specifically the socket will use for communication.
+    // recall that stream sockets use the TCP protocol. actually TCP is the only protocol available for stream sockets, so we just provide 0 in the protpcol parameter.
+    // providing 0 tells the socket system call to use the default protocol for this type of socket.
+
+    // both our client and server programs will call socket() like this and create a socket end point. 
+    // the file descriptor returned by the socket call will be the other system calls that establish a connection.
+
+    // next section we learn how to configure socket in our server program to wait for connections on a specific port and address.
 
     return 0;
 }

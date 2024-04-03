@@ -8,10 +8,18 @@
 
 int main(int argc, char* argv[]) {
     
-    char s[10];
-    fgets(s, 5, stdin);
-    printf("you typed: %s\n", s);
+    int fd[2];
+    pipe(fd);
+
+    printf("fd[0] is %d and fd[1] is %d\n", fd[0], fd[1]);
+
+    if (close(1) == -1) {
+        printf("waaa\n");
+    }
     
+    printf("bars\n"); // wont print
+    
+
     return 0;
 }
 
