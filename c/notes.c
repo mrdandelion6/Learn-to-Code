@@ -4429,9 +4429,39 @@ int socketConfiguration() {
     memset(&addr.sin_zero, 0, 8);
 
     // now we have set up our stuct sockaddr_in and we are ready to pass it as an argument to bind().
+    // but wait, isn't bind expecting a pointer to sockaddr struct not sockaddr_in?
+    // we just cast it lol. so call like this: bind(X, (struct sockaddr*) &addr, Y)
 
+    // 3rd and last parameter to bind is just the length of the address we are passing. can easily get this by using sizeof() on struct sockaddr_in.
+    // now we are finally ready to call bind:
 
-    // 3rd 
+    // the return value of bind is used for error checking:
+    if (bind(listen_soc, (struct sockaddr*) &addr, sizeof(struct sockaddr)) == -1) {
+        perror("bind");
+        close(listen_soc);
+        exit(1);
+    }
+    // confirming the success of bind is particularly important. suppose the port we picked is not available because its already in use. then bind would fail in this case.
+    
+    // so now we have bound a socket to a particular port on a particular machine. next we need to tell the machine to start looking for connections.
+    // the system call to start looking for connections is listen()
+    // int listen(int socket, int backlog)
+    
+    // the return value of listen is for error checking 
+    // the first parameter socket is the same socket we r setting up. 
+    // the second parameter backlog is a little more complicated. backlog denotes the maximum number of "partial connections" the server can hold.
+
+    // PARTIAL CONNECTIONS:
+    // basically a pending request to connect to the server. the requests are not immediately connected, they most go through some "work" of being accepted.
+    // backlog denotes the maximum number of this queue.
+
+    // for our purposes, we shall just set backlog to 5. then we call listen like so:
+    if (listen(listen_soc, 5) < 0) {
+        perror("listen");
+        exit(1);
+    }
+
+    // now the last system call that our server needs to establish a connection with the client is accept
 
     return 0;
 }
