@@ -18,6 +18,7 @@
 #include <fcntl.h>
 
 #include <sys/socket.h> // this is specific to unix OS. run ur IDE/text-editor through WSL if ur on windows
+#include <netinet/in.h>
 
 // use define to define a constant global value! these are stored in global data
 
@@ -4352,8 +4353,48 @@ int introToSockets() {
 int socketConfiguration() {
     // once we create our endpoints using socket system call (with stream sockets), we can now configure that socket to wait for connections at a specific address.
 
-    int listen_soc = socket(AF_INET, SOCK_STREAM, 0);
+    int listen_soc = socket(AF_INET, SOCK_STREAM, 0); // note that u need #include <sys/socket.h> for this which is linux specific. im running vscode through WSL for this.
 
+    if (listen_soc == -1) {
+        perror("socket");
+        exit(1);
+    }
+
+    // we have made a stream socket. now we want to actually set up the address.
+    // must use the bind() system call for this
+    // int bind(int socket, const struct sockaddr* address, socklen_t address_len);
+
+    // bind() takes 3 parameters
+        // 1st is socket we want to configure
+
+        // 2nd is a pointer to a sockaddr struct. this is a generic address fanily. address family is another name for domain.
+        // address families define how network addresses are represented and interpreted. different address families support different types of network communication protocols.
+        // again, note that the type for the address parameter in bind() is const struct sockaddr* which is GENERIC. 
+        // in our case, we will be using the address-family (aka DOMAIN) AF_INET. so we use the more specific struct sockaddr_in instead of sockaddr. the in stands for internet.
+        struct sockaddr_in {
+            short sin_family;
+            __u_short sin_port;
+            struct in_addr sin_addr; // need #include <netinet/in.h>
+            char sin_zero[8];
+        };
+
+        struct sockaddr_in addr;
+        addr.sin_family = AF_INET; // we set family to AF_INET
+        // next we set add.sin_port to the port number we want.
+        // port numbers range from 0 to 65535. different ports have different uses/reservations.
+        
+        // ports 0-1023 are reserved for well known services, such as Telnet (runs on port 23).
+        // ports 1024-49151 are known as registered ports. if you use these ports for a service u want to make public, you can REGISTER with IANA: the internet assigned numbers authority. 
+            // IANA also looks after assigning domain names at highest level.
+        // ports 49152-65535 are known as dynamic ports. for a server to run on your own machine, these ports will be fine. 
+            // but for a server running on a shared machine, dont use same port number as someone else. ie) dont setup a socket with a port that a differnet program is already using. 
+
+        // suppose we use port 54321 for a project:
+        addr.sin_port = 54321;
+        
+
+
+        // 3rd 
 
     return 0;
 }
