@@ -4354,6 +4354,7 @@ int socketConfiguration() {
     // once we create our endpoints using socket system call (with stream sockets), we can now configure that socket to wait for connections at a specific address.
 
     int listen_soc = socket(AF_INET, SOCK_STREAM, 0); // note that u need #include <sys/socket.h> for this which is linux specific. im running vscode through WSL for this.
+    // our "listening" socket.
 
     if (listen_soc == -1) {
         perror("socket");
@@ -4461,7 +4462,21 @@ int socketConfiguration() {
         exit(1);
     }
 
-    // now the last system call that our server needs to establish a connection with the client is accept
+    // now the last system call that our server needs to establish a connection with the client is accept()
+        // int accept(int sockfd, struct sockaddr* address, socklen_t* addrlen)
+    // first param: sockfd is just the listening socket we've been setting up.
+    // second param: address. accept uses address to communicate back to the caller; the address of the client.
+    // so when accept returns, the second parameter will point the a struct that holds the client's address information.
+
+    // note that accept() is a blocking system call, just like read(). it will wait until a connection is established.
+    // so for example, if u call accept and no client attempts to connect then accept will not return immediately; it will block.
+    // accept can return if there was an error tho. return value is -1 if accept() fails.
+    // however, on success, the value of accept() isnt 0, it's an integer representing a new socket which we will use to communicate with the client. we will explore this soon.
+ 
+    // so basically since the return value is being used to return a new socket index, it cant be used to return the address of a client.
+    // thats why we have the struct addr* pointer.
+
+    // similarly, the third parameter will be set to 
 
     return 0;
 }
