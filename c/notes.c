@@ -17,6 +17,8 @@
 #include <errno.h>
 #include <fcntl.h>
 
+#include <sys/socket.h> // this is specific to unix OS. run ur IDE/text-editor through WSL if ur on windows
+
 // use define to define a constant global value! these are stored in global data
 
 
@@ -4340,7 +4342,7 @@ int introToSockets() {
     // providing 0 tells the socket system call to use the default protocol for this type of socket.
 
     // both our client and server programs will call socket() like this and create a socket end point. 
-    // the file descriptor returned by the socket call will be the other system calls that establish a connection.
+    // the file descriptor returned by the socket call will be the system calls that establish a connection. (this is explain in next section)
 
     // next section we learn how to configure socket in our server program to wait for connections on a specific port and address.
 
@@ -4348,7 +4350,9 @@ int introToSockets() {
 }
 
 int socketConfiguration() {
-    
+    // once we create our endpoints using socket system call (with stream sockets), we can now configure that socket to wait for connections at a specific address.
+
+    int listen_soc = socket(AF_INET, SOCK_STREAM, 0);
 
 
     return 0;
