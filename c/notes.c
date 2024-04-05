@@ -4365,36 +4365,73 @@ int socketConfiguration() {
     // int bind(int socket, const struct sockaddr* address, socklen_t address_len);
 
     // bind() takes 3 parameters
-        // 1st is socket we want to configure
+    // 1st parameter of bind is socket we want to configure
 
-        // 2nd is a pointer to a sockaddr struct. this is a generic address fanily. address family is another name for domain.
-        // address families define how network addresses are represented and interpreted. different address families support different types of network communication protocols.
-        // again, note that the type for the address parameter in bind() is const struct sockaddr* which is GENERIC. 
-        // in our case, we will be using the address-family (aka DOMAIN) AF_INET. so we use the more specific struct sockaddr_in instead of sockaddr. the in stands for internet.
-        struct sockaddr_in {
-            short sin_family;
-            __u_short sin_port;
-            struct in_addr sin_addr; // need #include <netinet/in.h>
-            char sin_zero[8];
-        };
+    // 2nd of bind is a pointer to a sockaddr struct. there is a lot to know about this parameter.
+    // the sockaddr struct is a generic address fanily. address family is another name for domain.
+    // address families define how network addresses are represented and interpreted. different address families support different types of network communication protocols.
+    // again, note that the type for the address parameter in bind() is const struct sockaddr* which is GENERIC. 
+    // in our case, we will be using the address-family (aka DOMAIN) AF_INET. so we use the more specific struct sockaddr_in instead of sockaddr. the in stands for internet.
+    struct sockaddr_in {
+        short sin_family; // this specifies domain / family address
+        __u_short sin_port; // this specifies the port our socket is on
+        struct in_addr sin_addr; // this specifies the machine address. need #include <netinet/in.h>
+        char sin_zero[8];
+    };
 
-        struct sockaddr_in addr;
-        addr.sin_family = AF_INET; // we set family to AF_INET
-        // next we set add.sin_port to the port number we want.
-        // port numbers range from 0 to 65535. different ports have different uses/reservations.
-        
+    // 1.) -- SIN_FAMILY--
+    struct sockaddr_in addr;
+    addr.sin_family = AF_INET; // we set family to AF_INET
+
+    // 2.) ---SIN_PORT--
+    // next we set add.sin_port to the port number we want.
+    // port numbers range from 0 to 65535. different ports have different uses/reservations:
         // ports 0-1023 are reserved for well known services, such as Telnet (runs on port 23).
         // ports 1024-49151 are known as registered ports. if you use these ports for a service u want to make public, you can REGISTER with IANA: the internet assigned numbers authority. 
             // IANA also looks after assigning domain names at highest level.
         // ports 49152-65535 are known as dynamic ports. for a server to run on your own machine, these ports will be fine. 
             // but for a server running on a shared machine, dont use same port number as someone else. ie) dont setup a socket with a port that a differnet program is already using. 
 
-        // suppose we use port 54321 for a project:
-        addr.sin_port = 54321;
-        
+    // suppose we use port 54321 for a project:
+    addr.sin_port = htons(54321);
+    // we must use htons on the port number. htons stands for host to network short 
+    // we need to use this because different machines could have different bit representations of the same number. 
+    // eg) little endian vs big endian machines will have different bit orders.
+    // we want to ensure the 2 machines that are communicating are speaking the same language.
+    // so we add a middle language as a "protocol" so both machines know what to expect over the network.
+    // so we use htons to put the port numbers in the protocol format.
+
+    // more specifically, htons converts "the byte order of host machine to NETWORK BYTE ORDER".
+    // suppose the machine already uses network byte order, then htons does nothing.
+
+    // TERMINOLOGY SIDE NOTE: recall structs have "members". these can also be called fields. the terms are interchanged depending on the context but yeah.
+
+    // 3.) -- SIN_ADDR--
+    // now the third member, in_addr, is a struct itself. in_addr specifies the machine address of the socket.
+    // the only field of in_addr is s_addr.
+    addr.sin_addr.s_addr = INADDR_ANY; // we just set it to this constant.
+    // this configures the socket to accept connections from any of the addresses of the machine..
+    // but wait , dont machines have a single address? not always actually. a machine can have multiple network interface cards and can be plugged into several networks.
+    // this way a machine could have several IP addresses, each on a different network.
+    // so "a machine has a different address per network"
+
+    // rmk: a machine also has an address for itself. this is localhost: 127.0.0.1
+    // so a computer X may have an IP address like 123.456.78.910
+    // then to join a server on X from some computer we could connect to it using that address.
+    // however if we run the client program on the same machine (on X), we could connect to the server just using localhost 127.0.0.1
+
+    // 4.) -- SIN_ADDR--
+    // now the last field, sin_zero, is just used for extra padding.
+    // this is just used to make the sockaddr_in struct the same length as the generic sockaddr struct. pretty simple, we just add 8 bits.
+    // recall that when we malloc sockaddr_in, the stuff that was in the memory space previously wont automatically be reset unless we set it to something.
+    // we already set all the other 3 members, so they wont contain any old data. so we also want to set the padding to something, we just do memset and set everything to 0.
+    // the reason we want our old data to be wiped is bc it could contain vulernable information that malicious third parties could intercept and use to do bad things 
+    memset(&addr.sin_zero, 0, 8);
+
+    // now we have set up our stuct sockaddr_in and we are ready to pass it as an argument to bind().
 
 
-        // 3rd 
+    // 3rd 
 
     return 0;
 }
