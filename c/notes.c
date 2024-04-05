@@ -103,7 +103,8 @@ int main(int argc, char* argv[]) {
     int redirectingInputAndOutputDup2();
     int implementingShellPipeOperator();
     int introToSockets();
-    introToSockets();
+    int socketConfiguration();
+    socketConfiguration();
 
     return 0;
 }
@@ -4313,7 +4314,7 @@ int introToSockets() {
         
     // as a result, these system calls have many different and sometimes confusing options to allow you to set up the kind of socket that you want.
 
-    // we will just focus on one kid: stream sockets.
+    // we will just focus on one kind: stream sockets.
     // stream sockets are built on the TCP protocol. TCP sockets:
         // are connectetion oriented sockets
         // guarntee there will be no message loss in transit
@@ -4342,6 +4343,13 @@ int introToSockets() {
     // the file descriptor returned by the socket call will be the other system calls that establish a connection.
 
     // next section we learn how to configure socket in our server program to wait for connections on a specific port and address.
+
+    return 0;
+}
+
+int socketConfiguration() {
+    
+
 
     return 0;
 }
