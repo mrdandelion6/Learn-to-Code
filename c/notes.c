@@ -4369,7 +4369,7 @@ int socketConfiguration() {
     // 1st parameter of bind is socket we want to configure
 
     // 2nd of bind is a pointer to a sockaddr struct. there is a lot to know about this parameter.
-    // the sockaddr struct is a generic address fanily. address family is another name for domain.
+    // the sockaddr struct is a generic address family. address family is another name for domain.
     // address families define how network addresses are represented and interpreted. different address families support different types of network communication protocols.
     // again, note that the type for the address parameter in bind() is const struct sockaddr* which is GENERIC. 
     // in our case, we will be using the address-family (aka DOMAIN) AF_INET. so we use the more specific struct sockaddr_in instead of sockaddr. the in stands for internet.
@@ -4380,11 +4380,11 @@ int socketConfiguration() {
         char sin_zero[8];
     };
 
-    // 1.) -- SIN_FAMILY--
+    // 1.) -- SIN_FAMILY --
     struct sockaddr_in addr;
     addr.sin_family = AF_INET; // we set family to AF_INET
 
-    // 2.) ---SIN_PORT--
+    // 2.) -- SIN_PORT --
     // next we set add.sin_port to the port number we want.
     // port numbers range from 0 to 65535. different ports have different uses/reservations:
         // ports 0-1023 are reserved for well known services, such as Telnet (runs on port 23).
@@ -4407,9 +4407,9 @@ int socketConfiguration() {
 
     // TERMINOLOGY SIDE NOTE: recall structs have "members". these can also be called fields. the terms are interchanged depending on the context but yeah.
 
-    // 3.) -- SIN_ADDR--
+    // 3.) -- SIN_ADDR --
     // now the third member, in_addr, is a struct itself. in_addr specifies the machine address of the socket.
-    // the only field of in_addr is s_addr.
+    // the only field of sin_addr is s_addr.
     addr.sin_addr.s_addr = INADDR_ANY; // we just set it to this constant.
     // this configures the socket to accept connections from any of the addresses of the machine..
     // but wait , dont machines have a single address? not always actually. a machine can have multiple network interface cards and can be plugged into several networks.
@@ -4421,7 +4421,7 @@ int socketConfiguration() {
     // then to join a server on X from some computer we could connect to it using that address.
     // however if we run the client program on the same machine (on X), we could connect to the server just using localhost 127.0.0.1
 
-    // 4.) -- SIN_ADDR--
+    // 4.) -- SIN_ZERO --
     // now the last field, sin_zero, is just used for extra padding.
     // this is just used to make the sockaddr_in struct the same length as the generic sockaddr struct. pretty simple, we just add 8 bits.
     // recall that when we malloc sockaddr_in, the stuff that was in the memory space previously wont automatically be reset unless we set it to something.
@@ -4471,12 +4471,52 @@ int socketConfiguration() {
     // note that accept() is a blocking system call, just like read(). it will wait until a connection is established.
     // so for example, if u call accept and no client attempts to connect then accept will not return immediately; it will block.
     // accept can return if there was an error tho. return value is -1 if accept() fails.
-    // however, on success, the value of accept() isnt 0, it's an integer representing a new socket which we will use to communicate with the client. we will explore this soon.
+    // however, on success, the value of accept() isnt 0, it's a positive integer representing a new socket which we will use to communicate with the client. we will explore this soon.
  
     // so basically since the return value is being used to return a new socket index, it cant be used to return the address of a client.
     // thats why we have the struct addr* pointer.
+    // also just as before, we will actually pass in struct sockaddr_in* and cast it as (struct sockaddr*)
 
-    // similarly, the third parameter will be set to 
+    struct sockaddr_in client_addr;
+    // only thing we need to configure for this struct will be the sin_family
+    client_addr.sin_family = AF_INET;
+
+    // similarly, the third parameter will be set to the length of the address. we already know what the size is going to be since it's a sock stream with domain AF_INET and TCP protocol.
+    // so we calculate that as below: 
+    __u_int client_len = sizeof(struct sockaddr_in);
+    // and pass in the pointer of client_len into the accept() call.
+
+    // now we make the call:
+    accept(listen_soc, (struct sockaddr*) &client_addr, &client_len);
+    // when we make this call, the program blocks and waits for a connection to be made from client side. we will now write a program, client.c, that sends a connection.
+
+    // we must make a connect() system call from client program.
+        // int connect(int sockfd, const struct sockaddr* address, soclen_t addrlen)
+
+    // first parameter is going to be a socket created on the client side.
+    // second parameter is going to be the address of the socket on the server to which we want to connect. we have to know this address!
+
+    // we gotta know the port number, but we also need to know the machine address: ie) the IP address of the machine.
+    // humans know the machine "names" typically, but probably not the IP address. so we can get the IP address by providing a sys call with the machine's name.
+    // this is assuming we somehow know the machine's name.
+    // the sys call we use for this is getaddrinfo()
+        // int getaddrinfo(char* host, char* service, struct addrinfo* hints, struct addrinfo** result)
+    // this looks at the internet address of a machine based on its name. this is a powerful system call. 
+
+    // we just show the simplest possible use case of getaddrinfo() here. we completely ignore the second and third parameters of getaddrinfo, and just set them as NULL.
+    // the first parameter, host, is a string which is the name of the host machine. the last parameter is a pointer to a pointer of a linked list of structs.
+    // there could potentially be more than one address that satisfies our request for address information (not sure how). 
+    // each element in the linked list is information about one of those valid addresses.
+
+    // the getaddrinfo() sys call expects us to create a pointer and pass its address. then it allocates memory for linked list of address info and sets the pointer to point to the list.
+    // struct addrinfo* result; // so we pass this address as last param into getaddrinfo()
+
+    // btw all of this code is gonna be on client.c so yea
+    // so the system call getaddrinfo() allocates memory for the linked list in result on the heap. 
+    // we also get a function we call to free that memory when we are finished.
+    // this function is freeaddrinfo(struct addrinfo* result); just pass in result when we are done.
+
+    // but before we free the result, we want to use the information obtained in it to set the server address and connect.
 
     return 0;
 }
