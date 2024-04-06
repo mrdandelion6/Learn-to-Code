@@ -3,11 +3,12 @@
 *.o
 
 .vscode/
-notes
-main
 utmlab.sh
 tempCodeRunnerFile.c
 practice
 notes_sort
 binary_data*
 .bashrc
+notes
+main
+client

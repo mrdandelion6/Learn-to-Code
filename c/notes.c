@@ -4517,6 +4517,8 @@ int socketConfiguration() {
     // this function is freeaddrinfo(struct addrinfo* result); just pass in result when we are done.
 
     // but before we free the result, we want to use the information obtained in it to set the server address and connect.
+    // we will look at only the first address information struct from the linked list. this is the one pointed at directly by result.
+    
 
     return 0;
 }
