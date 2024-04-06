@@ -4490,7 +4490,8 @@ int socketConfiguration() {
     accept(listen_soc, (struct sockaddr*) &client_addr, &client_len);
     // when we make this call, the program blocks and waits for a connection to be made from client side. we will now write a program, client.c, that sends a connection.
 
-    // we must make a connect() system call from client program.
+    /* from here on, start reading client.c as well */
+    // we must make a connect() system call from client program. this will be client.c
         // int connect(int sockfd, const struct sockaddr* address, soclen_t addrlen)
 
     // first parameter is going to be a socket created on the client side.
@@ -4518,7 +4519,27 @@ int socketConfiguration() {
 
     // but before we free the result, we want to use the information obtained in it to set the server address and connect.
     // we will look at only the first address information struct from the linked list. this is the one pointed at directly by result.
-    
+    // after called getaddrinfo, we can obtain this by just doing
+    // server.sin_addr = ( (struct sockaddr_in *) result->ai_addr )->sin_addr;
+
+    // lets break it down: (starts dancing* jk)
+    // result->ai_addr returns a sockaddr generic address. we cast that to sockaddr_in then extract sin_addr from that.
+    // recall sockaddr_in has a sin_addr address. we then assign that to the server sockaddr_in that we are making for connect().
+    // like shown above: server.sin_addr = ( (struct sockaddr_in *) result->ai_addr )->sin_addr;
+
+    // now we have successfully set up our server sockaddr_in, and we can call connect.
+    // note that connect returns -1 if we fail. btw make sure u are reading client.c to understand all of this, or else it will sound like raw yaps.
+
+
+    // IMPORTANT REMARK ABOUT CONNECTING TO HOSTS:
+    // the getaddrinfo() is useful because we can just pass in something like a URL for a website that's hosted on a domain and retrieve its IP address.
+    // however, for connecting to a local machine, we note that there is no notion of a "host name".
+    // the idea of a host name for a local machine only extends to the local network. 
+    // for example my computer's name may be Faisal's Computer, and this information would be useful only on my local network.
+    // however if someone who was far away wanted to connect to a server hosted locally on my machine, they would need my actual IP address.
+    // because, consider that "Faisal's Computer" is not a unique name. it's not a server hosted somewhere on the web.
+    // in other words, getaddrinfo() is useless for setting up connections to servers hosted on local machines from far away.
+    // disclaimer: not entirely sure about all of this, it is just what i think from researching on the net.
 
     return 0;
 }

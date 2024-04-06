@@ -10,6 +10,8 @@
 
 int main() {
     int soc = socket(AF_INET, SOCK_STREAM, 0);
+    // now we want to call connect()
+    // connect(int sockfd, struct sockaddr* address, socklen_t addrlen)
 
     // set up sockaddr_in for the server's address to pass into connect
     struct sockaddr_in server;
@@ -20,7 +22,7 @@ int main() {
     // now we just need to set server.sin_addr.s_addr to the IP address.
     // to get IP address, we use getaddrinfo() and pass in the machine name.
 
-    // getaddrinfo(char* host, char* service, struct addrinfo* hints, struct addrinfo** result)
+    // int getaddrinfo(char* host, char* service, struct addrinfo* hints, struct addrinfo** result)
     // recall we set second and third param to null.
 
     // suppose the client we want to connect to has name "teach.cs.toronto.edu"
@@ -39,16 +41,22 @@ int main() {
         char *ai_canonname;		/* Canonical name for service location.  */
         struct addrinfo *ai_next;	/* Pointer to next in list.  */
     };
+    // i defined the struct again, pulling it from netdb.h because i was getting errors in intellisense for some reason.
 
 
     // first declare a struct addrinfo* type:
     struct addrinfo* result;
-    // i defined the struct again, pulling it from netdb.h because i was getting errors in intellisense for some reason.
 
     // pass the address of result. getaddrinfo() will return a linked list in result whose nodes contain valid memory addresses that satisfy the request.
     getaddrinfo("teach.cs.toronto.edu", NULL, NULL, &result);
 
     server.sin_addr = ( (struct sockaddr_in *) result->ai_addr )->sin_addr;
+    // atp server sockaddr_in is set up and we can call connect()
+    int return_code = connect(soc, (struct sockaddr*) &server, sizeof(struct sockaddr_in));
+
+    // we capture the return value to check if the connection worked.
+    printf("connected return with %d\n", return_code);
+    // note that connect returns a -1 if we fail
 
     return 0;
 }

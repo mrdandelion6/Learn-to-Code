@@ -8,16 +8,15 @@
 
 int main(int argc, char* argv[]) {
     
-    int fd[2];
-    pipe(fd);
-
-    printf("fd[0] is %d and fd[1] is %d\n", fd[0], fd[1]);
-
-    if (close(1) == -1) {
-        printf("waaa\n");
-    }
+    char hostname[256];
     
-    printf("bars\n"); // wont print
+    // get the hostname
+    if (gethostname(hostname, sizeof(hostname)) == 0) {
+        printf("Hostname: %s\n", hostname);
+    } else {
+        perror("gethostname");
+        return 1;
+    }
     
 
     return 0;
