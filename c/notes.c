@@ -107,7 +107,8 @@ int main(int argc, char* argv[]) {
     int implementingShellPipeOperator();
     int introToSockets();
     int socketConfiguration();
-    socketConfiguration();
+    int socketCommunication();
+    socketCommunication();
 
     return 0;
 }
@@ -4487,8 +4488,14 @@ int socketConfiguration() {
     // and pass in the pointer of client_len into the accept() call.
 
     // now we make the call:
-    accept(listen_soc, (struct sockaddr*) &client_addr, &client_len);
+    int client_socket = accept(listen_soc, (struct sockaddr*) &client_addr, &client_len);
     // when we make this call, the program blocks and waits for a connection to be made from client side. we will now write a program, client.c, that sends a connection.
+    // remeber, the return value of accept will be the file descriptor for client socket stream, and -1 if it fails.
+    if (client_socket == -1) {
+        perror("accept");
+        exit(1);
+    }
+
 
     /* from here on, start reading client.c as well */
     // we must make a connect() system call from client program. this will be client.c
@@ -4540,6 +4547,26 @@ int socketConfiguration() {
     // because, consider that "Faisal's Computer" is not a unique name. it's not a server hosted somewhere on the web.
     // in other words, getaddrinfo() is useless for setting up connections to servers hosted on local machines from far away.
     // disclaimer: not entirely sure about all of this, it is just what i think from researching on the net.
+
+    return 0;
+}
+
+int socketCommunication() {
+    // we already learned how to set up a connection, now we learn how to use the connection.
+
+    // review:
+    // CLIENT SIDE:
+    
+    // 1.) socket(): create server's socket with socket() system call
+    // 2.) bind(): bind socket to machine IP and particular port
+    // 3.) listen(): start listening for partial connections (ie pending requests)
+    // 4.) accept(): call blocking system call which waits for a connection request. 
+    //               return of accept() value is the file descriptor for a new socket which will be used for communication with client.
+
+    // SERVER SIDE:
+    // 1.) socket(): create client's socket with socket() system call
+    // 2.) getaddrinfo(): option call if we want to get the machine address of server from its name
+    // 3.) connect(): connect to the server by passing in our client socket and the server's address. we must know the server's address to connect to it.
 
     return 0;
 }
