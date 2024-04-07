@@ -45,15 +45,15 @@ int main() {
     // first declare a struct addrinfo* type:
     struct addrinfo* result;
 
-    // // pass the address of result. getaddrinfo() will return a linked list in result whose nodes contain valid memory addresses that satisfy the request.
-    // if (getaddrinfo("localhost", NULL, NULL, &result) != 0) { // note we are using localhost to connect to our own machine.
-    //     perror("getaddrinfo");
-    //     exit(1);
-    // }
-    // server.sin_addr = ( (struct sockaddr_in *) result->ai_addr )->sin_addr;
-    // freeaddrinfo(result); // we can free the result now.
+    // pass the address of result. getaddrinfo() will return a linked list in result whose nodes contain valid memory addresses that satisfy the request.
+    if (getaddrinfo("localhost", NULL, NULL, &result) != 0) { // note we are using localhost to connect to our own machine.
+        perror("getaddrinfo");
+        exit(1);
+    }
+    server.sin_addr = ( (struct sockaddr_in *) result->ai_addr )->sin_addr;
+    freeaddrinfo(result); // we can free the result now.
 
-    inet_pton(AF_INET, "localhost", &server.sin_addr);
+    // inet_pton(AF_INET, "localhost", &server.sin_addr);
     
     printf("connecting...\n");
 
