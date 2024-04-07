@@ -15,7 +15,7 @@ int main() {
     struct sockaddr_in server;
     server.sin_family = AF_INET;
     memset(&server.sin_zero, 0, 8);
-    server.sin_port = htons(45001);
+    server.sin_port = htons(46050);
 
     // now we just need to set server.sin_addr.s_addr to the IP address.
     // to get IP address, we use getaddrinfo() and pass in the machine name.
