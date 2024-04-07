@@ -5,8 +5,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>    
 #include <netdb.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
 
 int main() {
     int soc = socket(AF_INET, SOCK_STREAM, 0);
@@ -17,7 +15,7 @@ int main() {
     struct sockaddr_in server;
     server.sin_family = AF_INET;
     memset(&server.sin_zero, 0, 8);
-    server.sin_port = htons(54321);
+    server.sin_port = htons(45001);
 
     // now we just need to set server.sin_addr.s_addr to the IP address.
     // to get IP address, we use getaddrinfo() and pass in the machine name.
@@ -47,16 +45,38 @@ int main() {
     // first declare a struct addrinfo* type:
     struct addrinfo* result;
 
-    // pass the address of result. getaddrinfo() will return a linked list in result whose nodes contain valid memory addresses that satisfy the request.
-    getaddrinfo("teach.cs.toronto.edu", NULL, NULL, &result);
+    // // pass the address of result. getaddrinfo() will return a linked list in result whose nodes contain valid memory addresses that satisfy the request.
+    // if (getaddrinfo("localhost", NULL, NULL, &result) != 0) { // note we are using localhost to connect to our own machine.
+    //     perror("getaddrinfo");
+    //     exit(1);
+    // }
+    // server.sin_addr = ( (struct sockaddr_in *) result->ai_addr )->sin_addr;
+    // freeaddrinfo(result); // we can free the result now.
 
-    server.sin_addr = ( (struct sockaddr_in *) result->ai_addr )->sin_addr;
+    inet_pton(AF_INET, "localhost", &server.sin_addr);
+    
+    printf("connecting...\n");
+
     // atp server sockaddr_in is set up and we can call connect()
     int return_code = connect(soc, (struct sockaddr*) &server, sizeof(struct sockaddr_in));
 
     // we capture the return value to check if the connection worked.
-    printf("connected return with %d\n", return_code);
-    // note that connect returns a -1 if we fail
+    if (return_code == -1) {
+        perror("connect");
+        exit(1);
+    } // note that connect returns a -1 if we fail
+    printf("connection return with: %d\n", return_code);
+    
+
+    // now we test communicating by redircecting output.
+    dup2(soc, fileno(stdout));
+
+    char s[50];
+    while (1 != 0) {
+        scanf("%s", &s);
+        printf("%s\n", &s);
+    }
+    
 
     return 0;
 }

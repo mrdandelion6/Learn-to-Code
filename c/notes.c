@@ -3939,12 +3939,12 @@ int pipesInC() {
     int arr[2];
     pipe(arr);
     // this creates a read file descriptor in arr[0] and a write file descriptor in arr[1].
-    // pretty useless to have this for a lone process, the magic happens when we use fork().
+    // useless to have this for a lone process, the magic happens when we use fork().
 
     // when calling fork(), the child process inherits the same pipe. ie) it gets a copy of the pipe that can be thought of as a deep copy between the two processes, like this:
     // parent <--> pipe <--> child
 
-    // however note that pipes are UNI-DIRECTIONAL, ie) one way. so we can choose to either:
+    // however, note that pipes are UNI-DIRECTIONAL, ie) one way. so we can choose to either:
         // 1.) parent writes, child reads
         // 2.) child writes, parent reads
     
@@ -3958,7 +3958,6 @@ int pipesInC() {
     // if the child is only writing then we close the child's read file descriptor
 
     // once the pipe is set up, we can use read and write system calls to send and receive data on the pipe.
-
     // here is an example where the parent writes and child reads
 
     // IMPORTANT REMARK: the pipe() call must be made before the fork() call because the child process inherits the open file descriptors from the parent.
@@ -4077,7 +4076,7 @@ int redirectingInputAndOutputDup2() {
         // searches for lines containing "Saitama" in recursively in io-stuff. outputs this:
         // io-stuff/iostuff.txt:Saitama 999999
 
-    // we this would only print to shell but we can redirect output to save it to a file with redirection operator:
+    // this would only print to shell but we can redirect output to save it to a file with redirection operator:
         // grep Saitama io-stuff -r > temp.txt
 
     // we can even use output of one program is the input for another program with pipe |
@@ -4567,6 +4566,52 @@ int socketCommunication() {
     // 1.) socket(): create client's socket with socket() system call
     // 2.) getaddrinfo(): option call if we want to get the machine address of server from its name
     // 3.) connect(): connect to the server by passing in our client socket and the server's address. we must know the server's address to connect to it.
+
+    // connecting to multiple clients:
+    // after we call listen(), it is gonna be there forever, still listening. but we would need to call accept() again to start waiting for a new connection.
+    // recall that when we call accept(), our program begins to block. when blocking, we wont be able to talk to any currently connected clients.
+    // so the way to handle multiple clients is by making use of some of the stuff we have already learned before: forking etc.
+    // for now we will just focus on communicating between one client.
+
+    // rmk: sometimes we refer to a socket as a socket descriptor since it's actually just a fd into the fd table.
+    // once we have the stream socket set up between the client and server, we use this socket descriptor just like we use a file descriptor.
+    // so we can use read() and write() system calls.
+
+    int serv_soc = socket(AF_INET, SOCK_STREAM, 0);
+    struct sockaddr_in server_addr; 
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(45001);
+    memset(&(server_addr.sin_zero), 0, 8);
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+
+    if ( bind(serv_soc, (struct sockaddr*) &server_addr, sizeof(struct sockaddr_in)) == -1) {
+        perror("bind");
+        exit(1);
+    }
+    
+    if (listen(serv_soc, 5) == -1) {
+        perror("listen");
+        exit(1);
+    }
+
+    struct sockaddr_in client_addr;
+    client_addr.sin_family = AF_INET;
+    __u_int client_len = sizeof(struct sockaddr_in);
+
+    int client_soc = accept(serv_soc, (struct sockaddr*) &client_addr, &client_len);
+    if (client_soc == -1) {
+        perror("accept");
+        exit(1);
+    }
+
+    // redirect input
+    dup2(client_soc, fileno(stdin));
+    
+    char s[50];
+    while (1 != 0) {
+        scanf("%s", &s);
+        printf("%s\n", &s);
+    }
 
     return 0;
 }
