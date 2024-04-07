@@ -4696,5 +4696,13 @@ int issueWithBlockingRead() {
     // we introduce a problem with using a blocking read() calls to read from multiple sources.
     // then we introduce a new system call that solves this problem by telling us which sources are ready for processing.
 
+    // consider a simple scenario with a parent who has 1 child and a pipe set up between them.
+    // the parent wants to read from chill so we call read() which will block until we get some write() from the parent or the parent closes the write end of the pipe().
+    // simple enough.
+
+    // now consider a parent with two children, child1 and child2. suppose the parent has two pipes set up, pipe1, and pipe2, and is reading from both children.
+    // so we need 2 different calls to read(), one for each pipe. 
+    // infact we probably want to have multiple read calls to each child since they usually will have more information.
+
     return 0;
 }
