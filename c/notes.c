@@ -108,7 +108,8 @@ int main(int argc, char* argv[]) {
     int introToSockets();
     int socketConfiguration();
     int socketCommunication();
-    socketCommunication();
+    int socketCommunication2();
+    socketCommunication2();
 
     return 0;
 }
@@ -4577,6 +4578,8 @@ int socketCommunication() {
     // once we have the stream socket set up between the client and server, we use this socket descriptor just like we use a file descriptor.
     // so we can use read() and write() system calls.
 
+    // the following is going to be communication using dup2(), but we will explore communication without dup2 as well in next function.
+
     int serv_soc = socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in server_addr; 
     server_addr.sin_family = AF_INET;
@@ -4612,6 +4615,78 @@ int socketCommunication() {
         scanf("%s", &s);
         printf("%s\n", &s);
     }
+
+    return 0;
+}
+
+int socketCommunication2() { // this version uses write() and read() system call for communication
+
+    int serv_soc = socket(AF_INET, SOCK_STREAM, 0);
+    struct sockaddr_in server_addr; 
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(46050);
+    memset(&(server_addr.sin_zero), 0, 8);
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+
+    if ( bind(serv_soc, (struct sockaddr*) &server_addr, sizeof(struct sockaddr_in)) == -1) {
+        perror("bind");
+        exit(1);
+    }
+    
+    if (listen(serv_soc, 5) == -1) {
+        perror("listen");
+        exit(1);
+    }
+
+    struct sockaddr_in client_addr;
+    client_addr.sin_family = AF_INET;
+    __u_int client_len = sizeof(struct sockaddr_in);
+
+    int client_soc = accept(serv_soc, (struct sockaddr*) &client_addr, &client_len);
+    if (client_soc == -1) {
+        perror("accept");
+        exit(1);
+    }
+
+    // we use write() system call instead on the socket file descriptors.
+
+    write(client_soc, "hello\r\n", 7); // 5 chars for hello plus r and n characters. 
+    // note that we dont explicitly send the null terminating character in this examlple
+    // we use \r\n. this is called a "network newline"
+    // we need to specify a specific order for the bytes so that machines that use different byte orders can work together.
+    // similiarly, we are required to specify how to identify a new line so that machines that use a different sequence of characters render strings properly.
+
+    // also in the client we will need to allocate some space like a buffer for data to read.
+    // char buf[10]; in client.c
+
+    char line[10];
+    read(client_soc, line, 10);
+    line[9] = '\0'; // add null terminator to end since we didnt send one.
+    printf("message: %s\n", line);
+
+    // important remark: we are assuming that one read / write call is sufficient to relay the information
+    // but this is not true in general and just works for this specific case.
+    // remember, we are talking about communication over the internet. data is wrapped up in IP packets, sent from machine to machine, and reassembled on the other end.
+    // the stream socket protocol guarantees lossless transmition in same order. 
+    // however, it does not guarantee that a "bunch" of data written with a single write statement will all arive at the same time.
+    // in other words, there's no guarantee that it will all be available for the same read statement.
+    // it might come in two different pieces for example, so we would need 2 read statements.
+
+    // in real programs, we need to make use of the fact that the return value from read reports how many bytes were succesfully read.
+    // we check this return value and call read again if we were expecting more bytes.
+
+    //  it's especially important to check the return value of read because if the write end of the socket is closed, read will return 0.
+    // for example we are using the client socket to relay information bidirectionally. if the write end of that socket were to be closed than read returns 0.
+    // this tells us that we have already read all the data that will be sent on that socket and we do not need to call read() again.
+
+    // if we did call read() again while the other end of the socket is closed, the read call will just immediately return 0.
+    // if the other end of the socket is open, your read() will block forever, waiting for data that will never arrive.
+
+    // its also good practice to explicitly close() the socket descriptor once we are done with it. 
+    // this will cause the connection to be terminated. when our program exits, the system will explicitly send a close() on any sockets we didnt close.   
+    // but its just good practice. also avoids problems that occur when a program doesnt immediately terminate; which leaves the other partner in the conversation waiting.
+    close(serv_soc);
+    // we dont close client_soc because the client closes that.
 
     return 0;
 }

@@ -7,6 +7,10 @@
 #include <netdb.h>
 
 int main() {
+
+    int dup_2 = 0; // set this to 1 if u want to test socket communication with dup2
+                   // set this to 0 if u want to test without dup2 and just read/write
+
     int soc = socket(AF_INET, SOCK_STREAM, 0);
     // now we want to call connect()
     // connect(int sockfd, struct sockaddr* address, socklen_t addrlen)
@@ -53,7 +57,8 @@ int main() {
     server.sin_addr = ( (struct sockaddr_in *) result->ai_addr )->sin_addr;
     freeaddrinfo(result); // we can free the result now.
 
-    // inet_pton(AF_INET, "localhost", &server.sin_addr);
+    // inet_pton(AF_INET, "10.X.X.X.X", &server.sin_addr);
+    // the above is for using IP addresses directly instead of doing getaddrinfo()
     
     printf("connecting...\n");
 
@@ -66,17 +71,30 @@ int main() {
         exit(1);
     } // note that connect returns a -1 if we fail
     printf("connection return with: %d\n", return_code);
-    
+    // connect returns with 0 on success.
 
-    // now we test communicating by redircecting output.
-    dup2(soc, fileno(stdout));
+    // now we test communicating by redircecting output. with dup2
+    if (dup_2 == 1) {
+        dup2(soc, fileno(stdout));
 
-    char s[50];
-    while (1 != 0) {
-        scanf("%s", &s);
-        printf("%s\n", &s);
+        char s[50];
+        while (1 != 0) {
+            scanf("%s", &s);
+            printf("%s\n", &s);
+        }
     }
-    
+
+    else { // communicate with read/write instead
+        char buf[10]; // allocate some space for buffer
+        read(soc, buf, 7);
+        buf[7] = '\0'; // need to explicitly add null terminator at end 
+        printf("message: %s", buf);
+
+        write(soc, "0123456789", 10);
+
+    }
+
+    close(soc);
 
     return 0;
 }
