@@ -109,7 +109,8 @@ int main(int argc, char* argv[]) {
     int socketConfiguration();
     int socketCommunication();
     int socketCommunication2();
-    socketCommunication2();
+    int issueWithBlockingRead();
+    issueWithBlockingRead();
 
     return 0;
 }
@@ -4687,6 +4688,13 @@ int socketCommunication2() { // this version uses write() and read() system call
     // but its just good practice. also avoids problems that occur when a program doesnt immediately terminate; which leaves the other partner in the conversation waiting.
     close(serv_soc);
     // we dont close client_soc because the client closes that.
+
+    return 0;
+}
+
+int issueWithBlockingRead() {
+    // we introduce a problem with using a blocking read() calls to read from multiple sources.
+    // then we introduce a new system call that solves this problem by telling us which sources are ready for processing.
 
     return 0;
 }
