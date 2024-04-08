@@ -20,6 +20,8 @@
 #include <sys/socket.h> // this is specific to unix OS. run ur IDE/text-editor through WSL if ur on windows
 #include <netinet/in.h>
 
+#include <sys/select.h>
+
 // use define to define a constant global value! these are stored in global data
 
 
@@ -34,7 +36,7 @@ int main(int argc, char* argv[]) {
     int theMainMethod(int count, char* vectors[]);
     int types();
     int IOstuff();
-    int compilingWithUNIX();
+    int compilingWithUnix();
     int takeInput();
     int average_temp();
     int iteratingThroughArrays();
@@ -110,7 +112,8 @@ int main(int argc, char* argv[]) {
     int socketCommunication();
     int socketCommunication2();
     int issueWithBlockingRead();
-    issueWithBlockingRead();
+    int usingSelectForReading();
+    usingSelectForReading();
 
     return 0;
 }
@@ -199,7 +202,7 @@ int IOstuff() {
 
     }
 
-int compilingWithUNIX() {
+int compilingWithUnix() {
     // gcc main.c 
     // unless we provide additional arguments to the unix command above, the exe file that is produced will be a.out
     // run the executable by ./a.out
@@ -4652,7 +4655,7 @@ int socketCommunication2() { // this version uses write() and read() system call
     // we use write() system call instead on the socket file descriptors.
 
     write(client_soc, "hello\r\n", 7); // 5 chars for hello plus r and n characters. 
-    // note that we dont explicitly send the null terminating character in this examlple
+    // note that we dont explicitly send the null terminating character in this example as we dont have enough space for a null terminator.
     // we use \r\n. this is called a "network newline"
     // we need to specify a specific order for the bytes so that machines that use different byte orders can work together.
     // similiarly, we are required to specify how to identify a new line so that machines that use a different sequence of characters render strings properly.
@@ -4734,7 +4737,7 @@ int issueWithBlockingRead() {
 
     // note that select returns 1 if it is successful.
 
-    // we show an example of using select now:
+    // we show an example of reading without using select first, then in the next function we show the same code but with select. test out the functions for yourself and see how select allows us to read from multiple processes.
 
     char line[MAXSIZE]; // this will hold the read values
     int pipe_child1[2], pipe_child2[2];
@@ -4762,6 +4765,7 @@ int issueWithBlockingRead() {
         char message[10] = "HELLO FROM 1";
         write(pipe_child1[1], message, 10);
         close(pipe_child1[1]);
+        printf("child1 finished write\n"); // note that this never gets printed since while(1) happens forever.
         exit(0); // exit child1
     }
 
@@ -4787,6 +4791,7 @@ int issueWithBlockingRead() {
             char message[10] = "HELLO FROM 2";
             write(pipe_child2[1], message, 10);
             close(pipe_child2[1]);
+            printf("child2 finished write\n"); // this statement shows us that we finished writing but program is still blocked
             exit(0); // exit child2
         }
 
@@ -4814,10 +4819,139 @@ int issueWithBlockingRead() {
             }
             
         }
-
-        // can close read pipes here but the program automatically does this since we exit.
+        // can close read pipes here but the program automatically does this since we exit so we dont.
+        // in the next function we demonstrate the solution to this. it will be the same code but we handle the reading with select().
     }
 
     return 0;
 }
 
+int usingSelectForReading() {
+        char line[MAXSIZE]; // this will hold the read values
+    int pipe_child1[2], pipe_child2[2];
+
+    // before we fork, create child1 pipe:
+    if (pipe(pipe_child1) == -1) {
+        perror("pipe1");
+        exit(1);
+    }
+
+    int r = fork();
+    if (r < 0) {
+        perror("fork1");
+        exit(1);
+    } 
+    
+    else if (r == 0) { // child1
+        close(pipe_child1[0]); // we are not going to read from parent
+        printf("[%d] child1\n", getpid());
+
+        while(1) { // this causes a block for writing!!! select() gets around this.
+            //yuh
+        }
+
+        char message[15] = "HELLO FROM 1";
+        write(pipe_child1[1], message, 15);
+        close(pipe_child1[1]);
+        exit(0); // exit child1
+    }
+
+    else { // in parent
+        close(pipe_child1[1]); // not writing to child1
+
+        // now make another pipe for child2:
+        if (pipe(pipe_child2) == -1) {
+            perror("pipe2");
+            exit(1);
+        }
+
+        r = fork(); // create second child. approaching nesting hell lol
+        if (r < 0) {
+            perror("fork2");
+            exit(1);
+        }
+
+        else if (r == 0) { // in child 2
+            close(pipe_child2[0]); // not reading from parent
+            printf("[%d] child2\n", getpid());
+
+            char message[15] = "HELLO FROM 2";
+            write(pipe_child2[1], message, 15);
+            close(pipe_child2[1]);
+            exit(0); // exit child2
+        }
+
+        else { // back in parent
+            close(pipe_child2[1]); // not writing to child 2
+
+
+            // ======= READING WITH SELECT() =======
+            // we now begin reading.
+            // the following is how it looks WITH select()
+
+            // first set up the file descriptor sets.
+            // note that an fd_set is implemented as a bit field stored in an array of ints. recall bit manipulation and flags.
+
+            fd_set read_fds; // need #include <sys/select.h> for this
+            FD_ZERO (&read_fds); // first make the set empty (clear out junk in memory)
+            FD_SET(pipe_child1[0], &read_fds); // add reading fd 1
+            FD_SET(pipe_child2[0], &read_fds); // add reading fd2
+
+            // now we just need to set up numfd. numfd is a bit confusing. what we need to do is set this parameter to be the value of the highest file descriptor in your set, plus 1.
+            
+            int numfd = 1;
+            (pipe_child1[0] > pipe_child2[0]) ? (numfd += pipe_child1[0]) : (numfd += pipe_child2[0]);
+
+            // now we are ready to make a call to select() with the fd read sets.
+            if (select(numfd, &read_fds, NULL, NULL, NULL) != 1) {
+                perror("select");
+                exit(1);
+            } // note that select will block until at least one of the descriptors in the set are ready.
+
+            // now read_fds only contains file descriptors that are ready to be read as select() modified this.
+            // now we need to check which members are in the set. we have a another set operation for this: FD_ISSET()
+                // int FD_ISSET(int fd, fd_set* fdset)
+
+            // returns 1 if it is in the set, else 0.
+            
+            if (FD_ISSET(pipe_child1[0], &read_fds)) { // recall that if (1) evaluates to true in C just like in other languages.
+                // now if the read pipe of child1 is ready, we do the following:
+
+                if ( (r = read(pipe_child1[0], line, MAXSIZE)) < 0) { // note these if chain is just what we had in the old code, but now we only do this when we know read() is not gonna block.
+                    perror("read1");
+                    exit(1);
+                } else if (r == 0) {
+                    printf("child1 is closed");
+                } else {
+                    printf("read from child1: %s\n", line);
+                }
+
+            }
+
+            if (FD_ISSET(pipe_child2[0], &read_fds)) {
+                // and if read pipe of child 2 is ready, then we do this.
+
+                if ( (r = read(pipe_child2[0], line, MAXSIZE)) < 0) {
+                    perror("read2");
+                    exit(1);
+                } else if (r == 0) {
+                    printf("child2 is closed");
+                } else {
+                    printf("read from child2: %s\n", line);
+                }
+
+            }
+ 
+        }
+    }
+    
+    // now we have seen how select() helps us. when we run this function, we dont get an indefinite block like we did in the previous function.
+    // lastly, we go over the 3 stuff we set to NULL: select(numfd, read_fds, write_fds, error_fds, timeout)
+    // write_fds: just like read_fds, write_fds is a file descriptor set for writing fds.
+    // error_fds: just like the other two, error_fds is a file descriptor set for error fds.
+    // timeout: a pointer to the struct timeval. we can use it to set a time limit for how long select will block before returning even if no file descriptors are ready. think of javascript.
+
+    // another rmk: the fd sets we pass in get modified so we need to reconfigure them before another select() call.
+
+    return 0;
+}
