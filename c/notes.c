@@ -4692,6 +4692,7 @@ int socketCommunication2() { // this version uses write() and read() system call
     return 0;
 }
 
+// multiplexing
 int issueWithBlockingRead() {
     // we introduce a problem with using a blocking read() calls to read from multiple sources.
     // then we introduce a new system call that solves this problem by telling us which sources are ready for processing.
@@ -4704,5 +4705,119 @@ int issueWithBlockingRead() {
     // so we need 2 different calls to read(), one for each pipe. 
     // infact we probably want to have multiple read calls to each child since they usually will have more information.
 
+    // suppose we read them in the order: read child 1 pipe, then read child 2 pipe. and we read them like this in a loop.
+    // this works fine if child 1 writes. but what if child 1 doesnt write at all but child 2 writes a bunch.
+    // we wont be able to get to child 2 pipe read call because the read call for child 1's pipe will be blocking the program.
+    // this is rlly bad because we are keeping one child's writes waiting, and they can accumlate a lot to the point the pipe even gets full.    
+
+    // similarly even if we read for child 2 first, after we read once we get to the read call for child 1 and our program just blocks as child 1 has nothing to say.
+    // so essentially we are required for both of them to read and write sequentially in order, which is a big restraint. so order reading calls cant fix this.
+
+    // the resolution to this is the select() system call which lets us specify a set of file descriptors to read from, and then blocks until at least one of them is ready.
+    // then select() tells us which file descriptors are ready so we can call read() only on those and avoid blocking on the non ready ones.
+
+        // int select(int numfd,  
+        //            fd_set* read_fds, 
+        //            fd_set* write_fids, 
+        //            fd_set* error_fds, 
+        //            struct timeval* timeout)
+
+    // we will only make use of the first 2 parameters for now
+
+    // select(numfd, read_fds,  NULL, NULL, NULL)
+
+    // the basic idea is that the caller specifies a set of file descriptors to watch. select() blocks until one of these file descriptors has data to be read, or until the resources has been closed.
+    // in either case, we can then be certain that the file descriptors that select() specifies will be "ready", ie) it wont cause ready to block.
+
+    // the way this happens is that select() modifies the read_fds set we pass in to contain only fd's that are ready. 
+    // can have more than one fd ready when select() returns.
+
+    // note that select returns 1 if it is successful.
+
+    // we show an example of using select now:
+
+    char line[MAXSIZE]; // this will hold the read values
+    int pipe_child1[2], pipe_child2[2];
+
+    // before we fork, create child1 pipe:
+    if (pipe(pipe_child1) == -1) {
+        perror("pipe1");
+        exit(1);
+    }
+
+    int r = fork();
+    if (r < 0) {
+        perror("fork1");
+        exit(1);
+    } 
+    
+    else if (r == 0) { // child1
+        close(pipe_child1[0]); // we are not going to read from parent
+        printf("[%d] child\n", getpid());
+
+        while(1) { // this causes a block for writing!!! select() gets around this.
+            //yuh
+        }
+
+        char message[10] = "HELLO FROM 1";
+        write(pipe_child1[1], message, 10);
+        close(pipe_child1[1]);
+        exit(0); // exit child1
+    }
+
+    else { // in parent
+        close(pipe_child1[1]); // not writing to child1
+
+        // now make another pipe for child2:
+        if (pipe(pipe_child2) == -1) {
+            perror("pipe2");
+            exit(1);
+        }
+
+        r = fork(); // create second child. approaching nesting hell lol
+        if (r < 0) {
+            perror("fork2");
+            exit(1);
+        }
+
+        else if (r == 0) { // in child 2
+            close(pipe_child2[0]); // not reading from parent
+            printf("[%d] child\n", getpid());
+
+            char message[10] = "HELLO FROM 2";
+            write(pipe_child2[1], message, 10);
+            close(pipe_child2[1]);
+            exit(0); // exit child2
+        }
+
+        else { // back in parent
+            close(pipe_child2[1]); // not writing to child 2
+
+            // we now begin reading.
+            // the following is how it looks without select()
+            if ( (r = read(pipe_child1[0], line, MAXSIZE)) < 0) {
+                perror("read1");
+                exit(1);
+            } else if (r == 0) {
+                printf("child1 is closed");
+            } else {
+                printf("read from child1: %s\n", line);
+            }
+            
+            if ( (r = read(pipe_child2[0], line, MAXSIZE)) < 0) {
+                perror("read2");
+                exit(1);
+            } else if (r == 0) {
+                printf("child2 is closed");
+            } else {
+                printf("read from child2: %s\n", line);
+            }
+            
+        }
+
+        // can close read pipes here but the program automatically does this since we exit.
+    }
+
     return 0;
 }
+
