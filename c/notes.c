@@ -4,7 +4,7 @@
 // std stands for standard library, io for the input/output, and .h to signify header code
 #include <stdio.h> // for scanf and printf
 #include <stdlib.h>
-#include <stdbool.h> // for using bool types
+#include <stdbool.h> // for using bool types. though in C, we just use (1) for true and (0) for false
 #include <string.h>
 #include <time.h>
 #define DAYS 365 
@@ -4559,15 +4559,14 @@ int socketCommunication() {
     // we already learned how to set up a connection, now we learn how to use the connection.
 
     // review:
-    // CLIENT SIDE:
-    
+    // SERVER SIDE:
     // 1.) socket(): create server's socket with socket() system call
     // 2.) bind(): bind socket to machine IP and particular port
     // 3.) listen(): start listening for partial connections (ie pending requests)
     // 4.) accept(): call blocking system call which waits for a connection request. 
     //               return of accept() value is the file descriptor for a new socket which will be used for communication with client.
 
-    // SERVER SIDE:
+    // CLIENT SIDE:
     // 1.) socket(): create client's socket with socket() system call
     // 2.) getaddrinfo(): option call if we want to get the machine address of server from its name
     // 3.) connect(): connect to the server by passing in our client socket and the server's address. we must know the server's address to connect to it.
@@ -4827,7 +4826,7 @@ int issueWithBlockingRead() {
 }
 
 int usingSelectForReading() {
-        char line[MAXSIZE]; // this will hold the read values
+    char line[MAXSIZE]; // this will hold the rea~d values
     int pipe_child1[2], pipe_child2[2];
 
     // before we fork, create child1 pipe:
