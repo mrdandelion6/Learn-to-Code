@@ -4954,3 +4954,5 @@ int usingSelectForReading() {
 
     return 0;
 }
+
+// that concludes all my notes on C thus far. i will continue to add more notes as i learn more about C. hope this repo helped you.
