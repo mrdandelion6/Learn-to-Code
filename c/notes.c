@@ -4955,4 +4955,12 @@ int usingSelectForReading() {
     return 0;
 }
 
-// that concludes all my notes on C thus far. i will continue to add more notes as i learn more about C. hope this repo helped you.
+
+// =================================================================================================================================================================
+
+// END OF CSC209 NOTES !!! 
+
+// that concludes all my notes on C pertaining to CSC209. i may continue to add more notes to this repo as i learn more C but they will be unrelated to CSC209.
+// hope you enjoyed reading these notes as much as i enjoyed writing them.
+
+// =================================================================================================================================================================
