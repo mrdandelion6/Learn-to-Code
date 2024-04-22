@@ -4270,7 +4270,7 @@ int implementingShellPipeOperator() {
 }
 
 int introToSockets() {
-    // so far:
+    // so far: 
     // pipes to communicate between child and parent processes
     // signals to communicate between unrelated processes
     // however both pipes and signals can only be used to communicate with processes that are on the same machine.
