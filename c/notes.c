@@ -113,7 +113,8 @@ int main(int argc, char* argv[]) {
     int socketCommunication2();
     int issueWithBlockingRead();
     int usingSelectForReading();
-    usingSelectForReading();
+    int unknown_array_iteration();
+    unknown_array_iteration();
 
     return 0;
 }
@@ -142,11 +143,9 @@ int theMainMethod(int argc, char* argv[]) {
 
 int types() {
     // char: single characters which have ASCII keys
-    printf("integers on this device are %zu bytes\n", sizeof(1));
-    long x;
-    printf("longs on this device are %zu bytes\n", sizeof(x));
-    long long y;
-    printf("long longs on this device are %zu bytes\n", sizeof(y));
+    printf("integers on this device are %zu bytes\n", sizeof(int));
+    printf("longs on this device are %zu bytes\n", sizeof(long));
+    printf("long longs on this device are %zu bytes\n", sizeof(long long));
     // int: integer value (32 bits) 
     // long: integer value (64 bits)
     // float: float value 
@@ -226,7 +225,7 @@ int takeInput() {
     return 0;
 }
 
-bool test() {
+bool bool_test() {
     return true;
 }
 
@@ -350,14 +349,14 @@ int iteratingThroughArrays() {
 int loopIterationQuestion() {
     // write a code fragment to loop over an array <ages> of <count> integers and 
     // print the age of the second oldest. uou may assume that count is at least 2.
-    int count = 10;
+    int length = 10;
     // variables count and ages are declared and initialized in hidden code.
     
     int ages[10] = {11, 5, 2, 9, 4, 12, 10, 8, 10, 13};
     int i;
     int secondOldest = 0;
     int oldest = 0;
-    for (i = 0; i < count; i++) {
+    for (i = 0; i < length; i++) {
         if (ages[i] > oldest) {
             secondOldest = oldest;
             oldest = ages[i];
@@ -386,7 +385,7 @@ int welcomeToPointers() {
 
     // when defining pointers, we use * infront of the variable.
     // the int means pt holds the address of an integer
-    int *pt; // so this means pt is a pointer variable that holds the address of an integer
+    int* pt; // so this means pt is a pointer variable that holds the address of an integer
     // we say the type of pt is "int *"
     pt = &i; // pt is set to the memory address of i.
     printf("Value of pt: %p\n", pt);
@@ -402,7 +401,7 @@ int welcomeToPointers() {
     // note int *pt; is not a deference, its just a type declaration of int *
 
     char ch = 'Y';
-    char *ch_pt = &ch;
+    char* ch_pt = &ch;
 
     printf("ch_pt points to a value of %c\n", *ch_pt);
     return 0;
@@ -426,9 +425,20 @@ int assigningToDeferencedPointers() {
     printf("val of i: %d\n", i);
 
     // tricky!!
-    int *pt1 = q; // we are not assigning *pt = q, rather we are assigning pt = q. int * is just the declaration for pt.
+    int* pt1 = q; // we are not assigning *pt = q, rather we are assigning pt = q. int * is just the declaration for pt.
     int * pt2 = q; // the space can be like this
-    int* pt3 = q; // or like this; it doesnt matter
+    int *pt3 = q; // or like this; it doesnt matter
+
+    // it is standard to see it like this:
+    int *ptr;
+
+    // but i like to make it like this:
+    int* ptr2;
+
+    int* p1, p2; // this is a common mistake. p1 is a pointer, p2 is an integer
+
+    // proper way to declare two pointers:
+    int *p3, *p4;
 
     return 0;
 }
@@ -528,6 +538,24 @@ int properSum(int *A, int size) {
     }
     
     return total;
+}
+
+int print_iter(void* arr, int len, size_t elem_size) { // function for iterating an array of unknown type and printing elements
+
+    // even if we know the size of each element, and the length of the array, we still dont know the type of the elements
+    // we wont be able to print them out without knowing the type of the elements
+    // we can still do it, but we need to pass in a function that knows how to print the elements
+
+    for (int i = 0; i < len; i++) {
+        printf("elem %d is %d\n", i, ((char*) arr)[i * elem_size]);
+    } // in this case we're just assuming the elements are integers
+}
+
+
+int unknown_array_iteration() {
+
+
+    return 0;
 }
 
 int pointerArithmetic() {
