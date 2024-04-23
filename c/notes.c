@@ -879,13 +879,13 @@ int nestedDataStructures() {
 }
 
 
-int parseIntegerString(char* s) { // note this will mutate s
+int parseIntegerString(char* s) { // note this will not mutate s outside of the stack
     int x = 0;
     while (s[0] != '\0') {
-        int y = strtol(s, &s, 10);
+        int y = strtol(s, &s, 10); // base 10
         x += y;
 
-        if (y == 0) { // nothing was yielded from string
+        if (y == 0 && s[0] != '\0') { // nothing was yielded from string
             s++; // move on to next character
         }
     }
@@ -982,17 +982,22 @@ int commandLineArguments(int argc, char* argv[]) {
         printf("no arguments given\n");
     }
 
-    else if (strcmp(argv[1], "a")) { // cannot directly compare strings in C. it will end up comparing addresses. (remember theyre pointers!)
+    else if (strcmp(argv[1], "s") == 0) { // cannot directly compare strings in C. it will end up comparing addresses. (remember theyre pointers!)
         printf("sum is %d\n", sumX(argv, argc));
     }
 
-    else if (strcmp(argv[1], "s")) {
+    else if (strcmp(argv[1], "a") == 0) {
         printf("avg is %f\n", avgX(argv, argc));
     }
 
     else {
         printf("unrecogized value for first argument.\n please enter a or s as the first argument.\n");
     }
+
+    // strcmp returns 0 if the strings are equal
+    // strcmp returns a negative number if the first string is less than the second
+    // strcmp returns a positive number if the first string is greater than the second
+    // note that all nonzero numbers in C evaluate to true, so if(-1) is true, if(1) is true, if(0) is false
 }
 
 struct bars {
@@ -1156,7 +1161,7 @@ void print_array(int* arr, int size) {
 }
 
 int headerFiles() {
-    // compiling a program withh multiple source files
+    // compiling a program with multiple source files
     // need header files!!
 
     // moved all of this to functions.h
