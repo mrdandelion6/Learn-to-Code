@@ -686,6 +686,22 @@ int cDeclarationSynax() {
     int y = (int) x;  // assigns 3 to y
     printf("%d\n", y);
 
+
+    int* g2();
+    // a function returning int*
+
+    int (*f2)();
+    // a pointer to a function returning int
+
+    int (*f3(int x))[10];
+    // a pointer to a function that takes in an argument integer and returns an array of 10 integers
+
+    int* (*f4[10])();
+    // an array of 10 pointers to functions that return pointers to integers
+
+    // use the spiral reading trick:
+    // start from the variable name and move right then left, then right, then left, etc.
+
     return 0;
 }
 
