@@ -4488,12 +4488,13 @@ int socketConfiguration() {
     // the sockaddr struct is a generic address family. address family is another name for domain.
     // address families define how network addresses are represented and interpreted. different address families support different types of network communication protocols.
     // again, note that the type for the address parameter in bind() is const struct sockaddr* which is GENERIC. 
-    // in our case, we will be using the address-family (aka DOMAIN) AF_INET. so we use the more specific struct sockaddr_in instead of sockaddr. the in stands for internet.
-    struct sockaddr_in {
-        short sin_family; // this specifies domain / family address
-        __u_short sin_port; // this specifies the port our socket is on
-        struct in_addr sin_addr; // this specifies the machine address. need #include <netinet/in.h>
-        char sin_zero[8];
+    // in our case, we will be usingS the address-family (aka DOMAIN) AF_INET. so we use the more specific struct sockaddr_in instead of sockaddr. the in stands for internet.
+    
+    struct _sockaddr_in { // added a _ to avoid conflict with the actual struct sockaddr_in, as this is just for demonstration.
+        short sin_family; // this specifies domain / family address, set to AF_INET
+        __u_short sin_port; // this specifies the port our socket is on, set to htons(PORT_NUMBER   )
+        struct in_addr sin_addr; // this specifies the machine address. we set it to INADDR_ANY. need #include <netinet/in.h>
+        char sin_zero[8]; // padding
     };
 
     // 1.) -- SIN_FAMILY --
