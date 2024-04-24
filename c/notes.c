@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 // C Notes
 // i apologize for using camel case everywhere.. i have been coding in javascript for a week nonstop
 
@@ -23,7 +25,6 @@
 #include <sys/select.h>
 
 // use define to define a constant global value! these are stored in global data
-
 
 // note at the top we have #include statements. this is needed for C for using several (common) methods, types, etc.
 int main(int argc, char* argv[]) {
@@ -116,6 +117,9 @@ int main(int argc, char* argv[]) {
     int unknown_array_iteration();
     int string_play();
     string_play();
+
+    // non csc209 stuff
+    int feature_test_macros();
 
     return 0;
 }
@@ -3490,7 +3494,7 @@ int signalsInC() {
     return 0;
 }
 
-void handler(int code) { // our handler for signal 
+void handler(int code) { // our handler function for signals
     fprintf(stderr, "Signal %d caught\n", code);
 }
 
@@ -3516,30 +3520,31 @@ int handlingSignals() {
         // signum is the signal being modifed.
         // act is a pointer to a struct that we need to initialize ourselves before we call sigaction
         // oldact is a pointer to a struct that will hold the previous state of the signal after sigaction is called (we dont initialize this)
+        // oldact is just if we want to save the old behavior of the signal. could use it later etc.
 
     // we wont use oldact arg in our examples, but it sometimes helps to save the previous state of the signals.
 
-    // sigaction struct below. rmk: i was getting errors when i had siginfo_t* instead of void* so i changed it into void*. not sure why!!
+    // sigaction struct below.
 
     // struct sigaction {
     //     void (*sa_handler)(int);
-    //     void (*sa_sigaction)(int, void*, void*); // should be (int, siginfo_t*, void*) !!!
+    //     void (*sa_sigaction)(int, siginfo_t*, void*); 
     //     sigset_t sa_mask;
     //     int sa_flags;
     //     void (*sa_restorer)(void);
     // };
+    // commented this out because its already defined in signal.h
 
 
-    // void handler(int code);
-    // void (*f_ptr)(int) = &handler;
+    void (*f_ptr)(int) = &handler;
 
-    // struct sigaction newact;
-    // newact.sa_handler = f_ptr;
-    // newact.sa_flags = 0; // default flags
-    // sigemptyset(&newact.sa_mask); // set sa_mask to empty so no signals are blocked during handler
-    // // newact is set up at this point.
+    struct sigaction newact;
+    newact.sa_handler = f_ptr;
+    newact.sa_flags = 0; // default flags
+    sigemptyset(&newact.sa_mask); // set sa_mask to empty so no signals are blocked during handler
+    // newact is set up at this point.
 
-    // sigaction(SIGINT, &newact, NULL); // call sigaction system call to install our new handler for the SIGINT signal.
+    sigaction(SIGINT, &newact, NULL); // call sigaction system call to install our new handler for the SIGINT signal.
     
     // remark:
     // two signals cant be changed with sigaction: SIGKILL and SIGSTOP. 
@@ -5035,7 +5040,7 @@ int string_play() {
     else {
         printf("char at index 5 is %c\n", x[5]);
     }
-    
+
     printf("strncat - our string is: %s\n", x);
 
     // strncat will add a null terminator after n bits have been written
@@ -5051,6 +5056,8 @@ int string_play() {
 
     dest[4] = '\0'; // we add the null terminator manually
     printf("strncpy - our string is now: %s\n", dest);
+
+    return 0;
 }
 
 // =================================================================================================================================================================
@@ -5061,3 +5068,15 @@ int string_play() {
 // hope you enjoyed reading these notes as much as i enjoyed writing them.
 
 // =================================================================================================================================================================
+
+int feature_test_macros() {
+    // feature test macros are used to control the visibility of certain functions and headers in the C library.
+    // the idea is that the C library is a large collection of functions and headers. some of these functions are not part of the C standard.
+
+    // for example signal.h gives certain features if we have _GNU_SOURCE defined. if we dont have this defined, we dont get these features.
+    // since i coded this on ubuntu, i needed to define _GNU_SOURCE to get the features of signal.h.
+
+    // it is important to note that these definitions need to be made before the first #include statement in the file.
+
+    return 0;
+}
