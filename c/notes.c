@@ -101,6 +101,7 @@ int main(int argc, char* argv[]) {
     int handlingSignals();
     int bitwiseOperations();
     int bitShiftLogic();
+    int bit_shifting_signed_ints();
     int bitFlags();
     int bitArrays();
     int unbufferedIO();
@@ -116,10 +117,12 @@ int main(int argc, char* argv[]) {
     int usingSelectForReading();
     int unknown_array_iteration();
     int string_play();
-    string_play();
 
     // non csc209 stuff
     int feature_test_macros();
+
+
+    bit_shifting_signed_ints();
 
     return 0;
 }
@@ -3499,7 +3502,7 @@ void handler(int code) { // our handler function for signals
 }
 
 int handlingSignals() {
-    // change default behaviour of signal, eg:
+    // change default behaviour of signal, eg:  
         // print a msg
         // save some state
         // ignore signal 
@@ -3535,13 +3538,19 @@ int handlingSignals() {
     // };
     // commented this out because its already defined in signal.h
 
-
-    void (*f_ptr)(int) = &handler;
+    // we only care about sa_handler, sa_flags, and sa_mask
 
     struct sigaction newact;
+
+    // set the handler to be the function
+    void (*f_ptr)(int) = &handler;
     newact.sa_handler = f_ptr;
+
+    // just set flags to 0
     newact.sa_flags = 0; // default flags
-    sigemptyset(&newact.sa_mask); // set sa_mask to empty so no signals are blocked during handler
+
+    // just set sa_mask to empty so no signals are blocked during handler
+    sigemptyset(&newact.sa_mask); 
     // newact is set up at this point.
 
     sigaction(SIGINT, &newact, NULL); // call sigaction system call to install our new handler for the SIGINT signal.
@@ -3627,7 +3636,7 @@ int bitShiftLogic() {
     // we say the k'th bit is the k'th bit to the left of the zero'th bit
 
     // eg)
-    // for the bit: 0000 0100, the second bit is 1. ie) bit two is one.
+    // for the bit: 0000 0100, the second bit is 1. ie) bit two is one. (not third bit).
 
 
     // now lets explore some bitwise operator problems
@@ -3637,17 +3646,17 @@ int bitShiftLogic() {
         char b = 0xC1; // this is 1100 0001 in binary
 
         b |= 8;  // note 8 is 1000, sets b to 1100 1001
-        // short hand for b = b | 1;
+        // short hand for b = b | 8;
 
     // eg 2)
-        // check if the third bit of b has value 1
+        // check if the second bit of b has value 1
         b = 0xC1;
-        bool third_bit_is_one = b & 4;
-        printf("%d\n", third_bit_is_one); // will be 0
+        int second_bit_is_one = b & 4;
+        printf("%d\n", second_bit_is_one); // will be 0
 
         b |= 4; // gives 1100 0101
-        third_bit_is_one = b & 4;
-        printf("%d\n", third_bit_is_one); // will be 1
+        second_bit_is_one = b & 4;
+        printf("%d\n", second_bit_is_one); // will be 1
 
     
     // we can make these problems more general using slli << (shift left logic immediate)
@@ -3681,6 +3690,29 @@ void set_K(int* b, int k) { // k is required >= 0.
     // slli shifts 1 to the left by k binary places,
     // so for example: 1 << 3 , this will return 1000
     *b |= (1 << k); 
+}
+
+int bit_shifting_signed_ints() {
+
+    // note that integers are signed by default in C, and typically have 32 bits.
+
+    printf("size of int on this machine: %lu bytes\n", sizeof(int)); // prints 4 bytes = 32 bits 
+
+    // the leftmost bit is the sign bit, and the rest are the magnitude bits. so if we shift a signed int to the left, the sign bit will be shifted as well.
+
+    // eg)
+    int x = 0x80000000; // 1000 0000 0000 0000 0000 0000 0000 0000
+    printf("x is: %d\n", x); // prints largest possible negative value
+
+    x <<= 1; // shifts left by 1, so 0000 0000 0000 0000 0000 0000 0000 0000
+    printf("x is now: %d\n", x); // prints 0
+
+    // now suppose we had a value like this:
+    x = 0x40000000; // 0100 0000 0000 0000 0000 0000 0000 0000
+    printf("x is: %d\n", x); // prints 1073741824
+    // now we shift it 
+    x <<= 1;
+    printf("x is now: %d\n", x); // prints -2147483648, the most negative
 }
 
 
