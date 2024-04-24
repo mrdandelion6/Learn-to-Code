@@ -3796,9 +3796,11 @@ int bitFlags() {
     // 5                    101
     // 6                    110
     // 7                    111
-    // 8                001 000
+    // 10                001 000
 
-    // this ends up being useful for a format like rwxrwxrwx, we can just use an octal representation like xyz
+    // recall there is no 8 or 9 digits in octal.
+
+    // octal's 3 bit per digit representation ends up being useful for a format like rwxrwxrwx, we can just use an octal representation like xyz
 
     // we can then define constants based on these octals
 
@@ -3856,7 +3858,7 @@ int bitArrays() {
 
     // to remove 10 we can do the following
 
-    bit_array &= ~(1 << 10); // we want to make something like 011 1111 1111 and do &= on it.
+    bit_array &= ~(1 << 10); // we want to make something like 1111 1011 1111 1111 and do &= on it.
 
     // in this example the reason we use a short to contain the bit array because it is large enough to encapsulate our set size.
     // if we wanted more bits, then we can just use an unsigned int instead, giving us 32. 
@@ -3889,7 +3891,7 @@ int bitArrays() {
 }
 
 #define N 4
-#define INT_SIZE 32 
+#define INT_SIZE (sizeof(int) * 8)
 
 typedef struct {
     unsigned int field[N];
@@ -3921,6 +3923,16 @@ int ifset(unsigned int value, Bitarray* b) {
 
 
 int unbufferedIO() {
+    // OVERVIEW:
+    
+    // buffered IO:
+        //data is stored in a buffer before it is sent to the file or read from the file. reduces number of system calls. read large block of data at once.
+        // eg) fprintf, fscanf, fgets, fputs, fread, fwrite, etc.
+
+    // unbffered IO:
+        // data is sent to the file or read from the file immediately. no buffering. read or write one byte at a time.
+        // eg) read, write, open, close, lseek, etc.
+ 
     // so far we've only been using IO operations that operate on streams, using file objects
     // fopen, fclose, fgets, fscanf, fprintf, .. etc.
     // these are all buffered IO operations.
