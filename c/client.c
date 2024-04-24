@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,7 +23,7 @@ int main() {
     memset(&server.sin_zero, 0, 8);
     server.sin_port = htons(46050);
 
-    // now we just need to set server.sin_addr.s_addr to the IP address.
+    // now we just need to set server.sin_addr.s_addr to the server's IP address.
     // to get IP address, we use getaddrinfo() and pass in the machine name.
 
     // int getaddrinfo(char* host, char* service, struct addrinfo* hints, struct addrinfo** result)
@@ -32,7 +34,7 @@ int main() {
 
     
     /* pulled this from netdb.h */
-    struct addrinfo
+    struct _addrinfo // named it with _ to avoid conflict with actual addrinfo in netdb.h
     {
         int ai_flags;			/* Input flags.  */
         int ai_family;		/* Protocol family for socket.  */
@@ -41,9 +43,9 @@ int main() {
         socklen_t ai_addrlen;		/* Length of socket address.  */
         struct sockaddr *ai_addr;	/* Socket address for socket.  */
         char *ai_canonname;		/* Canonical name for service location.  */
-        struct addrinfo *ai_next;	/* Pointer to next in list.  */
+        struct _addrinfo *ai_next;	/* Pointer to next in list.  */
     };
-    // i defined the struct again, pulling it from netdb.h because i was getting errors in intellisense for some reason.
+    // only need to know about ai_addr
 
 
     // first declare a struct addrinfo* type:

@@ -4488,11 +4488,11 @@ int socketConfiguration() {
     // the sockaddr struct is a generic address family. address family is another name for domain.
     // address families define how network addresses are represented and interpreted. different address families support different types of network communication protocols.
     // again, note that the type for the address parameter in bind() is const struct sockaddr* which is GENERIC. 
-    // in our case, we will be usingS the address-family (aka DOMAIN) AF_INET. so we use the more specific struct sockaddr_in instead of sockaddr. the in stands for internet.
+    // in our case, we will be using the address-family (aka DOMAIN) AF_INET. so we use the more specific struct sockaddr_in instead of sockaddr. the in stands for internet.
     
     struct _sockaddr_in { // added a _ to avoid conflict with the actual struct sockaddr_in, as this is just for demonstration.
         short sin_family; // this specifies domain / family address, set to AF_INET
-        __u_short sin_port; // this specifies the port our socket is on, set to htons(PORT_NUMBER   )
+        __u_short sin_port; // this specifies the port our socket is on, set to htons(PORT_NUMBER)
         struct in_addr sin_addr; // this specifies the machine address. we set it to INADDR_ANY. need #include <netinet/in.h>
         char sin_zero[8]; // padding
     };
@@ -4646,7 +4646,7 @@ int socketConfiguration() {
     // server.sin_addr = ( (struct sockaddr_in *) result->ai_addr )->sin_addr;
 
     // lets break it down: (starts dancing* jk)
-    // result->ai_addr returns a sockaddr generic address. we cast that to sockaddr_in then extract sin_addr from that.
+    // result->ai_addr returns a sockaddr generic address. we cast that to sockaddr_in* then extract sin_addr from that.
     // recall sockaddr_in has a sin_addr address. we then assign that to the server sockaddr_in that we are making for connect().
     // like shown above: server.sin_addr = ( (struct sockaddr_in *) result->ai_addr )->sin_addr;
 
@@ -4661,7 +4661,7 @@ int socketConfiguration() {
     // for example my computer's name may be Faisal's Computer, and this information would be useful only on my local network.
     // however if someone who was far away wanted to connect to a server hosted locally on my machine, they would need my actual IP address.
     // because, consider that "Faisal's Computer" is not a unique name. it's not a server hosted somewhere on the web.
-    // in other words, getaddrinfo() is useless for setting up connections to servers hosted on local machines from far away.
+    // in other words you would need the name of the server's router given that it has a public domain on the internet.
     // disclaimer: not entirely sure about all of this, it is just what i think from researching on the net.
 
     return 0;
@@ -4682,6 +4682,7 @@ int socketCommunication() {
     // 1.) socket(): create client's socket with socket() system call
     // 2.) getaddrinfo(): option call if we want to get the machine address of server from its name
     // 3.) connect(): connect to the server by passing in our client socket and the server's address. we must know the server's address to connect to it.
+    // 4.) freeaddrinfo(): free the memory allocated by getaddrinfo()
 
     // connecting to multiple clients:
     // after we call listen(), it is gonna be there forever, still listening. but we would need to call accept() again to start waiting for a new connection.
