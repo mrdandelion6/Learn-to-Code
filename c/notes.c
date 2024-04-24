@@ -114,7 +114,8 @@ int main(int argc, char* argv[]) {
     int issueWithBlockingRead();
     int usingSelectForReading();
     int unknown_array_iteration();
-    unknown_array_iteration();
+    int string_play();
+    string_play();
 
     return 0;
 }
@@ -2255,6 +2256,17 @@ int everyIO() {
         // SEEK_SET = 0
         // SEEK_CUR = 1
         // SEEK_END = 2. remark for SEEK_END, if we wanna move backwards from the end (ie, left <--), then use a negative offset.
+
+    // int close(int fd)
+        // closes a file descriptor. returns 0 on success, -1 on error.
+
+    // int write(int fd, void* buf, size_t count)
+        // writes count bytes from buf to the file descriptor fd. returns number of bytes written on success, -1 on error.
+
+    // int read(int fd, void* buf, size_t count)
+        // reads count bytes from file descriptor fd into buf. returns number of bytes read on success, -1 on error.
+
+    
     return 0;
 }
 
@@ -2512,6 +2524,7 @@ int linkedStructures() {
     if (front == NULL) { // a little error catching
         fprintf(stderr, "Index Error\n");
     }
+
     else {
         printLinky(front);
     }
@@ -3200,14 +3213,14 @@ int relationshipOfProcesses() {
 int relationBetweenShellAndProcesses() {
     // relation between the shell and the processes it spawns
     // can use the wait() system call to force the parent process to wait until its children have been terminated. prototype is:
-    // pid_t wait(int* state_loc)
+    // pid_t wait(int* stat_loc)
     // wait() returns the process ID of the terminated child on success, else returns -1
 
     // STAT_LOC ARGUMENT
         // information about how the child terminated; ie terminates with error or terminates cleanly, is stored in the integer value of the stat_loc argument.
         // after a child process terminates, the exit status is stored in the stat_loc arguement (value returned on termination) 
         // this value is NOT necessarily equivalent to to the return value on termination
-        // various bits in the state_loc argument are used for different purposes! it is complex.
+        // various bits in the stat_loc argument are used for different purposes! it is complex.
         // for example, lowest 8 bits tell us whether the process terminated normally or whether it terminated because it received a signal.
         // for example, ctrl+C is a signaled termination.
         // if the process terminated due to a signal, the lower 8 bits tell us which signal.
@@ -3315,7 +3328,7 @@ int usingMacrosForStat_loc() {
             perror("wait");
         }
         else {
-            if (WIFEXITED(status)) { // WIFEXITED, read as W: if exited. returns true if the process exited normally (not signalled)
+            if (WIFEXITED(status)) { // WIFEXITED, read as W: if exited. returns 1 if the process exited normally (not signalled)
                 printf("Child %d terminated with %d\n", pid, WEXITSTATUS(status));  //WEXITSTATUS, read as W (wait): exit status. returns the exit status program terminated with. so with return 0, 1, 2, 3, 4.
             } else if (WIFSIGNALED(status)) { // WIFSIGNALED, read as W: if signaled. returns true if the process ended from a signal.
                 printf("Child %d terminated with a signal %d\n", pid, WTERMSIG(status)); // WTERMSIG, read as W: termination signal. returns the signal's status the program terminated with
@@ -3465,7 +3478,7 @@ int signalsInC() {
         // kill -INT 3819
 
     // note we didnt type SIGSTOP, just STOP.
-    // can also type in the numbers directory
+    // can also type in the numbers directly
 
     // library function kill uses the same idea.
         // kill(pid_t pid, int sig);
@@ -5004,6 +5017,41 @@ int usingSelectForReading() {
     return 0;
 }
 
+int string_play() {
+    // review of strings in C
+
+    char s[3] = "boba";
+    char x[5] = "yo";
+
+    // lets test what happens when we dont leave any space for the null terminator.
+    strncat(x, s, 3);
+
+    printf("char at index 4 is %c\n", x[4]);
+    // we see the null terminator is not added. it gets added at x[5] but this is not part of the string, so its unsafe.
+
+    if (x[5] == '\0') { // this one evaluates true
+        printf("char at index 5 is /0\n");            
+    }
+    else {
+        printf("char at index 5 is %c\n", x[5]);
+    }
+    
+    printf("strncat - our string is: %s\n", x);
+
+    // strncat will add a null terminator after n bits have been written
+    // strncpy however does not do this.
+
+    char dest[15] = "wassup gang";
+    char source[] = "yoskies";
+
+    strncpy(dest, source, 4);
+    // even if we leave space for null terminator, strncpy will not add it automatically, it needs to be part of the source
+    printf("strncpy - our string is: %s\n", dest);
+    // ends up being yosksup gang. we need to go out of our way to add the null terminator.
+
+    dest[4] = '\0'; // we add the null terminator manually
+    printf("strncpy - our string is now: %s\n", dest);
+}
 
 // =================================================================================================================================================================
 
