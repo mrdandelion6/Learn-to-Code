@@ -5273,6 +5273,51 @@ int writing_to_broken_pipes() {
     return 0;
 }
 
+
+int threads() {
+    // benefits of using multiple proceesses:
+
+        // 1. ) isolation: each process is protected from the other 
+        // 2. ) paralleism: can run multiple processes at the same time on a multicore machine
+
+    // drawbacks:
+        // 1. ) fork is heavyweight 
+        // 2. ) communication between processes is complicated: pipes, fd's, signals etc.
+
+    // what about having multiple THREADS in a single process?
+
+    // threads also allow for parallelism. they can run on different cores of the same machine.
+    // processes dont share memory, but threads do. this makes communication between threads easier.
+    // thread creation is also faster.
+
+    //  Pthreads is the API we use for managing threads. it is a standard API for threads in C.
+
+    // THREADS:
+    // threads belong to a process and share same PID and parent PID.
+    // threads also share heap and global variables since they share memory
+
+    // threads also have their own unique attributes:
+        // own unique thread ID
+        // own errno variable
+        // own stack for local vars and function calls
+
+    // Pthreads are odd in that they return a positive number for failure and 0 for success. 
+    // if a function fails, we can store the positive integer into ERRNO and call perror.
+
+    // pthread_create() is the function we use to create a thread. 
+        // int pthread_create(pthread_t* thread, const pthread_attr_t* attr, void* (*start_routine)(void*), void* arg)
+
+    // it takes in 4 parameters:
+        // 1. ) pointer to a pthread_t variable. this will store the thread ID of the thread we create.
+        // 2. ) pointer to a pthread_attr_t variable. this is a struct that contains the attributes of the thread we are creating.
+        // 3. ) pointer to a function that the thread will run. this function must return void* and take in a void* as a parameter.
+        // 4. ) pointer to the argument that we want to pass to the function. this is a void* so we can pass in anything.
+
+    // arg typically points to something in the heap or global variable
+
+    return 0;
+}
+
 // =================================================================================================================================================================
 
 // END OF CSC209 NOTES !!! 
