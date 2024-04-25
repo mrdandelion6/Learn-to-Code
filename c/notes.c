@@ -2275,6 +2275,21 @@ int everyIO() {
     // int read(int fd, void* buf, size_t count)
         // reads count bytes from file descriptor fd into buf. returns number of bytes read on success, -1 on error.
 
+    // int close(int fd)
+        // close a file descriptor. returns 0 on success, -1 on error.
+
+    // int open(const char* path, int flags)
+        // returns a file descriptor on success, -1 on error.
+        // opens a file. flags is a bitwise OR of the following values:
+            // O_RDONLY: open for reading only
+            // O_WRONLY: open for writing only
+            // O_RDWR: open for reading and writing
+
+            // less common stuff dont rlly need to know this:
+            // O_CREAT: create file if it does not exist
+            // O_TRUNC: truncate file to 0 length
+            // O_APPEND: append on each write
+            // O_EXCL: error if O_CREAT and file exists
     
     return 0;
 }
