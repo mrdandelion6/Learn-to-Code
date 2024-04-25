@@ -119,12 +119,13 @@ int main(int argc, char* argv[]) {
     int unknown_array_iteration();
     int string_play();
     int parsing_command_line_args();
+    int when_is_a_file_descriptor_ready();
 
     // non csc209 stuff
     int feature_test_macros(); // recommended for ubuntu users especially
 
     // call
-    parsing_command_line_args(argc, argv);
+    when_is_a_file_descriptor_ready();
 
     return 0;
 }
@@ -5008,6 +5009,9 @@ int issueWithBlockingRead() {
         // in the next function we demonstrate the solution to this. it will be the same code but we handle the reading with select().
     }
 
+    // note that an alternative to using select() as we show below is just forking a child for each fd we want to read from
+    // and instead of calling select(), we just call wait() in the parent process and read from the return value of wait().
+
     return 0;
 }
 
@@ -5214,6 +5218,57 @@ int parsing_command_line_args(int argc, char* argv[]) {
                 break;
         }
     }
+
+    return 0;
+}
+
+
+int when_is_a_file_descriptor_ready() {
+    // when is an FD ready?
+
+    // 1.) level triggered: when we can read/write from it without blocking
+    // 2.) edge trigerred: when there is a new action on the fd since we last "asked"
+
+    // select() is level triggered. it tells us when we can read/write from an fd without blocking.
+    // for example, there is data to be read on an fd but we havent read it yet, select() tells us its ready.
+
+    // but what if we want to know when there is new data on an fd? this is edge triggered.
+    // things are considered "edge-triggered" when the state changes since the last time we checked
+
+    // LIMITATIONS OF SELECT()
+        // can only monitor 1024 fds (on linux) at a time (1024 given by FD_SETSIZE)
+        // there are linux specific alternatives but these are not portable unlike the general select() call
+
+    // a common tradeoff is portability vs. efficiency. makes sense: we make things more general to make them more portable but this can make them less efficient.
+    // specific designs may excel in specific systems but these lose their portability.
+
+
+    // CANONICAL MODE
+        // when client types into a terminal, the characters are not sent to the server immediately. they are sent when client presses enter.
+    // NON-CANONICAL MODE
+        // when client types into a terminal, the characters are sent to the server immediately. 
+
+    // we dont gotta worry about this stuff when just using write() in our client code, as that sends the data immediately. its just for when we are reading from the terminal on client side.
+
+    return 0;
+}
+
+int writing_to_broken_pipes() {
+    // writing to a broken pipe generates a SIGPIPE signal. this will terminate your program.
+
+    // suppose u dont want the program to terminate when this happens. you can protect against it by ignoring the signal using a mask.
+    // can use sigprocmask() to do this or sigaction().
+    // just make a handler for the signal and have the error recorded in ERRNO.
+
+    // then check if ERRNO is equal to EPIPE. if it is, then you know that the pipe is broken.
+
+    if ( signal( SIGPIPE, SIG_IGN ) == SIG_ERR ) {
+        // if signal() returns SIG_ERR, it means that the signal could not be set. this is unrelated to any sigpipe signals. its just an error check
+        perror("signal");
+        exit(1);
+    }
+    // essentially alll this does is set SIGPIPE signal to SIG_IGN and SIG_IGN is a macro that tells the system to ignore the signal.
+    // then each time after calling write() and read() we check if ERRNO is EPIPE. if it is, we know the pipe is broken.
 
     return 0;
 }
