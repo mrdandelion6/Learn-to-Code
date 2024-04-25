@@ -118,12 +118,13 @@ int main(int argc, char* argv[]) {
     int usingSelectForReading();
     int unknown_array_iteration();
     int string_play();
+    int parsing_command_line_args();
 
     // non csc209 stuff
     int feature_test_macros(); // recommended for ubuntu users especially
 
     // call
-    more_signals();
+    parsing_command_line_args(argc, argv);
 
     return 0;
 }
@@ -5159,6 +5160,45 @@ int string_play() {
 
     dest[4] = '\0'; // we add the null terminator manually
     printf("strncpy - our string is now: %s\n", dest);
+
+    return 0;
+}
+
+int parsing_command_line_args(int argc, char* argv[]) {
+    // we will use getopt for this
+    // int getopt(int argc, char* const argv[], const char* optstring)
+    // argc is the number of arguments passed to the program, we get this from main()
+    // argv is the array of arguments passed to the program, we get this from main()
+    // optstring is a string that specifies the options the program is looking for. each character in the string is an option.
+
+    // getopt() returns the next option character from the optstring that matches an option in the argv list.
+    // it returns -1 if there are no more options to process.
+
+    // the reason we return an int is because we can return -1 to indicate that there are no more options to process.
+    // and note that any char sized elements are just 1 byte and can be fit into an integer.
+    // hence the comparison between the return value and characters like 'a' and 'b' is valid.
+
+    int opt;
+    while ( (opt = getopt(argc, argv, "abc:")) != -1 ) {
+        // a, b, and c are valid options. 
+        // whenever an character in the option has : after it, it means it requires an argument.
+        // since c is the only one with a colon, it is the only one that requires an argument.
+
+        switch(opt) { // compare the return value of getopt() to the options we are looking for.
+            case 'a': 
+                printf("option a\n");
+                break;
+            case 'b':
+                printf("option b\n");
+                break;
+            case 'c':
+                printf("option c with value %s\n", optarg);
+                break;
+            default:
+                printf("unknown option\n");
+                break;
+        }
+    }
 
     return 0;
 }
