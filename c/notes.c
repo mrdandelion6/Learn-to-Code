@@ -98,6 +98,7 @@ int main(int argc, char* argv[]) {
     int zombieAndOrphanProcesses();
     int runningDifferentPrograms();
     int signalsInC();
+    int more_signals();
     int handlingSignals();
     int bitwiseOperations();
     int bitShiftLogic();
@@ -119,10 +120,10 @@ int main(int argc, char* argv[]) {
     int string_play();
 
     // non csc209 stuff
-    int feature_test_macros();
+    int feature_test_macros(); // recommended for ubuntu users especially
 
-
-    bit_shifting_signed_ints();
+    // call
+    more_signals();
 
     return 0;
 }
@@ -3529,14 +3530,13 @@ int handlingSignals() {
 
     // sigaction struct below.
 
-    // struct sigaction {
+    // struct _sigaction {
     //     void (*sa_handler)(int);
-    //     void (*sa_sigaction)(int, siginfo_t*, void*); 
+    //     void (*sa_sigaction)(int, siginfo_t *, void *);
     //     sigset_t sa_mask;
     //     int sa_flags;
     //     void (*sa_restorer)(void);
     // };
-    // commented this out because its already defined in signal.h
 
     // we only care about sa_handler, sa_flags, and sa_mask
 
@@ -3559,6 +3559,63 @@ int handlingSignals() {
     // two signals cant be changed with sigaction: SIGKILL and SIGSTOP. 
     // SIGKILL will always cause process to terminate and SIGSTOP will always suspend the process.
 
+    return 0;
+}
+
+int  more_signals() {
+    
+    // we will learn more signal manipulating functions other than sigaction:
+        // int sigaddset(sigset_t* set, int signum)
+            // adds a signal to a set of signals
+        // int sigdelset(sigset_t* set, int signum)
+            // removes a signal from a set of signals
+        // int sigemptyset(sigset_t* set)
+            // empties a set of signals
+        // int sigfillset(sigset_t* set)
+            // fills a set of signals with all possible signals
+        // int sigsuspend(sigset_t* mask)
+            // temporarily replaces the signal mask of the calling process with the mask given as an argument and suspend calling process until a signal in the mask is received
+        // int sigprocmask(int how, const sigset_t* set, sigset_t* oldset)
+            // changes the signal mask of the calling process
+        // int sigpending(sigset_t* set)
+            // fills set with the signals that are currently blocked and pending delivery to the calling process
+        // int sigismember(const sigset_t* set, int signum)
+            // returns 1 if signum is a signal in set, 0 otherwise
+
+    // == sigaddset and sigdelset ==
+    // these functions add and remove signals from a set of signals
+    // here is an example
+    sigset_t mask;
+    sigemptyset(&mask); // initialize mask to empty
+    sigaddset(&mask, SIGINT); // add SIGINT to the mask
+    // adding to the mask means that the signal will be blocked when the mask is used in sigsuspend or sigprocmask
+    // will show this now
+
+    // int sigsuspend(const sigset_t* mask)
+    // sigsuspend() temporarily replaces the signal mask of the calling process with the mask given as an argument
+    // then it suspends the process until a signal is received
+
+    // mask points to a set of signals that the process will block. the process is suspended until one of the signals in the mask is received.
+    // when sigsuspend returns, the original signal mask is restored.
+    // sigsuspend always returns -1 and sets errno to EINTR if a signal is caught and the signal handler returns.
+
+    // here is an example of using sigsuspend:
+    sigemptyset(&mask); 
+    // now lets add a signal to the mask as before
+    sigaddset(&mask, SIGINT);
+    // now we will call sigsuspend
+    sigsuspend(&mask);
+    // now the process will be suspended until a SIGINT signal is received, at which point the signal handler will be called and the process will resume.
+
+    // == sigprocmask ==
+    // this is the function we use to change the set of blocking functions
+    // int sigprocmask(int how, const sigset_t* set, sigset_t* oldset)
+    // the how argument is one of three values (these are macros):
+        // SIG_BLOCK: adds the signals in set to the current mask
+        // SIG_UNBLOCK: removes the signals in set from the current mask
+        // SIG_SETMASK: sets the mask to the signals in set 
+
+    // oldset is a pointer to a sigset_t that will hold the previous mask after sigprocmask is called. may be useful to save the old mask.
     return 0;
 }
 
