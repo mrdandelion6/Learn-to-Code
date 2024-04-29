@@ -5323,7 +5323,7 @@ int threads() {
 // END OF CSC209 NOTES !!! 
 
 // that concludes all my notes on C pertaining to CSC209. i may continue to add more notes to this repo as i learn more C but they will be unrelated to CSC209.
-// hope you enjoyed reading these notes as much as i enjoyed writing them.
+// hope you learned much from these notes :)
 
 // =================================================================================================================================================================
 
