@@ -16,9 +16,9 @@ I will be using Ubuntu through WSL.
 ## Usage
 
 ### Learn C
-Located in the `c` directory. Made for someone who has never seen C before but also delve into more advanced systems programming topics such as pipes, processes, and sockets. 
+Located in the `c` directory. These notes are made for someone who has never seen C before but they also delve into more advanced systems programming topics such as pipes, processes, and sockets. Most of the material in these notes is pertaining to the course **CSC209 at UofT**, but anyone who wants to learn C and low level systems programming will find this useful.
 
-`notes.c` contains all the notes I have made along with C code examples. Each different topic is sectioned off into its own function. Similiar to a table of contents, you can view the list of topics in `main()` and ctrl-click them to jump to a topic. These notes are made to be compiled and read on Linux as I made them through Ubuntu on WSL. You can do otherwise but you may get intellisense errors.
+`notes.c` contains all the notes I have made along with C code examples. Each different topic is sectioned off into its own function. Similiar to a table of contents, you can view the list of topics in `main()` and ctrl-click them to jump to a topic. These notes are made to be compiled and read on Linux as I made them through Ubuntu on WSL. You can do otherwise but you may get intellisense and compilation errors. Windows users should compile using Ubuntu.
 
 If you would like to run code inside a particular topic, simply make that topic be the only function called in `main()`, then compile `notes.c`. You will need a C compiler, for example I use `gcc`. So in shell I will `cd` to the directory containing `notes.c` and run the following command:
 
@@ -36,6 +36,10 @@ Located in the `shell-script` directory. Made for someone who has never seen She
 chmod a+x myscript.sh
 ./myscript.sh
 ```
+
+---
+### Learn JavaSCript
+Located in the `java-script` directory. Made for someone who has never seen JavaScript before but has some familiarity with HTML and CSS.
 
 ---
 ### Learn Python
