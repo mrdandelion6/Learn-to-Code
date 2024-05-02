@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1 id="helloworld">Hello World!</h1>
+    <p id="p1"></p>
+    <p id="p2"></p>
+    <p id="p3"></p>
+
+    <label for="nameText" id="myLabel">Enter your name:</label><br>
+    <input type="text" id="nameText"><br>
+    <button type="button" id="submitButton" onclick="doSomething()">submit</button><br>
+    &nbsp; <br>
+    &nbsp; <br>
+
+    <canvas id="myCanvas" width="500" height="500"></canvas>
+
+    &nbsp; <br>
+    &nbsp; <br>
+    <button id="beginButt">begin</button>
+
+    <div id="div1"></div>
+
+    <div id="outerDiv">
+        <div id="innerDiv"></div>
+    </div>
+    
+    <button type="button" id="myButt">BUTOON</button> <br>
+
+    <img src="img/free-car-image.jpg" alt="sportcar" id="carPicture" height="100px"> <br>
+    
+    &nbsp; <br>
+    &nbsp; <br>
+
+    <label for="visaBtn">Visa</label>
+    <input type="radio" name="card" id="visaBtn"> <br>
+    <label for="masterBtn">Mastercard</label>
+    <input type="radio" name="card" id="masterBtn">  <br>
+    <label for="ppBtn">Paypal</label>
+    <input type="radio" name="card" id="ppBtn"> <br>
+
+    <button id="hiButton">submit</button> <br>
+    &nbsp; <br>
+    &nbsp; <br>
+
+    <label id="counterLabel">0</label>
+    <button id="decreaseBtn">decrease</button>
+    <button id="increaseBtn">increase</button>
+
+    &nbsp; <br>
+    &nbsp; <br>
+    <button id="BUYcourse">BUY NOW!!</button>
+
+    &nbsp; <br>
+    &nbsp; <br>
+    <h1 id="menuTitle">this is the menu</h1>
+
+    <ul id="veg">
+        <li>tomatoes</li>
+        <li>potatoes</li>
+        <li>onions</li>
+    </ul>
+    <ul id="fruit">
+        <li>tomatoes</li>
+        <li>potatoes</li>
+        <li>onions</li>
+    </ul>
+    <ul id="dessert">
+        <li>tomatoes</li>
+        <li>potatoes</li>
+        <li>onions</li>
+    </ul>
+
+    <div class="deserts">ice cream</div>
+    <div class="deserts">cake</div>
+    <div class="deserts">pie</div>
+
+<!-- good practice to put the script element at bottom of body -->
+<!-- want to render basic html content before script is parsed -->
+<!-- moreover, the script is likely reliant on existing html code, want to first render html -->
+<script src="index.js"></script>
+</body>
+</html>

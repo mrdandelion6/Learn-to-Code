@@ -38,8 +38,10 @@ chmod a+x myscript.sh
 ```
 
 ---
-### Learn JavaSCript
-Located in the `java-script` directory. Made for someone who has never seen JavaScript before but has some familiarity with HTML and CSS.
+### Learn JavaScript
+Located in the `javascript` directory. Made for someone who has never seen JavaScript before but has some familiarity with HTML and CSS.
+
+`notes.js` contains detailed notes on JavaScript with side by side code examples. `compare.java` compares Java's syntax against JavaScript's for those of you who are familiar with Java. See [javascript/README](javascript/README) for more info.
 
 ---
 ### Learn Python
