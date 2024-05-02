@@ -1,9 +1,13 @@
+.vscode/
+
 *.exe
 *.out
 *.o
 
-.vscode/
+# shell
 utmlab.sh
+
+# c
 tempCodeRunnerFile.c
 practice
 notes_sort
@@ -12,3 +16,6 @@ binary_data*
 notes
 main
 client
+
+# python
+env
