@@ -41,7 +41,7 @@ chmod a+x myscript.sh
 ### Learn JavaScript
 Located in the `javascript` directory. Made for someone who has never seen JavaScript before but has some familiarity with HTML and CSS.
 
-`notes.js` contains detailed notes on JavaScript with side by side code examples. `compare.java` compares Java's syntax against JavaScript's for those of you who are familiar with Java. See [javascript/README](javascript/README) for more info.
+`notes.js` contains detailed notes on JavaScript with side by side code examples. `compare.java` compares Java's syntax against JavaScript's for those of you who are familiar with Java. See [javascript/README](javascript/README.md) for more info.
 
 ---
 ### Learn Python
