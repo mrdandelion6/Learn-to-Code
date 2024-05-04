@@ -48,7 +48,7 @@ Located in the `javascript` directory. Made for someone who has never seen JavaS
 ### Learn Python
 Located in the `python` directory. Made for someone who is already familiar with Python and interested in learning tools for data analysis.
 
-`data_analysis.py` contains detailed notes on using various libraries such as NumPy, Pandas, and Matplotlib. There aren't any notes for learning Python from the ground up for this section unlike the others. Each different topic is sectioned off into its own function. Similiar to a table of contents, you can view the list of topics as functions in `contents()` and ctrl-click it to jump to a chapter.
+`data_analysis.py` contains detailed notes on using various libraries such as NumPy, Pandas, and Matplotlib. There aren't any notes for learning Python from the ground up for this language unlike the others. Each different topic is sectioned off into its own function. Similiar to a table of contents, you can view the list of topics in `contents()` and ctrl-click them to jump to a particular chapter.
 
 You will need to install a Python interpreter of version **3.12.1** or later and install all the required libraries. To install the required libraries you should create a virtual environment in the `python` directory, activate it, then install everything in `requirements.txt`. You can do so as follows (on Windows):
 ```
