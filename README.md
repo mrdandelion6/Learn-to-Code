@@ -9,6 +9,7 @@ Welcome to my code learning repository! This repository is a collection of my no
 - `Shell Script` 
 - `JavaScript` 
 - `Python`
+- `R`
 
 
 I will be using Ubuntu through WSL.  
