@@ -50,14 +50,14 @@ Located in the `python` directory. Made for someone who is already familiar with
 
 `data_analysis.py` contains detailed notes on using various libraries such as NumPy, Pandas, and Matplotlib. There aren't any notes for learning Python from the ground up for this language unlike the others. Each different topic is sectioned off into its own function. Similiar to a table of contents, you can view the list of topics in `contents()` and ctrl-click them to jump to a particular chapter.
 
-You will need to install a Python interpreter of version **3.12.1** or later and install all the required libraries. To install the required libraries you should create a virtual environment in the `python` directory, activate it, then install everything in `requirements.txt`. You can do so as follows (on Windows):
+You will need to have a Python interpreter of version **3.12.1** or later installed along with all the required libraries. To install the required libraries you should create a virtual environment in the `python` directory, activate it, then install everything in `requirements.txt`. You can do so as follows (on Windows):
 ```
 python -m venv env
 env\Scripts\activate
 pip install -r requirements.txt
 ```
 
-To run a particular function, simply make it the only function being called in the `if __name__ == "__main__"` statement and run the Python file. Make sure your IDE is using the Python interpreter for the virtual environment you created.
+To run a particular function, simply make it the only function being called in the `if __name__ == "__main__"` statement and run the Python file. Make sure your IDE is using the Python interpreter from the virtual environment you created, you may need to specify the path to the Python executable: `path-to-repo\repo-root\python\env\Scripts\python.exe`.
 
 ---
 
