@@ -59,6 +59,13 @@ pip install -r requirements.txt
 
 To run a particular function, simply make it the only function being called in the `if __name__ == "__main__"` statement and run the Python file. Make sure your IDE is using the Python interpreter from the virtual environment you created, you may need to specify the path to the Python executable: `path-to-repo\repo-root\python\env\Scripts\python.exe`.
 
+### Learn R
+Located in the `python` directory. Made for someone who has never seen R before. This section is relatively new so the notes may currently be small (or empty).
+
+`notes.r` will contain detailed notes on using R.
+
+You wll need version 4.4.0 or later.
+
 ---
 
 #### Happy coding.
