@@ -30,7 +30,7 @@ gcc -o notes notes.c
 
 ---
 ### Learn Shell Script
-Located in the `shell-script` directory. Made for someone who has never seen Shell Script before. 
+Located in the `shell-script` directory. Made for someone who has never seen Shell Script before. This material is very brief and most of it is pertaining to the course **CSC209 at UofT**, but anyone who wants to learn a little Shell Script may find this useful.
 
 `notes.sh` only contains notes and is not intended to be ran as a script. Rather, users may read through `notes.sh` and test commands in a bash terminal or create their own script in `myscript.sh`. To execute `myscript.sh` from shell, cd to the directory containing my script.sh and run the following command:
 ```
