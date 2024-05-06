@@ -3,13 +3,14 @@
 Welcome to my code learning repository! This repository is a collection of my notes and code snippets as I embark on the journey of learning many different programming languages. 🚀
 
 
-## Languages
+## Languages & Frameworks
 
 - `C` 
 - `Shell Script` 
 - `JavaScript` 
 - `Python`
 - `R`
+- `React`
 
 
 I will be using Ubuntu through WSL.  
