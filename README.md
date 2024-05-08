@@ -8,7 +8,7 @@ Welcome to my code learning repository! This repository is a collection of my no
 - `C` 
 - `Shell Script` 
 - `JavaScript` 
-- `Python`
+- `Python & Jupyter`
 - `R`
 - `React`
 
@@ -46,19 +46,19 @@ Located in the `javascript` directory. Made for someone who has never seen JavaS
 `notes.js` contains detailed notes on JavaScript with side by side code examples. `compare.java` compares Java's syntax against JavaScript's for those of you who are familiar with Java. See [javascript/README](javascript/README.md) for more info.
 
 ---
-### Learn Python
-Located in the `python` directory. Made for someone who is already familiar with Python and interested in learning tools for data analysis. This section is relatively new so the notes may currently be small (or empty).
+### Learn Python & Jupyter Notebooks
+Located in the `python` directory. Made for someone who is already familiar with Python and interested in learning tools for data analysis but has never seen Jupyter before. This section is relatively new so the notes may currently be small (or empty).
 
-`data_analysis.py` contains detailed notes on using various libraries such as NumPy, Pandas, and Matplotlib. There aren't any notes for learning Python from the ground up for this language unlike the others. Each different topic is sectioned off into its own function. Similiar to a table of contents, you can view the list of topics in `contents()` and ctrl-click them to jump to a particular chapter.
+`data_analysis.ipynb` contains detailed notes on using Jupyter and various libraries such as NumPy, Pandas, and Matplotlib. There aren't any notes for learning Python from the ground up in this section unlike the others. 
 
-You will need to have a Python interpreter of version **3.12.1** or later installed along with all the required libraries. To install the required libraries you should create a virtual environment in the `python` directory, activate it, then install everything in `requirements.txt`. You can do so as follows (on Windows):
+You will need to have Jupyter and a Python interpreter of version **3.12.1** or later installed along with all the required libraries. To install the required libraries you should create a virtual environment in the `python` directory, activate it, then install everything in `requirements.txt`. You can do so as follows (on Windows):
 ```
 python -m venv env
 env\Scripts\activate
 pip install -r requirements.txt
 ```
 
-To run a particular function, simply make it the only function being called in the `if __name__ == "__main__"` statement and run the Python file. Make sure your IDE is using the Python interpreter from the virtual environment you created, you may need to specify the path to the Python executable: `path-to-repo\repo-root\python\env\Scripts\python.exe`.
+Make sure your IDE is using the Python interpreter from the virtual environment you created, you may need to specify the path to the Python executable: `path-to-repo\repo-root\python\env\Scripts\python.exe`. You will also need to configure the notebook to use this same interpreter as its kernel.
 
 ### Learn R
 Located in the `python` directory. Made for someone who has never seen R before. This section is relatively new so the notes may currently be small (or empty).
