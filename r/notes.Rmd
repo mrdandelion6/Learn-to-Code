@@ -1,0 +1,174 @@
+---
+title: "R Notes" # yaml header
+output: 
+  html_document:
+    code_folding: hide
+date: "2024-05-09"
+author: "Faisal :)"
+---
+
+```{r notes}
+
+x <- 3 + 2
+
+contents <- function() {
+    # there is no go to definitions in vscode for R by default (ctrl-click)
+    # so just word search each function
+    setup_R()
+
+}
+
+setup_R <- function() {
+    # we will go ver how to set up R for vs code on windows.
+    # firstly install R for windows. 
+
+}
+
+variables <- function() {
+    # assign operator is <- but = also works
+    x = 10
+    y <- 10
+    # same thing
+}
+
+rmd_files <- function() {
+
+    # .rmd files stand for R markdown
+
+    # CHUNKS
+    # code put in ```{r} ```. press ctrl alt i to quick create a chunk
+}
+
+csv_data <-function() {
+
+    # LOADING CSVS
+    # to read CSVs, use read.csv() function
+    df <- read.csv("C:\735\code\synced\langs\0_misc\Learn-to-Code\r\data - data.csv.csv", header=TRUE)
+    # we call data like this a dataframe
+
+    # we can see an overview of our data set df by calling str(df)
+    str(df)
+    
+    # result is:
+    # 'data.frame':	100 obs. of  11 variables:
+    # $ participant_id: chr  "par_062" "par_006" "par_066" "par_042" ...
+    # $ group         : chr  "patient" "control" "control" "patient" ...
+    # $ age           : int  29 24 23 27 20 35 49 42 28 27 ...
+    # $ sex           : chr  "M" "F" "F" "F" ...
+    # $ brain_score   : num  0 71.6 72.1 73.6 75.8 ...
+    # $ cog_score     : num  21 22 27 22 29 29 27 30 26 30 ...
+    # $ health_score  : chr  "AVERAGE" "AVERAGE" "HIGH" "AVERAGE" ...
+    # $ test_1        : int  5 7 7 7 5 5 5 6 6 6 ...
+    # $ test_2        : int  5 9 7 8 5 7 7 5 8 9 ...
+    # $ test_3        : int  7 10 6 7 6 6 5 6 8 10 ...
+    # $ notes         : chr  "" "" "" "" ...
+
+    # we get a mix of chr (string) and int data.
+
+    # CLEANING CSVs
+    # dirty work to get data in the right format to be analyzed
+
+    # we never change the original data set, we only want to change the data loaded in R, our df
+
+    # we can access variables from a data frame using the $ operator. for example
+    df$sex
+
+    # AUTOMATIC ITERATION
+    # note that when we do some operator on a variable from a data frame it automatically iterates over all values in that variable.
+    # think of each variable of a dataframe as a column, and each cell in that column as a value. we refer to the stuff in variables just as "values".
+    # so when we do something like df$sex == 'M' like this:
+    df$sex == 'M'
+    # it iterates over all the values in the sex variable and prints TRUE or FALSE for all of them. and we get this:
+    # [1]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE  TRUE  TRUE FALSE  TRUE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE  TRUE
+    # [25] FALSE FALSE FALSE  TRUE FALSE  TRUE  TRUE FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+    # [49]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE  TRUE FALSE  TRUE
+    # [73]  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE  TRUE FALSE  TRUE FALSE FALSE  TRUE FALSE  TRUE  TRUE FALSE  TRUE
+    # [97] FALSE FALSE  TRUE  TRUE
+
+    # REPLACING VALUES
+    # we note there is one missing value "". this was supposed to be M.
+    # here is a reckless approach to fix this:
+    df$sex[df$sex == ''] <- 'M'
+    # we index into df$sex, and our index value is anywhere where df$sex == ''. 
+    # this is dangerous because it will just turn everything into that's '' into 'M', even if its some other missing data
+
+    # a better way to do it is by using the participant_id variable as these are unique
+    df$participant_id
+    # we know the missing M value has a participant_id of par_018 so we do this
+    df$sex[df$participant_id == "par_018"] <- 'M'
+
+    # DELETING VALUES
+    # to delete values from a df, we just set it to NA, which is like NULL.
+    # note that we have one extremely large value in df$age. suppose we only want participants to be aged 20-50.
+    df$age[df$age < 20 | df$age > 50] # just prints 388
+
+    # we set it to NA
+    df$age[df$age < 20 | df$age > 50] <- NA
+    # note the OR operator is just one |, like a bitwise operator in C or Java
+
+    # now we move on to checking the cog_score variable. we note there's a NaN value.
+    # we don't want to keep NaN in our cog_score because the cog_scores are indeed numbers!
+    # we want missing values to be NA, because if it's NaN we might end up getting some errors later on when trying to do numeric calculations with stuff in cog_score
+
+    # we have a special function to check if a value is a NaN, using is_nan(x)
+    # we can also use sum() function to sum up all the TRUEs that are returned. so we can see how many values in a variable are NaN like this:
+    sum(is.nan(df$cog_score))
+
+    df$cog_score[is.nan(df$cog_score)] <- NA
+    # we just check if something in cog_score is NAN and if it is set it to NA
+
+    # BOX PLOTS
+    # can make a box plot of our data frame as follows:
+    boxplot(df$brain_score)
+    # we observe that our box plot has a major outlier.
+    # even tho this outlier may be a real data point, we likely want to ignore it to avoid a bias in data analysis.
+
+    # we can also do boxplot.stats to see all the stats of the boxplot
+    boxplot.stats(df$brain_score)
+    # $stats
+    # [1] 73.590 82.800 85.585 89.405 96.110
+
+    # $n
+    # [1] 100
+
+    # $conf
+    # [1] 84.54141 86.62859
+
+    # $out
+    # [1]   0.00  71.57  72.09 998.70
+
+    # note that boxplot.stats() returns a list type object. side note, we can check the type of object a variable is using str()
+    # str stands for structure not string
+    test <- boxplot.stats(df$brain_score)
+    str(test) # prints List of 4
+
+    # we can exclude everything from the outliers variable when making our boxplot
+    boxplot( df$brain_score[!df$brain_score %in% boxplot.stats(df$brain_score)$out] )
+    # now we have no more outliers
+    
+    # TODO: finish this note
+    # supposed we want to create a new variable in our data frame that contains 
+    df$test_total <- rowSums(df[c('test_1', 'test_2', 'test_3')], na.rm = FALSE)
+
+    # EXCLUDING ENTIRE ROWS
+    # note that each row in a df is like one element in our data set that has values in each variable.
+    # we may want to remove entire rows of data for many reasons. for example, par_036 recinded their consent and all their test values are 0.
+    df <- df[!df$participant_id == 'par_036'] # this removes the entire row for par_036
+
+    # lets keep track of all our missing values
+    missing_indices <- which(is.na(df), arr.ind = TRUE)
+    # the value for missing_indices is:
+    #      row col
+    # [1,]  86   3
+    # [2,]  59   6
+    # [3,]  78   6
+    # [4,]  18  10
+
+    # CREATING DFs
+    # here is an example of creating a df for the missing contents of our original data
+    missing_df <- data.frame(
+        participant_id = df$participant_id[missing_indices]
+        missing_variables = names(df)$[missing_indices]
+    )
+}
+```

@@ -1,0 +1,16 @@
+---
+title: "R Notes" # yaml header
+output: 
+  html_document:
+    code_folding: hide
+date: "2024-05-09"
+author: "Faisal :)"
+---
+
+## Test
+
+```{r}
+
+x <- 3 + 2
+```
+
