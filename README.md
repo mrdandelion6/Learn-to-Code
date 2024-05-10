@@ -66,6 +66,7 @@ Make sure your IDE is using the Python interpreter from the virtual environment 
 Learn data analysis and a little ML using R. Made for someone who has never seen R before. Located in the `r` directory.
 
 `notes.Rmd` will contain detailed notes on using R. See [r/README](r/README.md) for more info.
+
 ---
 
 #### Happy coding.
