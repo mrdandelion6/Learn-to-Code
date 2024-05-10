@@ -9,12 +9,15 @@ author: "Faisal :)"
 
 __1. Before we get into our analysis, let's "clean up" our dataset. We can expect that there will be some data-entry errors. Are there any values that _must_ be incorrect? Are there missing values? What about outliers? Should any participants be excluded from our analysis? Can we compute a total test score? Print out a list of missing values that we should double check with the RA.__
 
-```{r dataCleaning}
+```{r dataCleaning} 
 # install.packages('knitr')
 library('knitr')
 
-df <- read.csv("C:/735/code/synced/langs/0_misc/Learn-to-Code/r/data - data.csv.csv", header=TRUE)
 
+df <- read.csv("C:/735/code/synced/langs/0_misc/Learn-to-Code/r/data.csv", header=TRUE)
+
+# table gives us a summary of our dataframe
+table(df)
 table(df$sex)
 
 # fill in missing values.

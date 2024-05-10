@@ -151,6 +151,28 @@ Open command palette and search *Keyboard Shortcuts (JSON)*. Add the following c
 ```
 This adds R's run selection command for .Rmd files. Be careful because this will run anything your cursor is on, including text outside of code chunks. I'm not sure if there's a better way to do this. Definitely reach out to me if you know of one.
 
+You may also add other shortcuts for .Rmd files for commands such as `Run Current Chunk`, `Run Above Chunks`, `Run All Chunks`, and so on. Add them with your desired key binds in the following format
+ ```json
+    {
+        "key": "shortcut+here",
+        "command": "r.command",
+        "when": "editorTextFocus && !editorReadonly && (editorLangId == 'rmd' || editorLangId == 'r markdown)"
+    }
+```
+Here is a list of relevant commands to replace `command` with above.
+- runAboveChunks
+- runAllChunks
+- runCurrentChunk
+
+For example,
+ ```json
+    {
+        "key": "ctrl+alt+p",
+        "command": "r.runAboveChunks",
+        "when": "editorTextFocus && !editorReadonly && (editorLangId == 'rmd' || editorLangId == 'r markdown)"
+    }
+```
+
 ---
 
 ### Set Radian to be Terminal for R
