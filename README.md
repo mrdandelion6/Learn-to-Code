@@ -11,6 +11,8 @@ Welcome to my code learning repository! This repository is a collection of my no
 - `Python & Jupyter`
 - `R`
 - `React`
+- `Sass` (coming)
+- `TypeScript` (coming)
 
 
 I will be using Ubuntu through WSL.  
@@ -61,12 +63,9 @@ pip install -r requirements.txt
 Make sure your IDE is using the Python interpreter from the virtual environment you created, you may need to specify the path to the Python executable: `path-to-repo\repo-root\python\env\Scripts\python.exe`. You will also need to configure the notebook to use this same interpreter as its kernel.
 
 ### Learn R
-Located in the `python` directory. Made for someone who has never seen R before. This section is relatively new so the notes may currently be small (or empty).
+Learn data analysis and a little ML using R. Made for someone who has never seen R before. Located in the `r` directory.
 
-`notes.r` will contain detailed notes on using R.
-
-You wll need version 4.4.0 or later.
-
+`notes.Rmd` will contain detailed notes on using R. See [r/README](r/README.md) for more info.
 ---
 
 #### Happy coding.
