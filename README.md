@@ -5,11 +5,15 @@ Welcome to my code learning repository! This repository is a collection of my no
 
 ## Languages & Frameworks
 
-- `C` 
+- `C`
+    - Pipes, processes, and sockets
 - `Shell Script` 
 - `JavaScript` 
+  - DOM
 - `Python & Jupyter`
+  - Data Analysis & ML
 - `R`
+  - Data Analysis
 - `React`
 - `Sass` (coming)
 - `TypeScript` (coming)
@@ -49,10 +53,17 @@ Located in the `javascript` directory. Made for someone who has never seen JavaS
 
 ---
 ### Learn Python & Jupyter Notebooks
-Located in the `python` directory. Made for someone who is already familiar with Python and interested in learning tools for data analysis but has never seen Jupyter before. This section is relatively new so the notes may currently be small (or empty).
+Located in the `python` directory. Made for someone who is already familiar with Python and interested in learning how to code ML and perform data analysis. 
 
 `data_analysis.ipynb` contains detailed notes on using Jupyter and various libraries such as NumPy, Pandas, and Matplotlib. There aren't any notes for learning Python from the ground up in this section unlike the others. 
 
+You can find comprehensive notes for coding ML in `python/ML`. Some topics include:
+- Supervised learning (see `Supervised_Learning.ipynb`)
+- Unsupervised learning (see `Unsupervised_Learning.ipynb`)
+- NLPs (see `NLP.ipynb`).
+There are also many slides for understanding how ML works in `python/ML/slides`. Credit to [Nakul Upadhya](https://github.com/upadhyan).
+
+#### Setup:
 You will need to have Jupyter and a Python interpreter of version **3.12.1** or later installed along with all the required libraries. To install the required libraries you should create a virtual environment in the `python` directory, activate it, then install everything in `requirements.txt`. You can do so as follows (on Windows):
 ```
 python -m venv env
