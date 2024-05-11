@@ -6,19 +6,41 @@ output:
 date: "2024-05-09"
 author: "Faisal :)"
 ---
+## Introduction to R
+Before we get into data analysis with R, we will go over some fundamental concepts in R. R is an interpreted language like Python, but it is specifically designed for statistical computing. R has strong support for vectorized operations making data visualization, data manipulation, and statistical analysis very easy.
 
-__1. Before we get into our analysis, let's "clean up" our dataset. We can expect that there will be some data-entry errors. Are there any values that _must_ be incorrect? Are there missing values? What about outliers? Should any participants be excluded from our analysis? Can we compute a total test score? Print out a list of missing values that we should double check with the RA.__
+R is often used in an interactive manner where you can run commands in the console and see the output immediately, similiar to Python in interactive mode or Jupyter Notebooks.
+
+## Cleaning up Data
+Before we get into our analysis, let's "clean up" our dataset. We can expect that there will be some data-entry errors. Are there any values that _must_ be incorrect? Are there missing values? What about outliers? Should any participants be excluded from our analysis? Can we compute a total test score? Print out a list of missing values that we should double check with the RA.__
+
+Note that any clean up we do to our data must only be inside our code! We should not exclude any data from our original dataset! In other words, the original file should remain untouched.
 
 ```{r dataCleaning} 
+# we will be using CSVs for our data
+
+# note that you will often want to use different packages which can be installed with install.package()
+# we comment out this command because we dont wan't our R script to install packages every time we run it
+# we could just delete it but it serves as a reminder that we need to install the package, for people who might not have it installed.
+
 # install.packages('knitr')
-library('knitr')
+library('knitr') # this library helps us render our markdown file
 
-
+# read.csv() reads a CSV provided it's file path.
 df <- read.csv("C:/735/code/synced/langs/0_misc/Learn-to-Code/r/data.csv", header=TRUE)
 
 # table gives us a summary of our dataframe
 table(df)
-table(df$sex)
+
+# INDEXING AND AUTOMATIC ITERATION
+# we can use the $ operator to access a column in a dataframe
+# a column is also called a variable
+# like this: df$variable_name, eg)
+df$age
+
+# can summarize columns as well by calling table on it
+table(df$age)
+
 
 # fill in missing values.
 df$sex[df$participant_id == "par_018"] <- 'M'
