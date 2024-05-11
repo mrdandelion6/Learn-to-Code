@@ -19,8 +19,6 @@ Welcome to my code learning repository! This repository is a collection of my no
 - `TypeScript` (coming)
 
 
-I will be using Ubuntu through WSL.  
-
 ## Usage
 
 ### Learn C
