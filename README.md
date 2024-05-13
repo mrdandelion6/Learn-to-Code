@@ -71,6 +71,7 @@ pip install -r requirements.txt
 
 Make sure your IDE is using the Python interpreter from the virtual environment you created, you may need to specify the path to the Python executable: `path-to-repo\repo-root\python\env\Scripts\python.exe`. You will also need to configure the notebook to use this same interpreter as its kernel.
 
+---
 ### Learn R
 Learn data analysis and a little ML using R. Made for someone who has never seen R before. Located in the `r` directory.
 
