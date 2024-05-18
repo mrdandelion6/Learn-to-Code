@@ -5,18 +5,18 @@ Welcome to my code learning repository! This repository is a collection of my no
 
 ## Languages & Frameworks
 
-- `C`
-    - Pipes, processes, and sockets
+- `C` : systems programming, pipes, processes, and sockets
 - `Shell Script` 
-- `JavaScript` 
-  - DOM
-- `Python & Jupyter`
-  - Data Analysis & ML
-- `R`
-  - Data Analysis
-- `React`
-- `Sass` (coming)
-- `TypeScript` (coming)
+- `JavaScript` : DOM
+- `Python & Jupyter` : data analysis + ml
+- `R` : data analysis + ml
+
+## Notes to Make
+- `MATLAB` : data analysis + ml
+- `React` 
+- `Sass` 
+- `TypeScript` 
+- `PowerShell`
 
 
 ## Usage
@@ -68,6 +68,7 @@ python -m venv env
 env\Scripts\activate
 pip install -r requirements.txt
 ```
+For a more advanced setup using `virtualenv`, to install and manage multiple different Python interpreters using `pyenv`, read [virtualenv_pyenv.md](python/virtualenv_pyenv.md).
 
 Make sure your IDE is using the Python interpreter from the virtual environment you created, you may need to specify the path to the Python executable: `path-to-repo\repo-root\python\env\Scripts\python.exe`. You will also need to configure the notebook to use this same interpreter as its kernel.
 
@@ -75,7 +76,27 @@ Make sure your IDE is using the Python interpreter from the virtual environment 
 ### Learn R
 Learn data analysis and a little ML using R. Made for someone who has never seen R before. Located in the `r` directory.
 
-`notes.Rmd` will contain detailed notes on using R. See [r/README](r/README.md) for more info.
+`notes.Rmd` will contain detailed notes on using R. See [r/README](r/README.md) for setting up R in VS Code.
+
+---
+### Learn MATLAB
+No notes yet.
+
+---
+### Learn React
+No notes yet.
+
+---
+### Learn Sass
+No notes yet.
+
+---
+### Learn TypeScript
+No notes yet.
+
+---
+### Learn PowerShell
+No notes yet.
 
 ---
 

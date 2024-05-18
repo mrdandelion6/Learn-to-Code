@@ -18,12 +18,6 @@ contents <- function() {
 
 }
 
-setup_R <- function() {
-    # we will go ver how to set up R for vs code on windows.
-    # firstly install R for windows. 
-
-}
-
 variables <- function() {
     # assign operator is <- but = also works
     x = 10
