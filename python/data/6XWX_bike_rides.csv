@@ -1,0 +1,201 @@
+date,time_start,duration_hours,state,starting_street_name,group_size,avg_speed_mph,top_speed_mph,rest_breaks
+2/13/2021,5:56 AM,1.57,Texas,Pearson,6,15.38,24.27,3
+2/9/2021,7:15 AM,1.38,New York,Crest Line,3,10.8,20.91,0
+10/27/2022,1:27 PM,5.85,Wisconsin,Vahlen,2,13.69,25.68,0
+5/8/2022,11:07 AM,4.07,Texas,Moulton,7,10.22,26.33,1
+1/28/2022,7:33 AM,1.31,Missouri,Arizona,5,11.63,25.96,1
+10/4/2021,8:06 AM,5.02,Mississippi,Glendale,4,13.86,25.18,0
+11/20/2021,7:58 AM,1.61,Virginia,Merry,5,15.2,27.47,2
+1/17/2022,6:58 AM,4.61,California,Dunning,5,14.24,25.57,0
+9/23/2022,7:09 AM,3.73,Texas,Anhalt,2,10.52,25.33,3
+9/29/2022,7:27 AM,2.36,Washington,Lakewood Gardens,5,10.57,20.59,2
+7/3/2022,9:36 AM,4.87,North Carolina,Hooker,7,15.94,20.6,0
+7/23/2022,12:26 PM,5.24,Texas,Eliot,1,14.77,27.12,3
+3/28/2021,4:15 PM,5.01,Texas,Monument,5,11.83,23.93,3
+1/6/2022,6:07 AM,2.43,Minnesota,Northland,1,16.81,27.14,0
+8/9/2022,3:00 PM,3.11,Missouri,Park Meadow,1,13.9,24.41,3
+1/31/2022,1:11 PM,1.56,Illinois,Cottonwood,3,10.12,24.89,2
+2/24/2022,10:53 AM,3.13,California,Pawling,2,12.28,23.76,1
+1/4/2021,10:48 AM,5.46,New York,Stephen,1,11.8,20.35,1
+5/6/2021,8:44 AM,4.77,Indiana,Butterfield,1,11.66,27.65,1
+1/8/2022,8:39 AM,2.89,Colorado,Monument,1,11.51,21.82,3
+9/8/2022,8:25 AM,1.63,Colorado,Ludington,5,11.26,27.43,0
+6/14/2022,11:45 AM,4.03,Arizona,Gale,3,14.99,23.04,1
+3/14/2022,7:14 AM,3.35,Massachusetts,Dakota,1,15.25,25.08,1
+5/25/2021,2:40 PM,4.18,Utah,High Crossing,1,14.08,27.59,3
+3/10/2021,2:06 PM,3.73,Texas,Grover,4,13.44,27.32,2
+1/31/2021,4:13 PM,3.77,New York,Katie,7,16.5,22.39,1
+3/30/2022,5:23 AM,5.77,Tennessee,Messerschmidt,5,13.13,23.17,1
+6/11/2021,6:18 AM,2.52,Florida,Spaight,5,14.36,27.72,0
+4/13/2021,8:22 AM,2.14,New York,Surrey,6,10.15,27.43,1
+7/4/2022,11:14 AM,1.22,New Mexico,Eagan,2,15.21,24.49,3
+10/25/2022,5:54 AM,5.24,Texas,Evergreen,1,15.76,23.29,0
+3/31/2021,8:06 AM,2.75,Texas,Springs,2,16.66,27.08,0
+8/6/2021,2:39 PM,4.14,California,Elmside,2,11.92,20.35,1
+7/21/2021,2:20 PM,1.63,Massachusetts,Comanche,2,11.96,23.69,2
+4/17/2022,3:10 PM,1.79,California,Talmadge,6,16.94,23.42,3
+11/15/2021,6:28 AM,3.39,Texas,Carioca,1,13.04,21.44,2
+7/13/2021,3:47 PM,5.47,Kentucky,Weeping Birch,2,10.81,25.13,2
+7/28/2022,12:40 PM,1.36,Pennsylvania,Monument,4,13.05,26.37,3
+9/13/2021,5:57 AM,5.95,Utah,Laurel,1,12.77,23.4,0
+5/27/2021,10:45 AM,1.24,Texas,Arkansas,7,10.34,22.37,2
+12/22/2022,9:23 AM,4.94,North Carolina,Parkside,1,13.44,22.81,2
+12/30/2022,7:59 AM,4.77,Indiana,Riverside,2,15.19,27.29,0
+4/24/2021,10:49 AM,1.24,Texas,Spaight,6,11.43,25.08,3
+12/9/2021,6:53 AM,5.09,Texas,Anhalt,3,11.09,23.1,0
+4/14/2022,11:14 AM,1.77,Texas,Merchant,4,13.68,22.63,0
+9/7/2021,9:56 AM,3,Utah,Summer Ridge,3,12.69,26.25,3
+12/2/2021,7:46 AM,3.9,Massachusetts,Towne,4,14.49,21.64,1
+11/30/2022,9:03 AM,4.41,Washington,Bluestem,1,15.5,22.71,2
+11/3/2021,1:52 PM,3.25,Florida,Fremont,2,10.87,25.85,3
+3/25/2022,7:32 AM,5.16,Louisiana,Sage,5,16.13,27.12,0
+7/1/2021,3:13 PM,2.9,Massachusetts,Hoffman,7,15.03,26.68,1
+8/22/2022,8:26 AM,3.39,Iowa,Raven,6,14.96,20.46,0
+10/4/2022,4:39 PM,3.5,Massachusetts,Northridge,6,16.23,22.38,1
+12/30/2022,3:18 PM,4.01,Connecticut,Menomonie,3,13.9,23.3,1
+1/10/2022,11:20 AM,5.83,North Carolina,Lukken,1,13.9,22.54,3
+2/18/2021,7:21 AM,2.31,Nebraska,Birchwood,4,11.98,24.32,1
+6/24/2022,1:48 PM,3.31,Alabama,Stone Corner,2,10.64,23.53,1
+8/28/2021,3:05 PM,4.91,District of Columbia,International,1,15.32,24.63,1
+12/18/2022,7:02 AM,1.4,Indiana,Gale,2,15.9,23.39,0
+11/12/2022,5:47 AM,2.95,Arizona,Mosinee,3,14.35,20.41,3
+5/19/2022,2:43 PM,2.57,Tennessee,Elmside,7,13.35,20.78,1
+8/7/2022,6:48 AM,1.11,Massachusetts,Dunning,4,11.07,24.25,3
+1/8/2022,1:49 PM,3.27,New York,Pond,2,14.11,25.1,0
+6/23/2022,10:08 AM,1.29,Texas,Sycamore,1,12.66,21.31,0
+4/16/2021,7:28 AM,5.62,California,Oxford,6,11.91,20.49,1
+2/22/2022,11:34 AM,5.84,Wisconsin,International,5,10.38,25.37,0
+10/26/2021,5:48 AM,3.19,Texas,Dorton,5,15.45,21.74,2
+8/12/2021,10:35 AM,5.97,California,West,1,15.42,24.69,3
+9/17/2022,10:19 AM,2.42,Florida,Butterfield,5,12.6,25.26,1
+9/9/2021,12:47 PM,5.12,Oklahoma,Mallard,6,13.68,25.24,2
+5/14/2021,3:58 PM,5.34,Oregon,Green,2,15.67,20.68,3
+10/25/2021,11:51 AM,5.61,Washington,Cardinal,3,14.41,25.56,3
+7/16/2022,12:42 PM,1.62,Massachusetts,Kennedy,2,11.72,22.94,1
+7/21/2022,11:54 AM,1.77,California,Wayridge,5,16.59,25.28,1
+5/4/2021,5:01 AM,5.97,California,Glendale,3,10.43,24.42,3
+8/21/2021,6:26 AM,1.78,Virginia,Del Mar,7,15.27,24.38,3
+9/17/2022,9:53 AM,1.87,Illinois,Annamark,5,14.45,24.23,2
+9/5/2022,8:47 AM,1.54,Illinois,Wayridge,7,11.98,23.96,2
+12/2/2022,12:14 PM,4.32,Ohio,Crest Line,2,13.06,27.63,1
+11/25/2021,4:44 PM,4.65,California,Esch,1,15.83,23.49,0
+7/20/2021,4:03 PM,4.93,Illinois,Carey,6,16.05,26.15,0
+6/30/2022,10:51 AM,5.61,Texas,Fairfield,7,12.47,21.18,0
+12/22/2022,12:55 PM,2.35,California,Doe Crossing,2,10.67,24.68,3
+10/24/2022,2:24 PM,3.25,Oklahoma,Hanover,3,14.51,22.51,1
+11/5/2022,9:11 AM,2.65,California,Riverside,6,14.88,25.65,0
+7/1/2022,3:16 PM,4.69,Florida,Reinke,4,10.14,20.4,0
+9/28/2022,4:23 PM,1.68,Iowa,Thierer,1,15.97,25.84,0
+3/7/2021,3:10 PM,3.11,California,Straubel,5,13.07,20.53,2
+11/21/2021,9:39 AM,3.54,Florida,Northview,7,14.47,23.18,0
+11/27/2021,1:35 PM,5.2,Tennessee,Cardinal,2,10.97,21.6,1
+6/21/2022,8:26 AM,2.86,Washington,Luster,2,13.3,20.71,3
+9/16/2022,4:57 PM,2.82,California,Laurel,3,10.29,24.1,3
+4/22/2021,12:12 PM,3.92,Kentucky,Westport,3,16.69,22.55,1
+11/19/2022,1:12 PM,2.66,Michigan,Sheridan,7,13.98,26.63,2
+9/6/2022,9:36 AM,3.47,California,Cordelia,5,14.33,21.05,3
+2/21/2022,8:07 AM,2.52,California,Valley Edge,6,12.63,24.67,2
+9/20/2021,8:29 AM,2.38,California,Old Shore,7,16.68,27.6,0
+8/14/2022,4:40 PM,5.06,Missouri,Village,2,12.78,21.96,3
+10/18/2022,1:37 PM,2.44,Rhode Island,Karstens,6,10.01,23.9,3
+8/16/2022,2:23 PM,3.68,Minnesota,Waxwing,2,12.35,27.44,3
+1/20/2022,8:50 AM,1.46,Maryland,Westport,1,10.67,23.21,1
+12/22/2022,10:52 AM,5.08,Indiana,Lunder,7,12.13,21.11,0
+6/15/2022,5:27 AM,3.27,Iowa,Barby,5,15.64,21.92,1
+12/20/2022,9:30 AM,1.81,Pennsylvania,Tony,7,13.63,25.58,0
+11/30/2022,7:20 AM,3.61,California,Dorton,1,10.1,25.55,1
+9/29/2022,6:39 AM,1.33,California,Swallow,7,11.3,25.15,2
+2/22/2021,10:05 AM,4.28,New York,Arkansas,7,15.75,27.64,1
+3/29/2021,4:55 PM,1.88,New York,Center,5,10.22,24.65,0
+4/3/2022,12:35 PM,3.49,Texas,Schlimgen,4,10.05,22.47,2
+11/17/2021,2:28 PM,2.37,Texas,Clove,7,12.15,22.84,1
+5/21/2022,3:00 PM,5.23,New Hampshire,Dapin,5,11.98,25.86,3
+1/14/2021,4:32 PM,6,California,Buhler,2,11.65,25.58,2
+8/4/2022,6:38 AM,1.11,Oregon,Pleasure,3,11.51,26.26,0
+1/22/2021,7:24 AM,3.03,Florida,Di Loreto,7,10.17,21.86,1
+10/15/2021,5:34 AM,2.84,Nevada,Sullivan,6,12.18,21.97,3
+7/3/2022,7:32 AM,4.35,Illinois,Shoshone,5,11.81,27.14,1
+11/11/2021,9:52 AM,5.12,Texas,Cottonwood,4,14.01,26.44,3
+11/5/2022,5:14 AM,3.98,District of Columbia,Kingsford,4,11.57,27.26,0
+9/14/2021,1:00 PM,4.18,Connecticut,Gale,4,10.58,22.52,2
+3/30/2022,4:15 PM,1.82,Virginia,Sherman,1,11.04,23.75,3
+5/27/2022,6:08 AM,2.14,Florida,Green,1,12.45,21.6,1
+9/15/2021,6:43 AM,1.87,Indiana,Bashford,7,11.63,24.36,1
+12/4/2022,4:46 PM,4.73,Arizona,Clyde Gallagher,2,10.52,20.44,0
+9/9/2021,1:47 PM,4.22,California,Golf Course,5,10.31,26.22,2
+7/15/2022,2:05 PM,3.71,Texas,Linden,5,15.77,27.27,3
+11/25/2022,5:21 AM,1.6,Colorado,Logan,1,15.83,25.79,1
+10/20/2021,10:42 AM,3.98,South Carolina,Old Shore,1,12.61,22.28,2
+3/29/2021,9:25 AM,1.13,New York,Bayside,4,15.22,26.78,0
+6/4/2021,8:30 AM,1.18,Alaska,Warner,3,10.33,23.72,1
+10/8/2021,11:33 AM,2.23,Louisiana,Waxwing,2,10.92,25.95,3
+10/14/2022,9:26 AM,5.54,Texas,Elka,3,11.11,21.56,3
+2/23/2021,4:25 PM,2.57,New York,Columbus,5,16.57,23.45,0
+12/8/2022,2:39 PM,3.79,New York,Northfield,6,11.88,22.76,2
+11/10/2021,6:21 AM,5.6,District of Columbia,Pearson,4,15.41,20.27,0
+6/16/2022,12:45 PM,3.24,Michigan,Farwell,3,13.36,27.82,3
+8/25/2021,12:14 PM,5.02,Oregon,Oak Valley,3,11.95,27.45,3
+2/25/2021,4:51 PM,5.19,Tennessee,Shoshone,2,16.18,25.66,0
+2/15/2021,3:21 PM,5.28,New York,East,3,11.75,22.05,3
+7/8/2021,8:09 AM,5.84,Georgia,Grasskamp,6,11.04,21.57,0
+5/26/2021,8:26 AM,4.9,Alabama,Mccormick,1,12.9,22.12,2
+11/26/2022,2:01 PM,5.44,West Virginia,Ludington,2,10.42,25.27,0
+5/5/2021,6:07 AM,2.8,Texas,Shelley,6,11.01,22.46,2
+6/16/2022,3:38 PM,2.48,Georgia,Mosinee,5,15.01,27.93,3
+12/9/2021,5:38 AM,2.13,Georgia,Farwell,1,16.6,20.17,1
+7/30/2022,9:50 AM,1.02,North Carolina,Eastwood,1,15.82,23.04,0
+9/28/2022,3:48 PM,1.51,New York,Blue Bill Park,6,16.14,24.96,1
+4/16/2022,4:58 PM,4.57,New Jersey,Bluestem,4,10.86,25.09,3
+8/18/2022,1:08 PM,3.18,Texas,Hudson,6,10.25,25.22,0
+8/17/2022,7:32 AM,3.2,Florida,Warrior,3,13.67,22.12,3
+9/14/2022,9:19 AM,5.43,Missouri,Vermont,4,14.69,27.69,0
+4/2/2021,3:26 PM,1.57,West Virginia,4th,5,16.67,20.01,3
+3/13/2022,3:13 PM,3.3,New York,Mesta,4,13.12,23.32,3
+10/28/2022,8:59 AM,2.28,California,Oakridge,3,10.52,22.85,3
+11/25/2022,4:08 PM,3.31,California,Sunfield,6,14.61,22.7,2
+1/18/2022,9:57 AM,1.59,Maryland,Rockefeller,1,13.94,22.06,2
+4/19/2022,6:11 AM,1.27,Illinois,Towne,1,11.86,22.14,3
+2/25/2021,12:37 PM,3.2,California,Monterey,6,14.61,26.44,3
+11/5/2022,11:35 AM,3.69,Ohio,Sugar,5,10.69,24.97,2
+1/27/2021,8:40 AM,3.89,Virginia,Eagle Crest,6,11.93,21.51,2
+1/7/2022,2:47 PM,4.76,Indiana,Brickson Park,1,16.33,22.44,0
+11/3/2021,11:04 AM,3.18,Nevada,Leroy,5,11.74,26.06,0
+11/24/2022,4:06 PM,4.22,Colorado,Novick,5,13.67,24.34,2
+8/23/2021,7:20 AM,2.22,Michigan,Annamark,2,16.4,27.17,3
+10/9/2021,2:16 PM,4.52,Virginia,Grover,4,13.94,20.9,0
+9/25/2021,9:38 AM,3.1,California,Leroy,4,14.48,24.96,3
+9/17/2022,7:28 AM,2.91,New York,Emmet,7,10.42,20.58,2
+9/21/2021,6:12 AM,5.18,Florida,Algoma,6,16.55,27.59,0
+10/18/2021,5:14 AM,4.05,Florida,Browning,5,11.5,20.38,3
+11/13/2022,8:33 AM,4.78,Louisiana,Kennedy,3,16.14,21.2,0
+10/19/2022,7:13 AM,3.64,Texas,Donald,4,15.51,26.91,2
+4/27/2021,5:23 AM,2.84,Georgia,Canary,2,14.13,25.48,2
+1/11/2022,12:31 PM,2.21,Arkansas,Meadow Valley,5,10.93,25.48,0
+7/29/2022,6:47 AM,5.4,Indiana,Stephen,1,16.01,21.79,0
+8/11/2021,10:01 AM,4.46,Michigan,Rieder,4,16.97,27.18,2
+10/6/2022,8:19 AM,1.56,Florida,Stuart,4,15.14,23.09,3
+6/29/2022,4:53 PM,2.16,California,Sunbrook,3,14.9,23.57,0
+5/16/2022,7:35 AM,5.61,Florida,Melody,1,10.46,26.53,1
+8/17/2021,4:03 PM,3.56,District of Columbia,Maple Wood,2,15.23,23.05,0
+11/30/2021,5:45 AM,4.37,Texas,Summit,7,11.89,26.03,3
+7/26/2022,9:34 AM,1.51,South Carolina,Florence,6,12.23,23.97,1
+12/18/2022,9:45 AM,4.22,California,Montana,6,10.2,27.54,1
+10/21/2022,5:18 AM,4.16,Texas,Stone Corner,5,14.04,27.15,0
+7/15/2021,10:53 AM,5.42,Texas,Glendale,3,11.83,27.66,2
+6/23/2022,1:34 PM,2.37,New York,Fulton,6,10.33,22.7,3
+11/11/2022,3:46 PM,4.42,Ohio,Main,2,10.03,24.11,3
+12/18/2022,7:43 AM,3.97,Georgia,Ilene,5,11.26,27.05,2
+6/25/2021,6:38 AM,4.91,Georgia,Mockingbird,6,12.89,22.32,1
+12/10/2021,6:16 AM,4.79,Washington,Rutledge,3,14.51,23.28,2
+9/30/2022,2:37 PM,3.59,Indiana,La Follette,1,16.48,20.29,3
+1/13/2022,4:23 PM,4.62,New Jersey,Fair Oaks,7,12.62,27.75,1
+6/4/2022,12:41 PM,3.78,Virginia,Hallows,2,16.94,23.2,2
+1/12/2021,4:24 PM,5.52,Florida,Prairieview,5,12.31,25.43,0
+6/30/2021,7:32 AM,1.79,Utah,Stephen,2,10.89,20.7,0
+9/1/2021,4:21 PM,2.46,Wisconsin,Grover,5,10.74,26.4,1
+2/20/2022,7:50 AM,2.42,New Jersey,Corben,4,14.55,26.77,1
+3/27/2022,3:15 PM,4.34,Washington,Loeprich,7,16.23,21.86,3
+10/14/2022,1:57 PM,3.68,Virginia,Warner,5,16.7,21.84,1
+10/1/2021,2:13 PM,3.47,Wisconsin,Hanover,5,10.66,25.82,3
+3/3/2022,12:50 PM,2.08,California,Mcbride,7,10.3,26.69,1
+3/3/2022,10:03 AM,5.76,Oklahoma,Badeau,7,16.55,20.88,0
