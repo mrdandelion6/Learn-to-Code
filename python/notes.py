@@ -48,5 +48,36 @@ def lambda_in_python():
 
     return 
 
+def with_as_in_python():
+    # syntax: 
+        # with (expression) as (variable):
+
+    # with statement is used to wrap the execution of a block of code
+    # it defines a context manager to be used
+    # the context manager is responsible for a setup and cleanup actions
+    # the with statement simplifies exception handling by encapsulating common preparation and cleanup tasks
+
+    with open("requirements.txt") as file:
+        data = file.read()
+        print(data)
+
+    # the file is automatically closed after the block of code is executed
+    # this is what makes the with statement so useful
+
+    # moreover, if an exception occurs during the execution of the block of code, 
+    # using with ensures that the file is properly closed after error is handled
+
+    # things with statements provides:
+        # 1.) automatic cleanup
+        # 2.) exception handling
+        # 3.) better readability
+
+    # closing files is important to free up system resources like memory and prevent memory leaks
+    # it also ensures that the data is written to the file
+    # moreover other programs can access the file after it is closed
+
+    return
+
+
 if __name__ == "__main__":
-    lambda_in_python()
+    with_as_in_python()
