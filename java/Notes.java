@@ -5,11 +5,11 @@ public class Notes {
     public static void main(String[] args) {
         // welcome to my notes on using java
 
-        commandTools();
+        commandLineTools();
 
     }
     
-    public static void commandTools() {
+    public static void commandLineTools() {
         // javac Example.java : compiles the java code
         // java Example : runs the compiled java code
         // jar [options] example.jar *.class : creates a jar file
