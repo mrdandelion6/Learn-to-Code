@@ -4,6 +4,7 @@
 
 def contents():
     lambda_in_python()
+    with_as_in_python()
 
     return
 
