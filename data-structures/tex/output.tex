@@ -8,4 +8,10 @@ our cost of the inner loop is:
 &\sum_{i=1}^{N-1} (10i + 3) + 8i + 4i\\
 =&\sum_{i=1}^{N-1} 22i + 3
 \end{align*}
+so our total cost is:
+\begin{align*}
+& 22N - 15 + \sum_{i=1}^{N-1} 22i + 3\\
+&= 22N - 15 + 22\frac{(n-1)n}{2} + 3 (n-1)\\
+&= 11n^2 + 14n - 18
+\end{align*}
 \end{document}

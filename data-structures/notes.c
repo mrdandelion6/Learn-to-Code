@@ -257,5 +257,14 @@ int counting_steps() {
         "\\end{align*}"
     );
 
+    add_tex_output(
+        "so our total cost is:\n"
+        "\\begin{align*}\n"
+        "& 22N - 15 + \\sum_{i=1}^{N-1} 22i + 3\\\\\n"
+        "&= 22N - 15 + 22\\frac{(n-1)n}{2} + 3 (n-1)\\\\\n"
+        "&= 11n^2 + 14n - 18\n"
+        "\\end{align*}"
+    );
+
     return 0;
 }
