@@ -249,6 +249,7 @@ int counting_steps() {
         // 4i steps
 
     // then in total, our while loop has the following cost:
+    // (see the latex output.pdf file in this directory)
     tex_output("our cost of the inner loop is:\n");
     add_tex_output(
         "\\begin{align*}\n"
