@@ -6,6 +6,7 @@
 #include <string.h>
 
 int main(int argc, char* argv[]) {
+
     // welcome to my notes on data structures.
     int main_topics();
     int ADTs();
@@ -49,6 +50,7 @@ int ADTs() {
 }
 
 int counting_steps() {
+    int xlx = __LINE__; // for latex typesetting, just ignore.
 
     // lets take a look at the following algo. we will see how we can count the total number of steps.
     #define N 10
@@ -85,9 +87,10 @@ int counting_steps() {
         // array access: 1 step + the steps to evaluate the index
         // constants: free, they don't need to be evaluated
 
+    // we can find the total steps by calculating the "cost" of each line and then multiplying by the "frequency"; the number of times that line runs.
     // lets count the steps for the insertion sort algorithm
 
-    int i = 1; 
+    i = 1; 
     // 2 steps: 
         // - 1 for initializing (setting i)
         // - 1 for assigning 1 to i
@@ -170,6 +173,89 @@ int counting_steps() {
             // 1 for getting i
             // 1 for calculating i+1
     }
+
+    // now lets determine the WORST CASE frequency of each line. then we can multiply the cost by the frequency to get the total steps.
+    
+    i = 1; // 1 frequency
+    while ( i < N ) { // N frequency: N-1 true + 1 false
+        // the reason it's N-1 times true is because we loop N-1 times before it's false [1, N-1] inclusive.
+        // would've been N times if i started at 0
+
+        int v = A[i]; // 1 * (N-1) freq, recall N-1 times true
+        int j = i; // 1 * (N-1) freq
+
+        while ( j > 0 && A[j-1] > v ) { // (i + 1) * (N-1) freq : but i is not constant, it changes each iteration
+            // worst case is loop runs all i times true, from j = i to j = 1 and 1 time false for j = 0
+            // we use i because we can evaluate the sum later 
+            // however, note that when calculating the total cost, we apply i for the "true" steps, and 1 for the "false" steps
+            // this is because the true steps run i times and the false step just runs once.
+            // recall the true steps were 10 and the false ones were 3, so we would have 10i + 3 for the total cost, and this would happen N - 1 times.
+            A[j] = A[j-1]; // 1 * (i) * (N-1) freq
+            j--; // 1 * (i) * (N-1) freq
+        }
+
+        A[j] = v; // 1 * (N-1) freq
+        i++; // 1 * (N-1) freq
+    }
+
+    // now let's calculate the total cost.
+    
+    i = 1; // line 1
+    while ( i < N ) { // line 2
+        int v = A[i]; // line 3
+        int j = i; // line 4
+
+        while ( j > 0 && A[j-1] > v ) { // line 5
+            A[j] = A[j-1]; // line 6
+            j--; // line 7
+        }
+
+        A[j] = v; // line 8
+        i++; // line 9
+    }
+
+    // line 1:
+        // 2 steps * 1 freq = 2 total
+    
+    // line 2: (let's assume we have i < len(A) instead of i < N, so 5 steps).
+        // 5 steps * N = 5N
+
+    // line 3:
+        // 5 steps * (N-1) = 5N - 5
+
+    // line 4:
+        // 3 steps * (N-1) = 3N - 3
+
+    // line 8:
+        // 5 steps * (N-1) = 5N - 5
+
+    // line 9:
+        // 4 steps * (N-1) = 4N - 4
+
+    // so excluding the inner while loop, we have:
+    // 2 + 5N + 5N - 5 + 3N - 3 + 5N - 5 + 4N - 4 = 22N - 22 + 2 
+    // = 22N - 15
+
+    // now let i be the i'th iteration of the outer loop
+    // for the inner loop, we then have the following cost at each iteration of the outer loop:
+    
+    // line 5:
+        // 10i + 3 steps
+
+    // line 6:
+        // 8i steps
+    
+    // line 7:
+        // 4i steps
+
+    // then in total, our while loop has the following cost:
+    tex_output("our cost of the inner loop is:\n");
+    add_tex_output(
+        "\\begin{align*}\n"
+        "&\\sum_{i=1}^{N-1} (10i + 3) + 8i + 4i\\\\\n"
+        "=&\\sum_{i=1}^{N-1} 22i + 3\n"
+        "\\end{align*}"
+    );
 
     return 0;
 }
