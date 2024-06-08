@@ -12,7 +12,7 @@ void print_int_arr(int* arr, int size) {
     printf("\n");
 }
 
-void tex_output(char* text) {
+void new_tex(char* text) {
     // creates a tex file and pdf output.tex and output.pdf, overwriting any existing files.
     
     char path[] = "tex/output.tex";

@@ -250,7 +250,7 @@ int counting_steps() {
 
     // then in total, our while loop has the following cost:
     // (see the latex output.pdf file in this directory)
-    tex_output("our cost of the inner loop is:\n");
+    new_tex("\\textbf{worst case cost}\n\nour cost of the inner loop is:\n");
     add_tex_output(
         "\\begin{align*}\n"
         "&\\sum_{i=1}^{N-1} (10i + 3) + 8i + 4i\\\\\n"
