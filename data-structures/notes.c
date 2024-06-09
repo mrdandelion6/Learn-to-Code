@@ -11,9 +11,11 @@ int main(int argc, char* argv[]) {
     int main_topics();
     int ADTs();
     int counting_steps();
+    int balanced_trees();
+    int avl_trees();
 
     // run
-    counting_steps();
+    avl_trees();
 
     return 0;
 }
@@ -266,6 +268,262 @@ int counting_steps() {
         "&= 11n^2 + 14n - 18\n"
         "\\end{align*}"
     );
+
+    // for the best cost, we can assume the inner loop runs 0 times, with only 1 false check.
+    // this would give us a frequency of N-1 for line 5 and 0 for line 6 and 7
+
+    // so the best case cost is:
+    // 22N - 15 + (N-1)*10 = 32N - 25
+    add_tex_output(
+        "\\textbf{best case cost}\n\n"
+        "\\vspace{5mm}\n"
+        "for the best case, the inner loop runs 0 times, so we have:\n"
+        "\\begin{align*}\n"
+        "& 22N - 15 + 10(N-1)\\\\\n"
+        "&= 32N - 25\n"
+        "\\end{align*}"
+    );
+
+    return 0;
+}
+
+int balanced_trees() {
+    // recall BSTs (binary search trees) 
+    // BSTs are a type of binary tree where the left child is less than the parent and the right child is greater than the parent
+    // eg:
+
+    //      5
+    //     / \
+    //    3   7
+    //   /   / \
+    //  1   6   8
+
+    // we can also choose <= for left or >= for right, it is a design decision.
+
+    // searching in a BST actually has a worst case time complexity of O(n) if the tree is unbalanced. for example:
+
+    //      1
+    //       \
+    //        2
+    //         \
+    //          3
+    //           \
+    //            4
+    //             \
+    //              5
+
+    // this is akin to a linked list, and searching for 5 would take 5 steps.
+    // to avoid this, we can use a balanced tree!
+    // maintain a BST that always stays balanced. so the height of the tree is always log(n) where n is the number of nodes.
+
+    // we have a few options for balanced trees:
+        // AVL trees
+        // red-black trees
+        // splay trees
+        // B-trees
+
+    // in the next section we are going to explore AVL trees.
+
+    return 0;
+}
+
+int avl_trees() {
+    // AVL trees are a type of balanced binary search tree
+    // they are named after their inventors: Adelson-Velsky and Landis
+    // AVL trees work by maintaining a BALANCE FACTOR for each node
+    // the balance factor of a node is the height of the left subtree - the height of the right subtree
+        // balance_factor = height(left) - height(right)
+
+    // AVL trees must maintain a balance factor of -1, 0, or 1 for each node
+    
+    // SEARCHING IN AVL
+    // searching in an AVL tree is the same as searching in a BST
+
+    // INSERTING INTO AN AVL TREE
+    // when inserting into an AVL tree, we first insert the node as we would in a BST
+    // then we update the balance factors of the nodes on the path from the root to the new node
+    // if the balance factor of any node becomes -2 or 2, we need to rebalance the tree!
+    // we can do this by "rotating" the tree
+
+    // eg, consider the tree:
+    //                              
+    //                44   (-1)        // numbers in brackets are the balance factors. no brackets means 0
+    //              /    \             //  leaves always have a balance factor of 0
+    //            32       78  (1)
+    //           /  \     /  \
+    //         17   35   50   88
+    //                  /  \
+    //                48    62
+
+    // adding a 45 would make the tree unbalanced!
+
+    //                44   (-2)
+    //              /     \            
+    //            32         78  (2)
+    //           /  \      /    \
+    //         17   35   50 (1)   88
+    //                  /  \
+    //                48    62
+    //               /
+    //              45  
+
+    // so we will "rotate" the tree to rebalance it. 
+    // we pick the lowest node with a balance factor of 2 or -2, and rotate it in the direction that will balance the tree.
+    // in this case we would rotation 78 to the right
+
+    //                44   (-1)
+    //              /     \
+    //            32       50  (0)
+    //           /  \     /  \
+    //         17   35   48   78
+    //                  /    /  \
+    //                45    62   88
+
+    // now the tree is balanced!
+
+    // let's go over how ROTATIONS work in a little more depth
+    // there are two types of rotations: CW and CCW
+
+    // we do a CW rotation when the balance factor > 1, like in the example above
+        // ie) the left subtree is too deep
+        // during CW rotation:
+        // 1. replace the parent with the left child, 
+        // 2. make the left child's right child the parent's left child
+        // 3. make the parent the right child of the left child
+        // this can be seen from the example above and takes O(1) time
+
+    // we do a CCW rotation when the balance factor < -1
+        // ie) the right subtree is too deep:A
+        // during CCW rotation:
+        // 1. replace the parent with the right child
+        // 2. make the right child's left child the parent's right child
+        // 3. make the parent the left child of the right child
+
+    // note that sometimes we need to do a DOUBLE ROTATION to balance the tree
+    // this is when we have a zig-zag pattern in the tree
+    // or more simply, when any child of the parent node we are rotating has a balance factor of the opposite sign 
+    // for example, say we want to insert 46 into the tree:
+
+    //                 44   (-1)
+    //              /     \
+    //            32       50  (0)
+    //           /  \     /  \
+    //         17   35   48   78
+    //                  /    /  \
+    //                45    62   88
+
+    // we get:
+
+    //                 44   (-2)
+    //             /       \
+    //          32          50 
+    //         /  \       /     \
+    //       17   35    48 (2)    78
+    //                  /        /   \
+    //                45 (-1)   62    88
+    //                  \
+    //                   46
+
+    // note how 48 is our problem node, and it has a balance factor of 2
+    // and that a child of 48, 45, has a balance factor of -1, which is the opposite sign
+    // hence we will need to do a double rotation to balance the tree
+    // first we will have to do a CCW rotation on 45, then a CW rotation on 48
+
+    // first rotation:
+
+    //                 44   
+    //              /     \
+    //            32       50  
+    //           /  \     /  \
+    //         17   35   48   78
+    //                  /    /  \
+    //                46    62   88
+    //               /
+    //              45
+
+    // second rotation:
+
+    //                 44   
+    //             /       \
+    //          32          50  
+    //        /  \        /    \
+    //      17   35     46     78
+    //                 /  \    /  \
+    //                45  48  62   88
+
+    // in the next section we will go over how to implement an AVL tree in C
+
+    return 0;
+}
+
+// we will implement an AVL tree in C in the following functions, see avl_implementation() for examples
+
+typedef struct AVLNode {
+    int value;
+    int balance_factor;
+    struct AVLNode* left;
+    struct AVLNode* right;
+} AVLNode;
+
+AVLNode* AVL_init(int val) {
+    AVLNode* new = malloc(sizeof(AVLNode));
+    new->value = val;
+    new->balance_factor = 0;
+    new->left = NULL;
+    new->right = NULL;
+    return new;
+}
+
+int AVL_isleaf(AVLNode* tree) {
+    return tree->left == NULL && tree->right == NULL;
+}
+
+int AVL_height(AVLNode* tree) {
+    if (tree == NULL) {
+        return 0;
+    }
+    int rh = AVL_height(tree->right);
+    int lh = AVL_height(tree->left);
+    return rh >=  lh ? 1 + rh : 1 + lh;
+}
+ 
+AVLNode* AVL_edge_find(AVLNode* tree, int val) {
+    // return a valid edge node in tree which a new node containing val can be attached to while maintaining the BST property
+    if ( tree->value == val ) {
+        return tree; // return the node itself when it matches the value exactly
+    }
+
+    if ( val >= tree->value && tree->right != NULL ) {
+        return AVL_edge_find(tree->right, val);
+
+    }
+    if ( val < tree->value && tree->left != NULL ) {
+        return AVL_edge_find(tree->left, val);
+    }
+
+    return tree;
+}
+
+int AVL_insert(AVLNode* tree, int val) {
+    AVLNode* new = AVL_init(val);
+    AVLNode* parent = AVL_edge_find(tree, val); 
+    if (parent->value >= val) {
+        parent->right = new; // parent-> right should be NULL
+        parent->balance_factor--;
+    } else {
+        parent->left = new; // parent-> left should be NULL
+        parent->balance_factor++;
+    }
+
+    
+
+    return 0;
+}
+
+
+int avl_implementation() {
+    // TODO:
+    
 
     return 0;
 }
