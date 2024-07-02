@@ -3,7 +3,8 @@
 Welcome to my code learning repository! This repository is a collection of my notes and code snippets as I embark on the journey of learning many different programming languages. 🚀
 
 
-## Languages & Frameworks
+## Notes I've Made
+Here are some languages and topics I have made a good amount of notes on so far. Some may not be complete yet, but have ample notes to get you started.
 
 - `C` : systems programming, pipes, processes, and sockets
 - `Shell Script` 
@@ -12,11 +13,17 @@ Welcome to my code learning repository! This repository is a collection of my no
 - `R` : data analysis + ml
 
 ## Notes to Make
+Here are some languages and topics I have made very little or no notes on yet. I plan to slowly add notes for these topics whenever I have time. 
+
 - `MATLAB` : data analysis + ml
 - `React` 
 - `Sass` 
 - `TypeScript` 
 - `PowerShell`
+- `Ruby`
+- `Docker`
+- `Java`
+- `Data Structures`
 
 
 ## Usage
