@@ -527,3 +527,45 @@ int avl_implementation() {
 
     return 0;
 }
+
+int augmented_data_structures() {
+    // "augmented data structure" is a fancy term for an existing data structure modified to store additional information and / or perform additional operations.
+
+    // lets make a task for ourselves: design a DS that implements an ordered set/dict and in addition to insert, delete, search, union, etc,. also supports two types of RANK QUERIES:
+        // 1. RANK(S, k): given a key k in set S, what is the rank of k in S? ie: the key's position among the elements of S
+        // 2. SELECT(S, r): given a rank r in set S, which key in S has rank r?
+
+    // for example, in the set of values S = {3, 15, 27, 30, 35, 56}
+    // rank(S, 15) = 2
+    // select(S, 4) = 30
+
+    // we can implement this using an AVL tree
+    // for rank:
+        // in-order traversal of the tree, and count the number of nodes visited until we reach the key
+    // for select:
+        // in order traversal of the tree, and return the key when we reach the r'th node
+
+    // what is the complexity of rank? O(n)
+    // what is the complexity of select? O(n)
+
+    // note that our search, insert, delete operations do not need to change.
+
+    // IDEA 1:
+    // store rank in each node n in the tree T
+    
+        // rank(T, k): search for n such that n.key = k, return n.rank -> O(log(n))
+        // select(T, r): search for n such that n.rank = r, return n.key -> O(log(n))
+
+    // note that with this idea, our search, insert, and delete operations will have to change to update the rank of each node whenever we insert and delete!
+    // kind of tedious
+
+    // IDEA 2:
+    // store the size of the subtree rooted at each node n in the tree T
+    // how is size related to rank? 
+    // define RELATIVE-RANK, rank(n, k) as rank of key k relative to the keys in the tree rooted at node n
+
+        // rank(T, k): 1 + number of keys in T than are less than k
+        // rank(n, n.key) = 1 + size(n.left)
+
+    return 0;
+}
