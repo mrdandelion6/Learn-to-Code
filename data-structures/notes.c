@@ -567,5 +567,22 @@ int augmented_data_structures() {
         // rank(T, k): 1 + number of keys in T than are less than k
         // rank(n, n.key) = 1 + size(n.left)
 
+        // we can use this to form an O(log(n)) algorithm for rank and select!
+
+    //  rank(T, k) in O(log(n)):
+    // to find the rank of k in T, we can do a binary search for k in T and keep track of the rank as we go down the tree.
+
+    // 1. base case: if k == n.key, return 1 + size(n.left)
+    // 2. if k < n.key, return rank(n.left, k)
+    // 3. if k > n.key, return 1 + size(n.left) + rank(n.right, k)
+
+    //  select(T, r) in O(log(n)):
+    // to find the key with rank r in T, we also do a binary search! this time, we traverse the tree and compare the rank of the current node to r. in our recursion, we will have to change the value of r as we go down the tree. it will make more sense when we see the algo:
+
+    // 1. base case: if r == size(n.left) + 1, return n.key
+    // 2. if r < (size.nleft) + 1, return select(n.left, r)
+    // 3. if r > (size.nleft) + 1, return select(n.right, r - 1 - size(n.left))
+
+    // now everything is in O(log(n))
     return 0;
 }
