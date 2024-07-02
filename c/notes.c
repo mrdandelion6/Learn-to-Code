@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     int IOstuff();
     int compilingWithUnix();
     int takeInput();
-    int average_temp();
+    int arrays_in_C();
     int iteratingThroughArrays();
     int loopIterationQuestion();
     int welcomeToPointers();
@@ -248,13 +248,13 @@ bool bool_test() {
 #define FUNCTIONS_H
 
 int takeInput(); // functions to make accessible between files
-int averageTemp();
+int arrays_in_C();
 
 #endif // closing place
 
 
 // === ARRAYS ===
-int averageTemp() {
+int arrays_in_C() {
     float daytime_high_1 = 16.0;
     float daytime_high_2 = 12.8;
     float daytime_high_3 = 14.6;
@@ -271,6 +271,24 @@ int averageTemp() {
     daytime_high[1] = 12.8;
     daytime_high[2] = 14.6;
     daytime_high[3] = 19.1;
+
+    // note that we cannot INITIALIZE an array with a variable size, only macro or constant size
+    // note that macros are constant and cannot be changed, so we can use them to define the size of an array
+    // for example,
+    int sizo = 10;
+    // int bad_array[sizo] = {1, 2, 3, 4, 5};
+    // the above generates an error because sizo is not a constant, it is a variable
+
+    // we can use macros alternatively
+    #define SIZO 10
+    int good_array[SIZO] = {1, 2, 3, 4, 5};
+
+    // however note we can stil declare arrays with a variable size
+    int array_that_works[sizo];
+    array_that_works[0] = 1;
+    array_that_works[1] = 1;
+    array_that_works[2] = 1;
+    array_that_works[3] = 1;
 
     int index = 1;
     printf("On day %d, the high was %f.\n", index, daytime_high[index]);  
