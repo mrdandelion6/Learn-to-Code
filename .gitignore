@@ -1,4 +1,5 @@
 .vscode/
+tempCodeRunnerFile*
 
 *.exe
 *.out
@@ -6,13 +7,12 @@
 
 # shell
 utmlab.sh
+.bashrc
 
 # c
-tempCodeRunnerFile.c
 practice
 notes_sort
 binary_data*
-.bashrc
 notes
 main
 client

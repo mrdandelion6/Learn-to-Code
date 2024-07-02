@@ -17,6 +17,7 @@ Before we get into our analysis, let's "clean up" our dataset. We can expect tha
 Note that any clean up we do to our data must only be inside our code! We should not exclude any data from our original dataset! In other words, the original file should remain untouched.
 
 ```{r dataCleaning} 
+setwd('./r')
 # we will be using CSVs for our data
 
 # note that you will often want to use different packages which can be installed with install.package()
@@ -27,7 +28,7 @@ Note that any clean up we do to our data must only be inside our code! We should
 library('knitr') # this library helps us render our markdown file
 
 # read.csv() reads a CSV provided it's file path.
-df <- read.csv("C:/735/code/synced/langs/0_misc/Learn-to-Code/r/data.csv", header=TRUE)
+df <- read.csv("./data.csv", header=TRUE)
 
 # table gives us a summary of our dataframe
 table(df)
