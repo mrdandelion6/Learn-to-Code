@@ -1,27 +1,92 @@
 \documentclass{article}
 \usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{geometry}
+\usepackage{calligra}
+\usepackage{mathpazo}
+\usepackage{tikz}
+\usepackage{changepage}
+\usepackage{microtype}
+\usepackage{nicefrac}
+\usepackage{forest}
+
+% ==========================
+% ========== META ==========
+
+\title{Data Structure Notes}
+\author{mrdandelion6}
+\date{July 2024}
+
+% === link colors ===
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+}
+% ===
+
+% === par indentations ===
+\newenvironment{mypar}{%
+    \setlength{\parskip}{1em}%
+    \parindent=0pt%
+}{%
+    \par%
+}
+% ===
+
+% === section indentations ===
+\makeatletter
+\renewcommand\section{\@startsection {section}{1}{\z@}%
+                                   {-5ex \@plus -1ex \@minus -.2ex}% above
+                                   {1ex \@plus .2ex}% below
+                                   {\normalfont\Large\bfseries}}%
+\makeatother
+% ===
+
+% === custom indentation ===
+\newenvironment{cindent}[1]{%
+    \par% Start a new paragraph
+    \setlength{\leftskip}{#1}% Set the left indentation
+    \noindent% No paragraph indentation
+    \ignorespaces% Ignore spaces after \begin{customindent}
+}{%
+    \par% End the paragraph
+}
+% ===
+
+% === proof ===
+\renewenvironment{proof}{\noindent{\textit{Proof.}} 
+\begin{cindent}{0.5cm}
+
+\vspace{-0.5cm}}
+{\end{cindent}\hfill$\square$}
+% ===
+
+% ========== META ==========
+% ==========================
 \begin{document}
 
-\textbf{worst case cost}
+\begin{mypar}
+\textbf{splitting an AVL tree}
 
-our cost of the inner loop is:
+let's split the AVL tree at 16
 
-\begin{align*}
-&\sum_{i=1}^{N-1} (10i + 3) + 8i + 4i\\
-=&\sum_{i=1}^{N-1} 22i + 3
-\end{align*}
-so our total cost is:
-\begin{align*}
-& 22N - 15 + \sum_{i=1}^{N-1} 22i + 3\\
-&= 22N - 15 + 22\frac{(n-1)n}{2} + 3 (n-1)\\
-&= 11n^2 + 14n - 18
-\end{align*}
-\textbf{best case cost}
-
-\vspace{5mm}
-for the best case, the inner loop runs 0 times, so we have:
-\begin{align*}
-& 22N - 15 + 10(N-1)\\
-&= 32N - 25
-\end{align*}
+\begin{forest}
+for tree={circle,draw,minimum size=2em,edge={-latex}, calign=edge midpoint}
+[25
+    [14, fill=blue, opacity=0.5
+        [12, fill=blue, opacity=0.5]
+        [17, fill=red, opacity=0.5]
+    ]
+    [30
+        [27]
+       [ ,phantom]
+    ]
+]
+\end{forest}
+\end{mypar}
 \end{document}

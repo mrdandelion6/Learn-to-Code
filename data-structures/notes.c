@@ -13,9 +13,10 @@ int main(int argc, char* argv[]) {
     int counting_steps();
     int balanced_trees();
     int avl_trees();
+    int union_of_AVLs();
 
     // run
-    avl_trees();
+    union_of_AVLs();
 
     return 0;
 }
@@ -584,5 +585,100 @@ int augmented_data_structures() {
     // 3. if r > (size.nleft) + 1, return select(n.right, r - 1 - size(n.left))
 
     // now everything is in O(log(n))
+    return 0;
+}
+
+int union_of_AVLs(){
+    // so far we have taken a look at the following operations on AVLs:
+    // 1. search
+    // 2. insert
+    // 3. delete
+    // 4. rank
+    // 5. select
+
+    // now we will explore returning the union, intersections, and difference of AVL trees
+    
+    // UNION OF AVL TREES
+    // suppose we have two AVL trees T1 and T2
+    // size(T1) = n, size(T2) = m, and n <= m
+
+    // simple approach for union:
+    // just add all the nodes of T1 to T2
+    // each insertion is O(log(m + n)), and we have n insertions
+    // hence, the complexity of the union is O(n*log(m + n))
+
+    // a better approach: divide and conquer
+
+        // recap of divide and conquer: split the input into smaller pieces and solve the problem on each piece, then combine the results
+
+        // some eg: merge sort, quick sort, binary search in array, etc.
+
+    // we can use divide and conquer to find the union of two AVL trees
+        // split T1 into smaller trees
+        // split T2 into smaller trees
+        // build unions of T1 and T2
+        // merge results from union of T1 and T2
+
+    // lets see how we can SPLIT an AVL tree
+        // suppose tree T2 has key k at its root node
+        // split T1 into two trees: T1<k and T1>k, both balanced
+        // split(T, k): returns (T<k, T>k)
+
+    // example
+    //           25
+    //         /    \
+    //       14       30
+    //      /  \     / 
+    //    12   17   27
+    // say we want to split at 16
+    // we want {12, 14} and {17, 25, 27, 30} as the result
+    // we split the left subtree into (L, R) = ({12, 14}, {17})
+    // T<k is {12, 14}, the left the above split
+    // T>k is join({17}, 25, {27, 30})
+
+    // so our split(T, k) algorithm will be as follows:
+    
+    // if T == null:
+    //    return (null, null)
+    // if k == T.key:
+    //    return (T.left, T.right)
+
+    // if k < T.key:
+    //    (L, R) = split(T.left, k)
+    //    R' = join(R, T.key, T.right)
+    //    return (L, R')
+
+    // if k > T.key:
+    //    (L, R) = split(T.right, k)
+    //    L' = join(L, t.key, T.left)
+    //    return (L', R)
+
+    // let's understand this recursion a bit better:
+        // our bases cases are fairly simple, we just return the left and right subtrees when we find the key or pairs of  NULLs when we reach a null node
+
+        // when the k < T.key, that means the split needs to happen in the left subtree.  but the right part of the split in the left subtree also needs to be joined with the stuff from the parent node. specifically, the parent node itself and the right subtree of the parent node.
+
+        // for visualization, see output.pdf
+            // you can see the blue nodes are the left split. the red nodes are the righ split WITHIN the subtree. they need to be joined with all the white nodes.
+
+    new_tex(
+        "\\begin{mypar}\n"
+        "\\textbf{splitting an AVL tree}\n\n"
+        "let's split the AVL tree at 16\n\n"
+        "\\begin{forest}\n"
+        "for tree={circle,draw,minimum size=2em,edge={-latex}, calign=edge midpoint}\n"
+        "[25\n"
+        "    [14, fill=blue, opacity=0.5\n"
+        "        [12, fill=blue, opacity=0.5]\n"
+        "        [17, fill=red, opacity=0.5]\n"
+        "    ]\n"
+        "    [30\n"
+        "        [27]\n"
+        "       [ ,phantom]\n"
+        "    ]\n"
+        "]\n"
+        "\\end{forest}\n"
+        "\\end{mypar}"
+    );
     return 0;
 }
