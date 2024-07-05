@@ -523,7 +523,7 @@ int AVL_insert(AVLNode* tree, int val) {
 
 
 int avl_implementation() {
-    // TODO:
+    // TODO: copy over the implementation from closestAVL project
     
 
     return 0;
@@ -599,11 +599,11 @@ int union_of_AVLs(){
     // now we will explore returning the union, intersections, and difference of AVL trees
     
     // UNION OF AVL TREES
-    // suppose we have two AVL trees T1 and T2
-    // size(T1) = n, size(T2) = m, and n <= m
+    // suppose we have two AVL trees G and L
+    // size(G) = n, size(L) = m, and n <= m
 
     // simple approach for union:
-    // just add all the nodes of T1 to T2
+    // just add all the nodes of G to L
     // each insertion is O(log(m + n)), and we have n insertions
     // hence, the complexity of the union is O(n*log(m + n))
 
@@ -614,14 +614,14 @@ int union_of_AVLs(){
         // some eg: merge sort, quick sort, binary search in array, etc.
 
     // we can use divide and conquer to find the union of two AVL trees
-        // split T1 into smaller trees
-        // split T2 into smaller trees
-        // build unions of T1 and T2
-        // merge results from union of T1 and T2
+        // split G into smaller trees
+        // split L into smaller trees
+        // build unions of G and L
+        // merge results from union of G and L
 
     // lets see how we can SPLIT an AVL tree
-        // suppose tree T2 has key k at its root node
-        // split T1 into two trees: T1<k and T1>k, both balanced
+        // suppose tree L has key k at its root node
+        // split G into two trees: G<k and G>k, both balanced
         // split(T, k): returns (T<k, T>k)
 
     // example
@@ -650,7 +650,7 @@ int union_of_AVLs(){
 
     // if k > T.key:
     //    (L, R) = split(T.right, k)
-    //    L' = join(L, t.key, T.left)
+    //    L' = join(T.left, t.key, L)
     //    return (L', R)
 
     // let's understand this recursion a bit better:
@@ -680,5 +680,42 @@ int union_of_AVLs(){
         "\\end{forest}\n"
         "\\end{mypar}"
     );
+
+
+    // now lets see how we can JOIN two AVL trees
+    // join(G, k, L): returns a new AVL tree with root k and subtrees G and L/ k is the root of L
+
+    // join(G, k, L):
+        // note that, G <= k <= L
+
+    // NULL cases 
+    // if G == null:
+    //    return insert(L, k)
+    // if L == null: 
+    //    return insert(G, k)
+
+    // NO BALANCE CASE 
+    // if |height(G) - height(L)| <= 1:
+    //    return new AVL tree with root k, left G, right L
+
+    // BALANCE CASE 
+    // if height(G) > height(L) + 1: 
+        // insert k and L into G 
+
+    // if height(L) > height(G) + 1: 
+        // insert k and G into L
+
+    // note that when we insert the trees, we don't just insert all the nodes of L into G or vice versa. we do it in a more efficient way!
+
+    // inserting L into G:
+    // suppose height(L) > height(G) + 1
+
+    // in L, keep going right to find the node p, which satisfies:
+        // 1.) p is still too tall: height(p) > height(G) + 1
+        // 2.) p.right is just right: height(p.right) <= height(G) + 1
+    // create a new node q with key k, left child p.right, and right child G. this node becomes p's new right child
+    // realance p from upwards as needed
+
+
     return 0;
 }
