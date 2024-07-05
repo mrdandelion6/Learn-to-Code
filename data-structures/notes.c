@@ -14,9 +14,10 @@ int main(int argc, char* argv[]) {
     int balanced_trees();
     int avl_trees();
     int union_of_AVLs();
+    int weighted_balance_trees();
 
     // run
-    union_of_AVLs();
+    weighted_balance_trees();
 
     return 0;
 }
@@ -707,15 +708,113 @@ int union_of_AVLs(){
 
     // note that when we insert the trees, we don't just insert all the nodes of L into G or vice versa. we do it in a more efficient way!
 
+    // inserting G into L:
+    // in this case height(L) > height(G) + 1
+
+        // in L, keep going right to find the node p, which satisfies:
+            // 1.) p is still too tall: height(p) > height(G) + 1
+            // 2.) p.right is just right: height(p.right) <= height(G) + 1
+        // create a new node q with key k, left child p.right, and right child G. this node becomes p's new right child
+        // rebalance p from upwards as needed
+
+
     // inserting L into G:
-    // suppose height(L) > height(G) + 1
+    // similiarly, in this case, height(G) > height(L) + 1
 
-    // in L, keep going right to find the node p, which satisfies:
-        // 1.) p is still too tall: height(p) > height(G) + 1
-        // 2.) p.right is just right: height(p.right) <= height(G) + 1
-    // create a new node q with key k, left child p.right, and right child G. this node becomes p's new right child
-    // realance p from upwards as needed
+        // in G, keep going left until we find a node p such that:
+            // 1.) height(p) > height(L) + 1
+            // 2.) height(p.right) <= height(L) + 1
 
+        // create a new tree q with node k, left child L, and right child p.right. then set q to be p's right child.
+        // rebalanced p from upwards as needed
+
+    // let's understand, why does this result in a balanced tree?
+    
+    // lets look at an example for intuition:
+
+    // suppose we have two AVL trees G and L
+
+    // L:
+    //          25
+    //        /    \
+    //      14      26
+
+    // G:
+    //           37
+    //        /      \
+    //      33        40
+    //     /  \      /  \
+    //   32   34    38   50
+    //  /       \          \
+    // 31       35          60
+    //            \
+    //            36
+
+    // suppose our k value is 30. we want to insert L into G
+
+    // we traverse G to find the node p = 33.
+    // then we create the following node:
+
+    //          30
+    //        /     \
+    //      25       32
+    //     /  \      /  
+    //   14    26  31 
+
+    // then we set this to be the left child of p = 33.
+
+    //                  37
+    //              /       \
+    //            33         40
+    //           /   \      /  \
+    //         30    34    38   50
+    //        /   \    \          \
+    //      25     32   36         60
+    //     /  \    /
+    //   14   26  31
+
+    // we can see the above tree is balanced.
+    // in general, there are 4 cases of joining AVL trees.
+    // it will be easier to understand with a diagram, so run this code and see the output.pdf file in this directory
+
+    // TODO: complete hand drawn diagrams for this and upload to the figures directory
+
+    add_tex_output(
+        "\n\n\\textbf{here are the 4 cases for joining AVL trees}\n\n"
+        "\\includegraphics[width=0.5\\textwidth]{figures/avl_join1.png}\n"
+        "\\includegraphics[width=0.5\\textwidth]{figures/avl_join2.png}\n"
+        "\\includegraphics[width=0.5\\textwidth]{figures/avl_join3.png}\n"
+        "\\includegraphics[width=0.5\\textwidth]{figures/avl_join4.png}\n"
+    );
+    
+    return 0;
+}
+
+int weighted_balance_trees() {
+    // another way to balance trees is to use WEIGHTED BALANCE TREES. 
+    // before we were using AVLs, which balanced the tree based on the height of the tree
+
+    // in a weighted balance tree, we balance the tree based on the number of nodes in the tree, i.e the size
+
+    // idea: at every node n,
+        // 1/3 <= [size(n.left) + 1] / [size(n.right) + 1] <= 3
+
+        // =>
+            // (1/3) * [size(n.right) + 1] <= size(n.left) + 1 <= 3 * [size(n.right) + 1]
+
+        // i.e the size of the left subtree + 1 is between 1/3 and 3 times the size of the right subtree + 1
+
+    // or we can simplify this by saying that weight(n) = size(n) + 1, hence:
+
+        // 1/3 <= weight(n.left) / weight(n.right) <= 3
+
+    // equivalently,
+        // weight(n.left) <= 3 * weight(n.right)
+        // weight(n.right) <= 3 * weight(n.left)
+
+    // we can use this to balance the tree. just keep track of the size with a size field.
+
+    // we will want to do rotations again, as with AVL trees!
 
     return 0;
 }
