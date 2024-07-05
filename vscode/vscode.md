@@ -14,6 +14,7 @@ When in doubt, open command palette (ctrl + shift + p). From here you see a list
 - ctrl + p : search for a file
 
 ### Text Editing
+- alt + left/right : go back/forward to where you were in the file  
 - ctrl + shift + o : go to a symbol in file
 - ctrl + d : multi select variables
 - ctrl + k + d : skip current variable selection
