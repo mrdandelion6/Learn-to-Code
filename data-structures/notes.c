@@ -1073,6 +1073,39 @@ int heap_max_extract() {
 
     // worst case time for this is O(logn)
 
+    return 0;
+}
 
+int heaps_in_array() {
+    // heaps can be implemented in an arrays instead of a tree
+
+    // the array is an in-order traversal of the tree. for example, for the following heap tree:
+
+    //                     16
+    //                  /      \
+    //                14        10
+    //              /    \      /  \
+    //             8      7    9    3
+    //            / \    / 
+    //           2   4  1
+
+    // we have the array [16, 14, 10, 8, 7, 9, 3, 2, 4, 1]
+
+    // where do we insert / remove ? simply at the ends of the array
+
+    // where are children / parents?
+        // left child of node at index i: index 2i
+        // right child of node at index i: index 2i + 1
+        // parent of node at index i: index i / 2
+
+    // pros:
+        // no need for pointers
+        // easy to implement
+        // easy to store in memory
+
+    // cons:
+        // need to resize array when it gets full
+        // need to shift elements when removing from the middle
+        // not as easy to visualize as a tree
     return 0;
 }
