@@ -889,7 +889,76 @@ int union_of_WBTs() {
 }
 
 int priority_queues() {
+    // priority queues are collections of priority-job pairs; priorities must be comparable; i.e. have some order
 
+    // they are ADTs with the following operations:
+        // insert(job, priority)
+        // max()
+        // extract_max()
+
+    // insert(j, p) inserts a job j with a given priority p
+    // max() returns the job with the highest priority
+    // extract_max removes the job with the highest priority from the priority queue and returns it
+
+    // a heap is one way to store a priority queue
+    // see the next section for heaps
 
     return 0;
+}
+
+int heaps() {
+    // a heap is:
+        // a binary tree
+        // "nearly complete": every level i has 2^i nodes, except the bottom level; the bottom nodes flush to the left
+        // at each node n: priority(n) >= priority(n.left) and priority(n) >= priority(n.right)
+
+        // here is an example
+        // note that each node is a priority which corresponds to a job
+
+        //                     16
+        //                  /      \
+        //                14        10
+        //              /    \      /  \
+        //             8      7    9    3
+        //            / \    / 
+        //           2   4  1
+
+        // notice how all the levels are complete except the last one, and the last one is filled from left to right
+
+        // lets look at some insertion examples
+
+        // insert 15 into the above heap
+
+        //                     16
+        //                  /      \
+        //                14        10
+        //              /    \      /  \
+        //             8      7    9    3
+        //            / \    / \
+        //           2   4  1   15
+        
+        // note that the order of the priorities is now bad! need to swap with parent.
+        // dont forget, we need parent >= left and parent >= right
+
+        //                     16
+        //                  /      \
+        //                14        10
+        //              /    \      /  \
+        //             8     15    9    3
+        //            / \    / \
+        //           2   4  1   7
+
+        // note that the order is still bad, we see 15 > 14 but 15 is the right child of 14
+
+        //                     16
+        //                  /      \
+        //                15        10
+        //              /    \      /  \
+        //             8     14    9    3
+        //            / \    / \
+        //           2   4  1   7
+
+        // now the order is good!
+
+        return 0;
 }
