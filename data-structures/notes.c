@@ -15,9 +15,10 @@ int main(int argc, char* argv[]) {
     int avl_trees();
     int union_of_AVLs();
     int weighted_balance_trees();
+    int priority_queues();
 
     // run
-    weighted_balance_trees();
+    priority_queues();
 
     return 0;
 }
@@ -657,7 +658,7 @@ int union_of_AVLs(){
     // let's understand this recursion a bit better:
         // our bases cases are fairly simple, we just return the left and right subtrees when we find the key or pairs of  NULLs when we reach a null node
 
-        // when the k < T.key, that means the split needs to happen in the left subtree.  but the right part of the split in the left subtree also needs to be joined with the stuff from the parent node. specifically, the parent node itself and the right subtree of the parent node.
+        // when the k < T.key, that means the split needs to happen in the left subtree.  but the right part of the split in the left subtree also needs to be joined with the stuff from the parent node. specifically, the parent node itself and the right subtree of the parent node need to be joined with the left subtrees right child
 
         // for visualization, see output.pdf
             // you can see the blue nodes are the left split. the red nodes are the righ split WITHIN the subtree. they need to be joined with all the white nodes.
@@ -740,15 +741,15 @@ int union_of_AVLs(){
     //      14      26
 
     // G:
-    //           37
-    //        /      \
-    //      33        40
-    //     /  \      /  \
-    //   32   34    38   50
-    //  /       \          \
-    // 31       35          60
-    //            \
-    //            36
+    //               37
+    //            /      \
+    //          33        40
+    //         /  \      /  \
+    //       32   34    38   50
+    //      /       \          \
+    //     31       35          60
+    //                \
+    //                36
 
     // suppose our k value is 30. we want to insert L into G
 
@@ -786,12 +787,28 @@ int union_of_AVLs(){
         "\\includegraphics[width=0.5\\textwidth]{figures/avl_join3.png}\n"
         "\\includegraphics[width=0.5\\textwidth]{figures/avl_join4.png}\n"
     );
-    
+
+    // we can use join() and split() as show above to implement union as follows:
+
+    // union(T1, T2):
+        // if T1 == nil
+        //    return T2
+        // if T2 == nil
+        //    return T1
+
+        // k = T2.key
+        // (L, R) = split(T1, k) // split T1 at the root of T2
+        
+        // L' = union(L, T2.left)
+        // R' = union(R, T2.right)
+
+        // return join(L', k, R')
+
     return 0;
 }
 
 int weighted_balance_trees() {
-    // another way to balance trees is to use WEIGHTED BALANCE TREES. 
+    // another way to balance trees is to use a WEIGHTED BALANCE TREE (WBT).
     // before we were using AVLs, which balanced the tree based on the height of the tree
 
     // in a weighted balance tree, we balance the tree based on the number of nodes in the tree, i.e the size
@@ -815,6 +832,64 @@ int weighted_balance_trees() {
     // we can use this to balance the tree. just keep track of the size with a size field.
 
     // we will want to do rotations again, as with AVL trees!
+
+    // ROTATIONS OF WBTs:
+
+    // CASE 1: right heavy AND single CCW rotation works
+        // i.e)
+        // if weight(n.right) > 3 * weight(n.left) 
+        // and weight(n.right.left) < 2 * weight(n.right.right)
+
+        // why does that second condition allow a single rotation to work?
+        // simple idea: the heavy node was the right node, so we check the weights of its children. the right node's left node is going to become the new right node of the parent node. want to make sure its size is not too big compared to the right node's right node.
+
+        // we can mathematically show why this works:
+            // let l = size(n.left), a = size(n.right.left), b = size(n.right.right).
+            // since n is right heavy, either:
+            // - a node was added to n.right to cause the imbalance
+            // a node was removed from n.left to cause the imbalance
+
+            // we have the following assumptions:
+            // TODO: write up the mathematical derivation and add to the output.pdf file
+ 
+        // CASE 2: left heavy AND single CW rotation works
+            // same idea:
+            // weight(n.left) > 3 * weight(n.right)
+            // weight(n.left.right) < 2 * weight(n.left.left)
+
+        // CASE 3: right heavy AND double rotation needed
+            // in this case:
+            // weight(n.right) > 3 * weight(n.left)
+            // weight(n.right.left) >= 2 * weight(n.right.right)
+
+            // must do:
+            // R = n.right
+            // rotate_right(R.left)
+            // new_R = n.right
+            // rotate_left(new_R)
+
+        // CASE 4: left heavy AND double rotation needed
+            // in this case:
+            // same idea
+
+    // so when we insert / delete, we would rebalance each node from the inserted / deleted node to the root. usually done recursively. same as AVL trees.
+        
+    return 0;
+}
+
+int union_of_WBTs() {
+    // for the union of WBTs, we would need to change the join() function.
+
+    // recall for AVLs, they join function:
+        // join(G, k, L):
+
+    // TODO: do the rest
+
+    return 0;
+}
+
+int priority_queues() {
+
 
     return 0;
 }
