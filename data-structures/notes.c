@@ -907,10 +907,15 @@ int priority_queues() {
 }
 
 int heaps() {
+    // heaps are a datastructure with O(1) time to find the highest priority element (min or max)
+    // and O(log(n)) time to insert and delete elements
+
+    // this makes them perfect for implementing priority queues and many other applications
+
     // a heap is:
         // a binary tree
         // "nearly complete": every level i has 2^i nodes, except the bottom level; the bottom nodes flush to the left
-        // at each node n: priority(n) >= priority(n.left) and priority(n) >= priority(n.right)
+        // at each node n: priority(n) >= priority(n.left) and priority(n) >= priority(n.right). this is known as the heap priority
 
         // here is an example
         // note that each node is a priority which corresponds to a job
@@ -959,6 +964,115 @@ int heaps() {
         //           2   4  1   7
 
         // now the order is good!
+        // we'll explore the algorithm for insertion in the section after the next one
 
         return 0;
+}
+
+int applications_of_heaps() {
+    // heaps have many applications:
+        // 1. heapsort
+        // 2. priority queues
+        // 3. dijkstra's algorithm
+        // 4. huffman coding
+        // 5. median maintenance
+        // 6. job scheduling
+        // 7. kth largest element
+        // 8. finding the mode of a set of numbers
+        // 9. finding the top k elements of a set of numbers
+        // 10. finding the smallest k elements of a set of numbers
+
+        // 11. graph algorithms: prim's and krushkal's algorithms for finding the minimum spanning tree
+
+        // 12. stream processing: heaps are used in algos that deal with streaming data where u need to keep track of the top k elements in a dataset that is too large to fit in memory
+
+        // 13. memory management: some implementations of memory allocation and garbage collection algorithms use heaps to keep track of memory blocks
+
+    return 0;
+}
+
+int heap_insertion() {
+    // let's go over the algorithm for inserting into a heap
+
+    // insert(H, p, j):
+        // v = create_node(p, j)
+
+        // insert v at bottom level, leftmost free place (find smallest height favoring left)
+
+        // while v has a parent p with priority(p) < priority(v): swap v and p
+            // this is called "bubbling up" and ensures the heap property is maintained
+    
+    // worst case time is O(height)
+    // note that height = floor(log(n)) + 1 (assuming we say a single node heap has height 1)
+
+    return 0;
+}
+
+
+int heap_max_extract() {
+    // for doing max_extract, we need to remove the root node and replace it with the last node in the heap, i.e the rightmost node in the bottom level
+
+    // example
+
+    //                     16
+    //                  /      \
+    //                15        10
+    //              /    \      /  \
+    //             8      14    9    3
+    //            / \    / \
+    //           2   4  1   7
+
+    // after extracting the max, we replace 16 with 7
+
+    //                     7
+    //                  /      \
+    //                15        10
+    //              /    \      /  \
+    //             8      14    9    3
+    //            / \    /
+    //           2   4  1
+
+    // now we need to "bubble down" the new root node to maintain the heap property
+
+    // bubbling down:
+
+    //                 15
+    //              /      \
+    //            7        10
+    //          /    \      /  \
+    //         8      14    9    3
+    //        / \    /
+    //       2   4  1
+
+    // need to swap 7 and 14 now
+
+    //                 15
+    //              /      \
+    //            14        10
+    //          /    \      /  \
+    //         8      7    9    3
+    //        / \    /
+    //       2   4  1
+
+    // now the order is good
+
+    // lets look at the algorithm to do this
+
+    // max_extract(H):
+        // max_p, max_j = priority(H), job(H)
+
+        // move last node to root
+        // v = root
+
+        // while v has child c with priority(c) > priority(v):
+            // c = child with highest priority
+            // swap v and c
+            // v = c
+
+        // return max_p, max_j
+
+    // worst case time for this is O(logn)
+
+
+    return 0;
 }
