@@ -1109,3 +1109,35 @@ int heaps_in_array() {
         // not as easy to visualize as a tree
     return 0;
 }
+
+int heap_height() {
+    // in this section we prove that the height of a heap is ceil(log(n)) + 1
+    // note that we are considering a single node to have height 1
+
+    // let h = height of the heap
+    // let n = size of heap
+
+    // largest n: when the bottom level is totally full
+    // then,
+    // n = 2^0 + 2^1 + 2^2 + ... + 2^(h-1)
+    // geometric series sum formula: 2^0 + 2^1 + 2^2 + ... + 2^(h-1) = 2^h - 1
+
+    // then, n = 2^h - 1
+
+    // smallest n:
+    // when there is only 1 node at the bottom level.
+    // then,
+    // n = [2^0 + 2^1 + 2^2 + ... + 2^(h-2)] + 1
+    //   = [2^(h-1) - 1] + 1
+    //   = 2^(h-1)
+
+    // hence,
+    // 2^(h-1) <= n <= 2^h - 1
+    // 2^(h-1) <= n < 2^h
+    // h-1 <= log(n) < h
+    // h = <= log(n) + 1 < h + 1
+
+    // hence, h = ceil(log(n)) + 1
+
+    return 0;
+}
