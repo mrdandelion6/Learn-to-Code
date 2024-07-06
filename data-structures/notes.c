@@ -16,9 +16,11 @@ int main(int argc, char* argv[]) {
     int union_of_AVLs();
     int weighted_balance_trees();
     int priority_queues();
+    int intro_to_graphs();
+    int undirected_graphs();
 
     // run
-    priority_queues();
+    undirected_graphs();
 
     return 0;
 }
@@ -28,7 +30,7 @@ int main_topics() {
 
     // 1. balance trees
     // 2. hash tables
-    // 3. graphs
+    // 3. intro_to_graphs
     // 4. disjoint sets
     // 5. priority queues
     // 6. amortized analysis
@@ -720,7 +722,7 @@ int union_of_AVLs(){
 
 
     // inserting L into G:
-    // similiarly, in this case, height(G) > height(L) + 1
+    // similarly, in this case, height(G) > height(L) + 1
 
         // in G, keep going left until we find a node p such that:
             // 1.) height(p) > height(L) + 1
@@ -907,7 +909,7 @@ int priority_queues() {
 }
 
 int heaps() {
-    // heaps are a datastructure with O(1) time to find the highest priority element (min or max)
+    // heaps are a data structure with O(1) time to find the highest priority element (min or max)
     // and O(log(n)) time to insert and delete elements
 
     // this makes them perfect for implementing priority queues and many other applications
@@ -1071,7 +1073,7 @@ int heap_max_extract() {
 
         // return max_p, max_j
 
-    // worst case time for this is O(logn)
+    // worst case time for this is O(log(n))
 
     return 0;
 }
@@ -1141,3 +1143,159 @@ int heap_height() {
 
     return 0;
 }
+
+
+int intro_to_graphs() {
+    // a graph is a collection of nodes (vertices) and edges (connections between nodes)
+    // graphs can be directed or undirected
+
+    // before we go into the details of graphs, we will first go some examples of graphs and their applications
+
+    // example usages of graphs:
+        // cities and highways between them
+        // computers and network cables between them
+        // people and relationships
+        // in a board game: a state and legal moves to other states
+
+    // simply anything that can be modelled with nodes and edges.
+    // remember, edges are connections between nodes, the PATHs, i.e. the LINES between the nodes
+
+    // in a nutshell, we use graphs because they are a simple and powerful way to model relationships between objects
+    // lets look at an example of a graph
+
+    //         c     e
+    //        / \
+    //       a---b---d
+
+    // note that this is not a tree, nodes can be connected in any way. the nodes can connect horizontally, vertically, or diagonally, it doesn't matter
+
+    // definition of a graph
+    // a GRAPH is a pair G = (V, E), where:
+        // V is a set of vertices (nodes)
+        // E is a set of edges (connections between nodes)
+
+    // in the next function sections we will look at different kinds of graphs, such as undirected and directed graphs.
+    // for now we will work with undirected graphs because they are simpler
+
+    // UNDIRECTED GRAPH:
+        // an undirected graph is a graph where the edges are bidirectional, i.e there is no direction to the edges and they can be considered to point in both directions
+
+    // lets take a look at some graph terminology that applies in general to all graphs
+    // GRAPH TERMINOLOGY:
+
+    // 1. VERTEX: vertex is another word for node in the graph
+    // 2. ENDPOINT: the nodes at the end of an edge are called the endpoints of the edge
+    // 3. INCIDENT ON: we say an edge is incident on a vertex if the vertex is one of the endpoints of the edge
+    // 4. DEGREE: the degree of a vertex is the number of edges incident on the vertex
+    // 5. ADJACENT: two vertices are adjacent if there is an edge between them
+
+    // example from aboves, 
+        // edge {a, c} is incident on a and is also incident on c
+        // b and d are endpoints of edge {b, d}
+        // e is not an endpoint of any edge
+        // edge {c, b} is not incident on a
+        // vertices a and b are adjacent
+        // the degree of a is 2 and the degree of b is 3
+
+
+    // now lets explore WAYS OF STORING UNDIRECTED GRAPHS !! essentially: how can we implement a graph in code? these methods show how we can represent a graph in memory! they do not store the nodes of the graph, but rather the connections between the nodes, i.e how they are related
+    
+    // 1. ADJACENCY MATRIX: 
+        // a 2D array where the rows and columns are the vertices, and the value at (i, j) is 1 if there is an edge between i and j, and 0 otherwise
+
+        // note that the space complexity of the adjacency matrix is O(n^2), where n is the number of vertices
+
+        // here is the adjacency matrix for the above graph:
+
+        //     a  b  c  d  e
+        //  a  0  1  1  0  0
+        //  b  1  0  1  1  0
+        //  c  1  1  0  0  0
+        //  d  0  1  0  0  0
+        //  e  0  0  0  0  0
+
+        // operation times:
+        // who are adjacent to vertex v? O(n)
+            // go through the row for v and check for 1s
+        // are v1 and v2 adjacent? O(1)
+            // double index into the matrix, adj[v1][v2] == 1?
+
+    // 2. ADJACENCY LIST:
+        // a 1D array or dictionary where the key is the vertex and the value is a list of vertices that are adjacent to the key vertex
+
+        // the space complexity of the adjacency list is O(n + m), where n is the number of vertices and m is the number of edges
+
+        // here is the adjacency list for the above graph:
+
+        // a: [b, c]
+        // b: [a, c, d]
+        // c: [a, b]
+        // d: [b]
+        // e: []
+
+        // operation times:
+        // who are adjacent to vertex v? O(degree(v))
+            // just return the list of adjacent vertices
+            // even though returning the list is O(1), we consider it O(degree(v)) because we consider iterating over the list. in that sense, this is the fastest time complexity of finding the adjacent vertices (O(1) to return, O(degree(v)) to iterate)
+        // are v1 and v2 adjacent? O(degree(v1))
+            // iterate over the list of adjacent vertices of v1 and check if v2 is in the list
+        
+        // this is much more optimal for graph searches
+
+    // MORE (UNDIRECTED) GRAPH TERMINOLOGY:
+        // 1. PATH: a PATH is a non-empty sequence of vertices in which:
+            // consecutive vertices are adjacent
+        // 2. SIMPLE PATH: a SIMPLE PATH is a path in which:
+            // consecutive vertices are adjacent
+            // AND vertices are distinct
+
+            // for example, recall our graph:
+
+            //         c     e
+            //        / \
+            //       a---b---d
+
+            // - <d> is a path of length 0
+            // - <d, b, c> is a path of length 2
+            // - <d, b, c, b> is not a (simple) path because b is repeated
+            // - <b, a, d> is not a path
+
+        // 3. REACHABLE: we say a vertex v is reachable from vertex u if there is a path from u to v
+            // e.g. a is reachable from c, b, d, but not e
+
+        // 4. SIMPLE CYCLE: a SIMPLE CYCLE non-empty sequence of vertices in which:
+            // consecutive vertices are adjacent
+            // first vertex = last vertex
+            // vertices are distinct except for the first=last
+            // edges used are distinct
+            // a single vertex is not a cycle
+
+            // for example, consider the following graph:
+
+            //       c       e
+            //     /   \   /   \
+            //    a------b------d
+
+            //  <b, a, c, b> is a simple cycle, length 3. some books call it <b, a, c> instead
+
+            // <b, c, a, b, d, e, b> is not a simple cycle because b is repeated
+
+            // <b, d, b> is not a simple cycle because the edge {b, d} is repeated
+
+            // <a, b> is not a simple cycle because first != last
+
+    return 0;
+ }
+
+
+ int undirected_graphs() {
+    
+
+    // an undirected graph is a pair of sets (V, E), where:
+        // V: is a set of vertices (nodes)
+        // E: is a set of edges (connections between nodes)
+
+    // typically you wont have an edge going from a node to itself.
+
+    return 0;
+ }

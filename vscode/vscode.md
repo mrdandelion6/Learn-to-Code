@@ -23,7 +23,7 @@ When in doubt, open command palette (ctrl + shift + p). From here you see a list
 - ctrl + shift + arrows : select text
 - ctrl + / : comment out line
 - F5 : debug
-- F12 : jump to definition
+- ctrl + shift + ; : jump to definition
 
 ### Sidebar
 - ctrl + b : hide side bar
