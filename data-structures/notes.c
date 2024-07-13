@@ -946,6 +946,7 @@ int heaps() {
         
         // note that the order of the priorities is now bad! need to swap with parent.
         // dont forget, we need parent >= left and parent >= right
+        // this is called "bubble up", also known as float up or sift up. 
 
         //                     16
         //                  /      \
@@ -1034,7 +1035,7 @@ int heap_max_extract() {
     //            / \    /
     //           2   4  1
 
-    // now we need to "bubble down" the new root node to maintain the heap property
+    // now we need to "bubble down" the new root node to maintain the heap property. also known as sift down or float down.
 
     // bubbling down:
 
@@ -1095,10 +1096,10 @@ int heaps_in_array() {
 
     // where do we insert / remove ? simply at the ends of the array
 
-    // where are children / parents?
-        // left child of node at index i: index 2i
-        // right child of node at index i: index 2i + 1
-        // parent of node at index i: index i / 2
+    // where are children / parents? suppose the first index is index 0
+        // left child of node at index i: index 2i + 1
+        // right child of node at index i: index 2i + 2
+        // parent of node at index i: index floor[ (i - 1) / 2 ]
 
     // pros:
         // no need for pointers
