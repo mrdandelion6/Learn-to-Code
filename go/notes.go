@@ -38,6 +38,8 @@ func intro_to_go() {
 		// this is useful for when you want to run the code multiple times
 		// you can also use the -o flag to specify the name of the executable just like with gcc
 		// you can run the executable by typing ./<executable name> in the terminal, just like with C
+		// note that for windows, u must include a .exe extension to the executable name for it to be able to run
+		// like this: go build -o myprogram.exe myprogram.go
 }
 
 func the_main_function() {
