@@ -1,6 +1,15 @@
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
 object notes {
     def main(args: Array[String]): Unit = {
         println("Hello, world!")
+    }
+
+    def contents() = {
+        welcome()
+        function_syntax()
+        futures()
     }
 
     def welcome(): Unit = {
@@ -70,6 +79,38 @@ object notes {
                 x * y
             }
         }
+    }
+
+    def futures(): Unit = {
+        // the Future type is used to represent a value that will be available at some point in the future and may not exist yet
+        // since the value may not exist yet, the Future type is used for asynchronous programming.
+        // these are 
+
+        // the Future type provides to work with the result of an asynchronous operation without blocking the current thread.
+        // must have: import scala.concurrent.Future
+        // must have: import scala.concurrent.ExecutionContext.Implicits.global
+
+        // here is a summary of how future works in scala:
+        // 1. asynchronous execution:
+            // when you create a Future, the computation it represents is executed on a separate thread, allowing the current thread to continue without waiting for the Future to complete
+
+        // 2. error handling:
+            // futures can also handle failures. if the asynchronous computation fails, the Future will contain the exception instead of a successful result. you can respond to both successful and failed futures using callbacks like onComplete, onSuccess, onFailure, and recover.
+
+        // 3. awaiting results:
+            // while its generally best to stay non blocking and compose Futures, scala also provides the Await object, which can block the current thread until the Future completes for when you absolutely need to wait for a result.
+
+        // heres a simple example of a future
+        val futureResult: Future[Int] = Future {
+            Thread.sleep(1000)
+            42
+        }
+
+        futureResult.onComplete {
+            case Success(value) => println(s"The result is $value")
+            case Failure(exception) => println(s"Failed with $exception")
+        }
+
     }
 }
 
