@@ -12,24 +12,11 @@ Here are some languages and topics I have made a good amount of notes on so far.
 - `Python & Jupyter` : data analysis + ml
 - `R` : data analysis + ml
 
-## Notes to Make
-Here are some languages and topics I have made very little or no notes on yet. I plan to slowly add notes for these topics whenever I have time. 
-
-- `MATLAB` : data analysis + ml
-- `React` 
-- `Sass` 
-- `TypeScript` 
-- `PowerShell`
-- `Ruby`
-- `Docker`
-- `Java`
-- `Data Structures`
-- `Scala`
-- `PHP`
-- `Golang`
-
+The other folders may also contain some decent notes, but are not going to be as in depth as the above list.
 
 ## Usage
+
+Here's how to use my notes interactively for different sections.
 
 ### Learn C
 Located in the `c` directory. These notes are made for someone who has never seen C before but they also delve into more advanced systems programming topics such as pipes, processes, and sockets. Most of the material in these notes is pertaining to the course **CSC209 at UofT**, but anyone who wants to learn C and low level systems programming will find this useful.
