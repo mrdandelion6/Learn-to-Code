@@ -65,7 +65,7 @@ python -m venv env
 env\Scripts\activate
 pip install -r requirements.txt
 ```
-For a more advanced setup using `virtualenv`, to install and manage multiple different Python interpreters using `pyenv`, read [virtualenv_pyenv.md](python/virtualenv_pyenv.md).
+For a more advanced setup using `virtualenv`, to install and manage multiple different Python interpreters using `pyenv`, [check out my article](https://medium.com/towardsdev/managing-virtual-environments-with-different-python-interpreters-b997b7bb7254) on Medium.
 
 Make sure your IDE is using the Python interpreter from the virtual environment you created, you may need to specify the path to the Python executable: `path-to-repo\repo-root\python\env\Scripts\python.exe`. You will also need to configure the notebook to use this same interpreter as its kernel.
 
@@ -73,7 +73,7 @@ Make sure your IDE is using the Python interpreter from the virtual environment 
 ### Learn R
 Learn data analysis and a little ML using R. Made for someone who has never seen R before. Located in the `r` directory.
 
-`notes.Rmd` will contain detailed notes on using R. See [r/README](r/README.md) for setting up R in VS Code.
+`notes.Rmd` will contain detailed notes on using R. See [r/README](r/README.md) for setting up R in VS Code or also [read my article](https://towardsdev.com/setting-up-r-for-vs-code-c03a6fda311d) on Medium
 
 ---
 ### Learn MATLAB
