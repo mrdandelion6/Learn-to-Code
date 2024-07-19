@@ -1,6 +1,6 @@
 # Learn to Code
 
-Welcome to my code learning repository! This repository is a collection of my notes and code snippets as I embark on the journey of learning many different programming languages. 🚀
+Welcome to my code learning repository. This repository is a collection of my notes and code snippets as I embark on the journey of learning many different programming languages. 🚀
 
 
 ## Notes I've Made
@@ -24,6 +24,9 @@ Here are some languages and topics I have made very little or no notes on yet. I
 - `Docker`
 - `Java`
 - `Data Structures`
+- `Scala`
+- `PHP`
+- `Golang`
 
 
 ## Usage
