@@ -12,7 +12,7 @@ Here are some languages and topics I have made a good amount of notes on so far.
 - `Python & Jupyter` : data analysis + ml
 - `R` : data analysis + ml
 
-The other folders may also contain some decent notes, but are not going to be as in depth as the above list.
+The other folders may also contain some decent notes, but are not going to be as in depth as the above list. I am making them as I go along.
 
 ## Usage
 
@@ -75,25 +75,6 @@ Learn data analysis and a little ML using R. Made for someone who has never seen
 
 `notes.Rmd` will contain detailed notes on using R. See [r/README](r/README.md) for setting up R in VS Code or also [read my article](https://towardsdev.com/setting-up-r-for-vs-code-c03a6fda311d) on Medium
 
----
-### Learn MATLAB
-No notes yet.
-
----
-### Learn React
-No notes yet.
-
----
-### Learn Sass
-No notes yet.
-
----
-### Learn TypeScript
-No notes yet.
-
----
-### Learn PowerShell
-No notes yet.
 
 ---
 
