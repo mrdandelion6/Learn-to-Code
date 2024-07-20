@@ -15,7 +15,5 @@ end
 def variables()
     #
     var x = 1
-    asfdsfd
-    d
 
 end

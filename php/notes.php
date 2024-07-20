@@ -28,8 +28,8 @@ function intro_to_php() {
     // see php_tags() for an more
 
     // PHP IS EMEDDABLE IN HTML
-    // this is not inside HTML files, but rather inside HTML tags within PHP files
-    // this can be done using the <?php ?\> tags(no \ after the ?)
+    // this does not mean PHP can be written inside HTML files, but rather PHP code can be written inside HTML tags WITHIN PHP files
+    // this can be done using the <?php ?\> tags(no \ after the ?). you can see our tag at the top.
 
     // for example:
         // <!DOCTYPE html>
@@ -82,7 +82,9 @@ function php_tags() {
     // anything outside of the php tags is treated as html
     // for example, lets end our php code and write some html
 }
-?>
+?> <!-- end of php code -->
+
+<!-- now we're in html -->
 <!DOCTYPE html>
 <html>
 <head>
