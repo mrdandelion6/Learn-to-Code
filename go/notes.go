@@ -12,7 +12,7 @@ func main() {
 
 func intro_to_go() {
 	// go is a statically typed, compiled language
-	// the syntax is similar to C but it is more high level
+	// the syntax is similar to C but it does not have as much low level control
 	// go is a garbage collected language, so you don't have to worry about memory management
 
 	// something very unique to go is that it is a CONCURRENT language

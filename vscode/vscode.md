@@ -7,6 +7,8 @@ When in doubt, open command palette (ctrl + shift + p). From here you see a list
 
 ## Some Useful Keybinds
 
+Some of these may be custom set by me, but most are default.
+
 ### General
 - ctrl + shift + p : command palette
 - ctrl + ` : open terminal
