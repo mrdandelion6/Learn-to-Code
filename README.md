@@ -1,6 +1,6 @@
 # Learn to Code
 
-Welcome to my code learning repository! This repository is a collection of my notes and code snippets as I embark on the journey of learning many different programming languages. 🚀
+Welcome to my code learning repository. This repository is a collection of my notes and code snippets as I embark on the journey of learning many different programming languages. 🚀
 
 
 ## Notes I've Made
@@ -12,21 +12,11 @@ Here are some languages and topics I have made a good amount of notes on so far.
 - `Python & Jupyter` : data analysis + ml
 - `R` : data analysis + ml
 
-## Notes to Make
-Here are some languages and topics I have made very little or no notes on yet. I plan to slowly add notes for these topics whenever I have time. 
-
-- `MATLAB` : data analysis + ml
-- `React` 
-- `Sass` 
-- `TypeScript` 
-- `PowerShell`
-- `Ruby`
-- `Docker`
-- `Java`
-- `Data Structures`
-
+The other folders may also contain some decent notes, but are not going to be as in depth as the above list.
 
 ## Usage
+
+Here's how to use my notes interactively for different sections.
 
 ### Learn C
 Located in the `c` directory. These notes are made for someone who has never seen C before but they also delve into more advanced systems programming topics such as pipes, processes, and sockets. Most of the material in these notes is pertaining to the course **CSC209 at UofT**, but anyone who wants to learn C and low level systems programming will find this useful.
@@ -75,7 +65,7 @@ python -m venv env
 env\Scripts\activate
 pip install -r requirements.txt
 ```
-For a more advanced setup using `virtualenv`, to install and manage multiple different Python interpreters using `pyenv`, read [virtualenv_pyenv.md](python/virtualenv_pyenv.md).
+For a more advanced setup using `virtualenv`, to install and manage multiple different Python interpreters using `pyenv`, [check out my article](https://medium.com/towardsdev/managing-virtual-environments-with-different-python-interpreters-b997b7bb7254) on Medium.
 
 Make sure your IDE is using the Python interpreter from the virtual environment you created, you may need to specify the path to the Python executable: `path-to-repo\repo-root\python\env\Scripts\python.exe`. You will also need to configure the notebook to use this same interpreter as its kernel.
 
@@ -83,7 +73,7 @@ Make sure your IDE is using the Python interpreter from the virtual environment 
 ### Learn R
 Learn data analysis and a little ML using R. Made for someone who has never seen R before. Located in the `r` directory.
 
-`notes.Rmd` will contain detailed notes on using R. See [r/README](r/README.md) for setting up R in VS Code.
+`notes.Rmd` will contain detailed notes on using R. See [r/README](r/README.md) for setting up R in VS Code or also [read my article](https://towardsdev.com/setting-up-r-for-vs-code-c03a6fda311d) on Medium
 
 ---
 ### Learn MATLAB
