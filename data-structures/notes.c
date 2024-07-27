@@ -17,10 +17,12 @@ int main(int argc, char* argv[]) {
     int weighted_balance_trees();
     int priority_queues();
     int intro_to_graphs();
-    int undirected_graphs();
+    int breadth_first_search();
+    int depth_first_search();
+    int directed_graphs();
 
     // run
-    undirected_graphs();
+    directed_graphs();
 
     return 0;
 }
@@ -1145,7 +1147,6 @@ int heap_height() {
     return 0;
 }
 
-
 int intro_to_graphs() {
     // a graph is a collection of nodes (vertices) and edges (connections between nodes)
     // graphs can be directed or undirected
@@ -1346,7 +1347,7 @@ int intro_to_graphs() {
         //   a     b      d
 
     return 0;
- }
+}
 
 int breadth_first_search() {
     // breadth first search is a graph traversal algorithm that traverses the graph level by level, and has an order for visiting each level which leads to many patterns
@@ -1383,6 +1384,69 @@ int breadth_first_search() {
         // we consider each edge twice
             // each edge is incident on 2 vertices
         // we find each vertex's list of neighbors once
+        // check v's visited status deg(v) times
+            // deg(v) is the degree of v, i.e the number of edges incident on v
+        // hence the time complexity is O(|V| + |E|)
+
+    return 0;
+}
+
+int depth_first_search() {
+    // depth first search is a graph traversal algorithm that traverses the graph by going as deep as possible along each branch before backtracking
+
+    // DFS leaves a trail of breadcrumbs as it goes, and backtracks when it reaches a dead end, i.e a vertex with no unvisited neighbors
+
+    // example, consider the following graph where X is an unvisited vertex and O is a visited vertex, and Z is the vertex we are at
+
+    // for this, it would be best to see diagrams online for yourself. it is very simple
+
+    // DFS finds:
+        // whether a vertex is reachable from start
+        // a tree constisting of reachable vertices and edges from start
+        // the component containing start
+        // with a little modification, whether a cycle exists in the graph
+
+    // DFS TIME COMPLEXITY:
+        // also O(|V| + |E|), same as BFS
+
+    // DETECTING CYCLES:
+        // while searching, check if our current vertex has a neighbor that is visited and is not the predecessor
+        // if true, then we have a cycle
+
+    return 0;
+}
+
+directed_graphs() {
+    // directed graphs are graphs where the edges have a direction, i.e they point from one node to another
+
+    // the edges are represented as ordered pairs, i.e (u, v) is an edge from u to v. we don't have any bidirectional edges
+
+    // e.g)
+
+    //          c     e
+    //         ^  \
+    //        /    v 
+    //       a<----b---->d
+    //              <----
+
+    // hard to type, but we have (b, d) and (d, b) as edges.
+
+    // adjacency list:
+        // a: [c]
+        // b: [a, d]
+        // c: [b]
+        // d: [b]
+        // e: []
+
+    // note that c is adjacent to a, but a is not adjacent to c
+
+    // we need new definition for degree:
+        // in-degree of a vertex v: number of edges that point to v
+        // out-degree of a vertex v: number of edges that point from v
+
+    // also cycles and paths must now consider the direction of the edges
+
+    // BFS and DFS are the same, but the resulting "subgraph" obtained will depends on our starting vertex even for connected graphs
 
     return 0;
 }

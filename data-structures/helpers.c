@@ -20,8 +20,8 @@ void new_tex(char* text) {
     // opening in append mode
     FILE* file = fopen(path, "w");
     if (file == NULL) {
-        fprintf(stderr, "error opening tex file: %s\n", path);
-        exit(1);
+        printf("making a file: %s\n", path);
+        system("mkdir tex; touch tex/output.tex");
     }
 
 
@@ -102,6 +102,7 @@ void new_tex(char* text) {
         text);
         
     fclose(file);
+    printf("created tex file\n");
     system("cd tex; pdflatex output.tex; cd ..; mv tex/output.pdf .");
 }
 
