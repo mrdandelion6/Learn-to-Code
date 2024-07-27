@@ -11,6 +11,7 @@ Here are some languages and topics I have made a good amount of notes on so far.
 - `JavaScript` : DOM
 - `Python & Jupyter` : data analysis + ml
 - `R` : data analysis + ml
+- `Data Structures`
 
 The other folders may also contain some decent notes, but are not going to be as in depth as the above list. I am making them as I go along.
 
