@@ -20,9 +20,10 @@ int main(int argc, char* argv[]) {
     int breadth_first_search();
     int depth_first_search();
     int directed_graphs();
+    int strongly_connected_components();
 
     // run
-    directed_graphs();
+    strongly_connected_components();
 
     return 0;
 }
@@ -1413,6 +1414,9 @@ int depth_first_search() {
         // while searching, check if our current vertex has a neighbor that is visited and is not the predecessor
         // if true, then we have a cycle
 
+    // FINISHING A VERTEX*
+    // when doing DFS, we say that a vertex is finished when we have visited all its neighbors and backtracked to it
+
     return 0;
 }
 
@@ -1447,6 +1451,50 @@ directed_graphs() {
     // also cycles and paths must now consider the direction of the edges
 
     // BFS and DFS are the same, but the resulting "subgraph" obtained will depends on our starting vertex even for connected graphs
+
+    // only difference is that for DFS, when we are detecting cycles we check if our current vertex has a neighbor that is visited (which includes the predecessor)
+
+    return 0;
+}
+
+strongly_connected_components() {
+    // only applies to directed graphs
+
+    // strongly connected components are subsets of vertices in a directed graph where every vertex is reachable from every other vertex in the subset
+
+    // e.g)
+
+    //          c     e
+    //         ^  \
+    //        /    v
+    //       a<----b---->d
+
+    // then the strongly connected components are:
+        // {a, b, c}
+        // {d}
+        // {e}
+
+    // i.e for every vertex in a component, there is a path to every other vertex in the component
+
+    // we briefly introduce tranposed graphs for directed graphs:
+        // the tranpose of a graph G, denoted G^T, is the graph obtained by reversing the direction of all the edges in G
+
+        // G^T has the same strongly connected components as G
+
+        // the time to compute the adjacency list of G^T is O(|V| + |E|)
+
+    // COMPUTING SCCs - KOSARAJU'S ALGORITHM:
+        // 1. run DFS on G:
+            // visit all vertices
+            // store the order in which vertices finish* in a stack
+        // 2. compute adjacency list of G^T to form G^T
+        // 3. run DFS on G^T
+            // use the stack from step 1 to determine the order of vertices to visit
+            // each resulting completion of DFS is a strongly connected component
+
+    // time complexity is O(|V| + |E|)
+
+    
 
     return 0;
 }
