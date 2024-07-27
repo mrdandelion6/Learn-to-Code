@@ -1181,6 +1181,9 @@ int intro_to_graphs() {
     // UNDIRECTED GRAPH:
         // an undirected graph is a graph where the edges are bidirectional, i.e there is no direction to the edges and they can be considered to point in both directions
 
+    // DIRECTED GRAPH:
+        // a directed graph is a graph where the edges have a direction, i.e they point from one node to another
+
     // lets take a look at some graph terminology that applies in general to all graphs
     // GRAPH TERMINOLOGY:
 
@@ -1279,24 +1282,107 @@ int intro_to_graphs() {
 
             //  <b, a, c, b> is a simple cycle, length 3. some books call it <b, a, c> instead
 
-            // <b, c, a, b, d, e, b> is not a simple cycle because b is repeated
+            // <b, c, a, b, d, e, b> is not a simple cycle because b is repeat// ed
 
             // <b, d, b> is not a simple cycle because the edge {b, d} is repeated
 
             // <a, b> is not a simple cycle because first != last
 
+        // 5. CONNECTED
+        // a graph is connected if between every to disinct vertices there is a path. remember, an edge is not a path. a graph that is not connected is said to be disconnected
+
+        // e.g) 
+
+        // following graph is connected
+
+        //      c       e
+        //    /   \       \
+        //   a------b------d
+
+        // following graph is disconnected
+
+        //      c       e
+        //    /   \       \
+        //   a------b      d
+
+        // 6. COMPONENT
+        // a component is a maximal subset of vertices reachable from each other.
+
+        // e.g)
+
+        // following graph has 2 components
+
+        //      c       e
+        //    /   \       \
+        //   a------b      d
+
+        // components are: {a, b, c} and {d, e}
+
+        // 7. TREE
+        // a tree is a connected graph with no simple cycles
+
+        // let E be the number of edges and V be the number of vertices
+        // then equivalent definitions are:
+            // between every two vertices there is a unique path
+            // connected, but deleting any edge disconnects the graph
+            // connected and |E| = |V| - 1, (1 less edge than vertices)
+            // no cycles, but adding any edge creates a cycle
+            // no cycles and |E| = |V| - 1
+
+        // e.g)
+
+        //      c       e
+        //    /   \       \
+        //   a     b ------d
+
+
+        // 8. FOREST
+        // a forest is a graph that is a collecion of trees
+
+        // e.g)
+
+        //      c       e ----- f
+        //    /   \       \
+        //   a     b      d
+
     return 0;
  }
 
+int breadth_first_search() {
+    // breadth first search is a graph traversal algorithm that traverses the graph level by level, and has an order for visiting each level which leads to many patterns
 
- int undirected_graphs() {
-    
+    // the algorithm is as follows:
+        // 1. visit the start vertex
+        // 2. visit all the neighbors of the above
+        // 3. visit all the neighbors of the above
+        // ...
 
-    // an undirected graph is a pair of sets (V, E), where:
-        // V: is a set of vertices (nodes)
-        // E: is a set of edges (connections between nodes)
+    // the algorithm uses a queue to keep track of the vertices to visit next
 
-    // typically you wont have an edge going from a node to itself.
+    // start := pick a start vertex
+    // q := new queue
+    // q.enqueue(start)
+    // mark start as visited
+
+    // while q is not empty:
+        // u := q.dequeue()
+        // for each neighbor v of u:
+            // if v is not visited:
+                // q.enqueue(v)
+                // mark v as visited
+
+    // BFS finds:
+        // whether a vertex is reachable from start
+        // if yes, the shortest path and distance
+        // a tree constisting of reachable vertices and edges from start
+        // the component containing start
+
+    // BFS TIME COMPLEXITY:
+        // we enqueue and dequeue each vertex once
+            // only enqueue if not visited
+        // we consider each edge twice
+            // each edge is incident on 2 vertices
+        // we find each vertex's list of neighbors once
 
     return 0;
- }
+}
