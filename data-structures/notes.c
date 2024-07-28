@@ -21,9 +21,10 @@ int main(int argc, char* argv[]) {
     int depth_first_search();
     int directed_graphs();
     int strongly_connected_components();
+    int dijkstras_algorithm();
 
     // run
-    strongly_connected_components();
+    dijkstras_algorithm();
 
     return 0;
 }
@@ -1420,7 +1421,7 @@ int depth_first_search() {
     return 0;
 }
 
-directed_graphs() {
+int directed_graphs() {
     // directed graphs are graphs where the edges have a direction, i.e they point from one node to another
 
     // the edges are represented as ordered pairs, i.e (u, v) is an edge from u to v. we don't have any bidirectional edges
@@ -1457,7 +1458,7 @@ directed_graphs() {
     return 0;
 }
 
-strongly_connected_components() {
+int strongly_connected_components() {
     // only applies to directed graphs
 
     // strongly connected components are subsets of vertices in a directed graph where every vertex is reachable from every other vertex in the subset
@@ -1493,8 +1494,44 @@ strongly_connected_components() {
             // each resulting completion of DFS is a strongly connected component
 
     // time complexity is O(|V| + |E|)
+    return 0;
+}
 
-    
+int  weighted_graphs() {
+    // weighted graphs are graphs where the edges have a weight, i.e a number associated with them
+
+    // the weight can represent the cost of traversing the edge, the distance between the nodes, etc
+
+    // e.g)
+
+    //          c     e
+    //         ^  \
+    //        /    v
+    //       a<----b---->d
+
+    // with weights:
+    // a -> c: 2
+    // c -> b: 6
+    // b -> d: 1
+    // b -> a: 3
+
+    // weights indicate the cost of traversing the edge
+    // the higher the weight, the more expensive it is to traverse the edge
+    // you can think of the weight as the distance between the vertices
+
+    return 0;
+}
+
+int dijkstras_algorithm() {
+    // dijkstra's algorithm is a graph traversal algorithm that finds the shortest path from a start vertex to all other vertices in a graph
+
+    // task: given a (edge-weighted) graph and two vertices, find the shortest path between the two vertices or report that no path exists
+
+    // or even better: given an edge-weighted graph and a vertex s, find the shortest path from s to all other vertices
+
+    // dijkstra's algo finds shortest paths by a BFS with a twist:
+        // the BFS queue is replaced with a min-priority queue.
+        // in case you forgot about the BFS queue: it is a queue that keeps track of the vertices to visit. each time you visit a vertex, you add its neighbors to the queue
 
     return 0;
 }
