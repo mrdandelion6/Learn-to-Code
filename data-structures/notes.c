@@ -1794,6 +1794,18 @@ int expandable_arrays() {
             // lets ask: why do we copy into a new array instead of just expanding the current array?
             // answer: there may not be enough adjacent memory to expand the current array, so we need to look for a new block of memory to allocate, hence we copy the elements to a new array
 
+    // we can use our previously learned ammortization methods to see what the amortized time of add is
+
+    // accounting method:
+    // get(), set(), size() receive $1 and spend $1
+    // add() receives $3, costs $1 normally, costs $capacity when we need to double capacity
+        // if we need to double capacity and copy: 
+            // after we double it, the array is half full
+            // everything added after that will save $2, add() receives $3 and spends $1 when no copying is needed
+            // hence until the array is full again, we have saved $2 * (capacity/2) = $capacity
+            // this is enough to pay for the copying
+
+    // this analysis essentially shows that the occasional expensive operation of doubling the capacity is paid for by the many cheap operations of adding elements
         
 
     return 0;
