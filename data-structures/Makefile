@@ -1,14 +1,14 @@
-OBJFILES = notes.o helpers.o
+OBJFILES = src/notes.o src/helpers.o
 
 notes: $(OBJFILES)
 	gcc -w $(OBJFILES) -o notes
 
-notes.o: notes.c helpers.h
-	gcc -w -c notes.c
+src/notes.o: src/notes.c src/helpers.h
+	gcc -w -c src/notes.c -o src/notes.o
 
-helpers.o: helpers.c helpers.h
-	gcc -w -c helpers.c
+src/helpers.o: src/helpers.c src/helpers.h
+	gcc -w -c src/helpers.c -o src/helpers.o
 
 .PHONY: clean
 clean:
-	rm *.o notes
+	rm src/*.o notes

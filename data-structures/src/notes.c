@@ -1613,6 +1613,7 @@ int dijkstras_algorithm() {
         // the rest of the operations are O(1)
 
     // then the total worst case time complexity is O(nlogn) + O(mlogn) = O(nlogn + mlogn) = O((n + m)logn)
-        
+    printf("end!\n");
+
     return 0;
 }
