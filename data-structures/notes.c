@@ -1,3 +1,4 @@
+
 #define _GNU_SOURCE
 
 #include "helpers.h"
@@ -1647,10 +1648,20 @@ int amortized_analysis() {
         // if n operaitons take O(f(n)) total time in the worst case
         // then the amortized time per operation is O(f(n) / n)
 
+
+    return 0;
+}
+
+int amortized_aggregate_method() {
     // AMORTISATION METHOD #0: AGGREGATE
     // aggegating is what we just considered with multi pop stacks
     // make an observation / argument about overall number of steps in n operations
     // usually examine how different operations depend on each other
+
+    return 0;
+}
+
+int amortized_accounting_method() {
 
     // AMORTISATION METHOD #1: ACCOUNTING
     // let's consider our multi-pop stack example from earlier.
@@ -1663,9 +1674,127 @@ int amortized_analysis() {
     // the idea is that we are analyzing the overall cost of the operations by accounting our cost and giving an allowance of sorts
 
     // this only works if we have enough to pay everything in the end
-    // must prove the invariant: amount >= 0
+    // must prove the invariant: amount >= 0 !!!
     //  conclude that each operation takes O(2) amortised time
 
+    // let's look at an example where we prove amount >= for the multi-pop stack:
+    // WTS for each operation, amount >= 0 persists. we prove this by proving that amount >= size at all times
+
+    // our IH: at the start amount = 0 = size, hence amount >= size
+
+    // consider a push operation:
+        // assume amount >= size, WTS amount' >= size' (where amount' and size' are the amounts and sizes after the push operation)
+
+        // amount' = credit(push) - cost(push) + amount
+        //         = 2 - 1 + amount
+        //         = amount + 1
+
+        // size' = size + 1
+
+        // then since (size + 1 <= amount + 1), we have
+        // => size' <= amount'
+
+    // consider a pop operation:
+        // assume amount >= size, WTS amount' >= size'
+
+        // amount' = credit(pop) - cost(pop) + amount
+        //         = 2 - 1 + amount
+        //         = amount + 1
+
+        // size' = size - 1
+
+        // then since (size - 1 <= amount + 1), we have
+        // => size' <= amount'
+
+    // now consider multipop operation:
+        // assume amount >= size, WTS amount' >= size'
+        // let k be the number of items popped
+
+        // amount' = amount + credit(multipop) - cost(multipop)
+        //         = amount + 2 - k
+
+        // size' = size - k
+
+        // then since (size - k <= amount + 2 - k), we have
+        // => size' <= amount'
+
+    // then as size >= 0 always, we have that amount >= 0 is an invariant.
+
+    return 0;
+}
+
+int amortized_potential_method() {
+    // AMORTISATION METHOD #2: POTENTIAL
+    // now we look at another method of amortisation: potential method
+
+    // we define a potential function that maps the state of the data structure to a real number
+    // we can define it so that f(D_i) = stack size after i operations
+    // let t_i be the time taken for the i-th operation
+    // let t be the total time taken for n operations
+    // let a_i = t_i + f(D_i) - f(D_{i-1}), this is amortised time for the i-th operation!
+
+    // note that f(D_i) - f(D_{i-1}) is the change in potential from the i-1th state to the i-th state
+
+    // then the sum (a_i) [i = 1 to i = n] 
+    //           = sum (t_i + f(D_i) - f(D_{i-1})) [i = 1 to i = n] 
+    //           = t + f(D_n) - f(D_0)
+
+    // note that f(D_0) = 0, and f(D_i) >= 0 for all i, hence f(D_n) >= 0
+    // so f(D_n) - f(D_0) >=0
+    // hence, the sum (a_i) [i = 1 to i = n] >= t
+
+    // then we can use O(a_i) as the amortised upper bound for each operation
+
+    // in general, we want to do the following:
+        // define a potential function, f(D_i)
+        // prove that f(D_n) >= f(D_0) for all n >= n_o
+        // let t_i be the time taken for the i-th operation
+        // and let a_i = t_i + f(D_i) - f(D_{i-1}), this is amortised time for the i-th operation
+
+    // for better understanding, let's look at an example with the multi-pop stack
+    // recall: 
+        // f(D_i) = stack size after i operations
+        // t_i = time taken for the i-th operation
+        // a_i = t_i + f(D_i) - f(D_{i-1})
+
+    // then for multipop stack,
+        // push: a_i = 1 + [f(D_{i-1}) + 1] - f(D_{i-1}) = 2
+        // we note that push increases the potential by 1, so f(D_i) = f(D_{i-1}) + 1
+
+        // pop: a_i = 1 + [f(D_{i-1}) - 1] - f(D_{i-1}) = 0
+        // same idea, pop decreases the potential by 1, so f(D_i) = f(D_{i-1}) - 1
+
+        // multipop(k): a_i = k + [f(D_{i-1}) - k] - f(D_{i-1}) = 0
+
+
+    // UNDERSTANDING:
+
+    // the potential method may seem very abstract but it is very analagous to the accounting method. the potential function is essentially the amount of money we have in the accounting method
+
+    // if an operation is cheap but increases the potential, then we can use the potential to pay for more expensive operations in the future
+
+    // if an operation is expensive but decreases the potential, then we "spend" the potential to pay for the operation 
+    
+    //  the key is that sum(a_i) >= t, hence we can use O(a_i) ass the amortised upper bound for each operation
+
+
+    return 0;
+}
+
+int expandable_arrays() {
+    // expandable arrays are arrays that can grow and shrink in size, i.e they are dynamic arrays
+    // usual array operations:
+        // get(i), read A[i] for 0 <= i < size(A)
+        // set(i, x), set A[i] = x for 0 <= i < size(A)
+        // size(), return size of array
+
+    // but size can grow
+        // add(x): write x to the end of the array if there is space
+        // if A is full, double capacity and copy elements to new array before adding x
+            // lets ask: why do we copy into a new array instead of just expanding the current array?
+            // answer: there may not be enough adjacent memory to expand the current array, so we need to look for a new block of memory to allocate, hence we copy the elements to a new array
+
+        
 
     return 0;
 }
