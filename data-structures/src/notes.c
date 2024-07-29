@@ -1617,3 +1617,55 @@ int dijkstras_algorithm() {
 
     return 0;
 }
+
+int amortized_analysis() {
+    // amortized analysis is a method of analyzing the time complexity of an algorithm over a sequence of operations
+
+    // we begin studying how to calculate the total time of a sequence of operations as a whole
+    // before we would calculate the sub of the worst case times of each individal operation separately
+
+    // for example, consider multi-pop stack operations:
+        // push(x): O(1)
+        // pop(): O(1)
+
+        // if we do n pops, the total time is O(n),
+        // multipop(k): O(k)
+
+    // now consider what happens if we start with an empty stack and perform n operations (can be any operations: push, pop, or multipop).
+
+    // a naive analysis may suggest in the worst case we have O(n^2) time complexity if we call multipop(n) n times
+
+    // however, obviously this cannot be the case because in order for multipop to be O(n), the stack must grow to size n, and this will take a lot of push() calls, which are O(1). so multipop will rarely be called and most of our operations will be O(1), hence the total time complexity must be O(n). if multipop is called a lot, then the stack will not be given a chance to grow to size n, and the total time complexity will not be O(n) for multipop.
+
+    // you might be thinking, well that's pretty obvious, what's the point? i thought this too, but this is a good example to illustrate the concept of amortized analysis as you will see. we are essentially taking a more in-depth look at the analyzing worst case time complexity.
+
+    // idea:
+        // if n operations take O(n) total time in the worst case
+        // then the amortized time per operation is O(1)
+
+    // in general:
+        // if n operaitons take O(f(n)) total time in the worst case
+        // then the amortized time per operation is O(f(n) / n)
+
+    // AMORTISATION METHOD #0: AGGREGATE
+    // aggegating is what we just considered with multi pop stacks
+    // make an observation / argument about overall number of steps in n operations
+    // usually examine how different operations depend on each other
+
+    // AMORTISATION METHOD #1: ACCOUNTING
+    // let's consider our multi-pop stack example from earlier.
+    // say each operation receives 2 dollars
+    // say push and pop spend 1 dollar
+    // multipop(k) spends the number of items actually popped: min(k, size) dollars
+    // if we have money left over after the operation, we save it for the future
+    // else if we dont have enough for the operation: spend from savings
+
+    // the idea is that we are analyzing the overall cost of the operations by accounting our cost and giving an allowance of sorts
+
+    // this only works if we have enough to pay everything in the end
+    // must prove the invariant: amount >= 0
+    //  conclude that each operation takes O(2) amortised time
+
+
+    return 0;
+}
