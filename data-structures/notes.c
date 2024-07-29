@@ -5,9 +5,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+int TEX_SUPPORT = 1; // want a mutable variable
+
 int main(int argc, char* argv[]) {
 
+    if (argc > 1) {
+        if (strcmp(argv[1], "tex") == 0) {
+            TEX_SUPPORT = 1;
+        }
+    }
+
     // welcome to my notes on data structures.
+    int making_the_most_of_my_notes();
     int main_topics();
     int ADTs();
     int counting_steps();
@@ -27,6 +36,20 @@ int main(int argc, char* argv[]) {
     dijkstras_algorithm();
 
     return 0;
+}
+
+int making_the_most_of_my_notes() {
+    // text notes for data structures might not be the best for learning, especially for those who are new.
+
+    // while these notes are nice and compact, without a visual representation, it can be hard to understand the concepts.
+
+    // that's why i have a folder with figures and diagrams which can be renfered in an output.pdf file if you have a latex compiler installed and in the PATH of where you execute this program.
+
+    // to enable this feature, keep TEX_SUPPORT as 1 at the top of this file, or set it to 0 to disable it if you don't have latex installed.
+
+    // these diagrams really help but are not crucial to these notes as i explain with text and pseudocode quite a bit anyways.
+
+    // you can also pass the argument "tex" to the program to enable the latex output if you want to keep the TEXT_SUPPORT variable as 0.
 }
 
 int main_topics() {
@@ -261,37 +284,41 @@ int counting_steps() {
 
     // then in total, our while loop has the following cost:
     // (see the latex output.pdf file in this directory)
-    new_tex("\\textbf{worst case cost}\n\nour cost of the inner loop is:\n");
-    add_tex_output(
-        "\\begin{align*}\n"
-        "&\\sum_{i=1}^{N-1} (10i + 3) + 8i + 4i\\\\\n"
-        "=&\\sum_{i=1}^{N-1} 22i + 3\n"
-        "\\end{align*}"
-    );
+    
+    if (TEX_SUPPORT) {
+        new_tex("\\textbf{worst case cost}\n\nour cost of the inner loop is:\n");
 
-    add_tex_output(
-        "so our total cost is:\n"
-        "\\begin{align*}\n"
-        "& 22N - 15 + \\sum_{i=1}^{N-1} 22i + 3\\\\\n"
-        "&= 22N - 15 + 22\\frac{(n-1)n}{2} + 3 (n-1)\\\\\n"
-        "&= 11n^2 + 14n - 18\n"
-        "\\end{align*}"
-    );
+        add_tex_output(
+            "\\begin{align*}\n"
+            "&\\sum_{i=1}^{N-1} (10i + 3) + 8i + 4i\\\\\n"
+            "=&\\sum_{i=1}^{N-1} 22i + 3\n"
+            "\\end{align*}"
+        );
 
-    // for the best cost, we can assume the inner loop runs 0 times, with only 1 false check.
-    // this would give us a frequency of N-1 for line 5 and 0 for line 6 and 7
+        add_tex_output(
+            "so our total cost is:\n"
+            "\\begin{align*}\n"
+            "& 22N - 15 + \\sum_{i=1}^{N-1} 22i + 3\\\\\n"
+            "&= 22N - 15 + 22\\frac{(n-1)n}{2} + 3 (n-1)\\\\\n"
+            "&= 11n^2 + 14n - 18\n"
+            "\\end{align*}"
+        );
 
-    // so the best case cost is:
-    // 22N - 15 + (N-1)*10 = 32N - 25
-    add_tex_output(
-        "\\textbf{best case cost}\n\n"
-        "\\vspace{5mm}\n"
-        "for the best case, the inner loop runs 0 times, so we have:\n"
-        "\\begin{align*}\n"
-        "& 22N - 15 + 10(N-1)\\\\\n"
-        "&= 32N - 25\n"
-        "\\end{align*}"
-    );
+        // for the best cost, we can assume the inner loop runs 0 times, with only 1 false check.
+        // this would give us a frequency of N-1 for line 5 and 0 for line 6 and 7
+
+        // so the best case cost is:
+        // 22N - 15 + (N-1)*10 = 32N - 25
+        add_tex_output(
+            "\\textbf{best case cost}\n\n"
+            "\\vspace{5mm}\n"
+            "for the best case, the inner loop runs 0 times, so we have:\n"
+            "\\begin{align*}\n"
+            "& 22N - 15 + 10(N-1)\\\\\n"
+            "&= 32N - 25\n"
+            "\\end{align*}"
+        );
+    }
 
     return 0;
 }
@@ -669,25 +696,28 @@ int union_of_AVLs(){
         // for visualization, see output.pdf
             // you can see the blue nodes are the left split. the red nodes are the righ split WITHIN the subtree. they need to be joined with all the white nodes.
 
-    new_tex(
-        "\\begin{mypar}\n"
-        "\\textbf{splitting an AVL tree}\n\n"
-        "let's split the AVL tree at 16\n\n"
-        "\\begin{forest}\n"
-        "for tree={circle,draw,minimum size=2em,edge={-latex}, calign=edge midpoint}\n"
-        "[25\n"
-        "    [14, fill=blue, opacity=0.5\n"
-        "        [12, fill=blue, opacity=0.5]\n"
-        "        [17, fill=red, opacity=0.5]\n"
-        "    ]\n"
-        "    [30\n"
-        "        [27]\n"
-        "       [ ,phantom]\n"
-        "    ]\n"
-        "]\n"
-        "\\end{forest}\n"
-        "\\end{mypar}"
-    );
+    
+    if (TEX_SUPPORT) {
+        new_tex(
+            "\\begin{mypar}\n"
+            "\\textbf{splitting an AVL tree}\n\n"
+            "let's split the AVL tree at 16\n\n"
+            "\\begin{forest}\n"
+            "for tree={circle,draw,minimum size=2em,edge={-latex}, calign=edge midpoint}\n"
+            "[25\n"
+            "    [14, fill=blue, opacity=0.5\n"
+            "        [12, fill=blue, opacity=0.5]\n"
+            "        [17, fill=red, opacity=0.5]\n"
+            "    ]\n"
+            "    [30\n"
+            "        [27]\n"
+            "       [ ,phantom]\n"
+            "    ]\n"
+            "]\n"
+            "\\end{forest}\n"
+            "\\end{mypar}"
+        );
+    }
 
 
     // now lets see how we can JOIN two AVL trees
@@ -786,13 +816,15 @@ int union_of_AVLs(){
 
     // TODO: complete hand drawn diagrams for this and upload to the figures directory
 
-    add_tex_output(
-        "\n\n\\textbf{here are the 4 cases for joining AVL trees}\n\n"
-        "\\includegraphics[width=0.5\\textwidth]{figures/avl_join1.png}\n"
-        "\\includegraphics[width=0.5\\textwidth]{figures/avl_join2.png}\n"
-        "\\includegraphics[width=0.5\\textwidth]{figures/avl_join3.png}\n"
-        "\\includegraphics[width=0.5\\textwidth]{figures/avl_join4.png}\n"
-    );
+    if (TEX_SUPPORT) {
+        add_tex_output(
+            "\n\n\\textbf{here are the 4 cases for joining AVL trees}\n\n"
+            "\\includegraphics[width=0.5\\textwidth]{figures/avl_join1.png}\n"
+            "\\includegraphics[width=0.5\\textwidth]{figures/avl_join2.png}\n"
+            "\\includegraphics[width=0.5\\textwidth]{figures/avl_join3.png}\n"
+            "\\includegraphics[width=0.5\\textwidth]{figures/avl_join4.png}\n"
+        );
+    }
 
     // we can use join() and split() as show above to implement union as follows:
 
@@ -1525,13 +1557,62 @@ int  weighted_graphs() {
 int dijkstras_algorithm() {
     // dijkstra's algorithm is a graph traversal algorithm that finds the shortest path from a start vertex to all other vertices in a graph
 
+    // note that we can use dijkstra's algorithm on both directed and undirected graphs, weighted or unweighted
+
     // task: given a (edge-weighted) graph and two vertices, find the shortest path between the two vertices or report that no path exists
 
-    // or even better: given an edge-weighted graph and a vertex s, find the shortest path from s to all other vertices
+    // or even better: given an edge-weighted graph and a vertex s, find the shortest path from s to all other vertices. this is the most common use case
 
     // dijkstra's algo finds shortest paths by a BFS with a twist:
         // the BFS queue is replaced with a min-priority queue.
-        // in case you forgot about the BFS queue: it is a queue that keeps track of the vertices to visit. each time you visit a vertex, you add its neighbors to the queue
+            // in case you forgot about the BFS queue: it is a queue that keeps track of the vertices to visit. each time you visit a vertex, you add its neighbors to the queue
+        // with an additional operation: decrease_priority(vertex, new_priority). remember, since this is a min-priority queue, a decrease in priority means it will be visited sooner
 
+    // we keep univisted vertices in a min-priority queue:
+        // priority(v) = distance(start, v)
+        // priority(v) = infinity if no path from s to v
+
+    // we want to have a list of unvisited vertices, and also a table of priority and predecessors for each vertex 
+
+    // at the start of the algorithm, the priority of the start vertex is 0 and the priority of all other vertices is infinity:
+
+    // vertex_priority = {a: 0, b: inf, c: inf, d: inf, e: inf, f: inf, g: inf, h: inf, i: inf}
+    // vertex_predecessor = {a: None, b: None, c: None, d: None, e: None, f: None, g: None, h: None, i: None}
+
+    // consider the graph in the pdf output
+    
+    if (TEX_SUPPORT) {
+        new_tex(
+            "\\begin{center}\n"
+            "\\includegraphics[width=0.5\\textwidth]{../figures/dijkstra.png}\n"
+            "\\end{center}"
+        );
+    }
+
+    // if we start at a, then the algorithm would go as follows:
+        // begin at a
+            // check a's neighbours b, h: update their priorities and predecessors: {b: 4, h: 8}, {b: a, h: a}
+            // add b and h to the min priority queue
+            // mark a as visited
+        // pop b from the min priority queue
+            // since b has a lower priority than h, we pop b
+            // check b's unvisited neighbours and update their priorities and predecessors: {c: 12}
+                // we don't update h because it's current priority is 8 and the new priority would be 4 + 11 = 15 from a -> b -> h. hence we don't change h's priority or predecessor
+
+        // ... and so on until the min priority queue is empty
+
+    // with the predecessor table, we can construct a tree with a at the root and the shortest paths to all other vertices. the tree is called the shortest path tree
+
+    // let n = |V| and m = |E|. then the time complexity of dijkstra's algorithm is O((n + m)*log(n))
+    // let's see why:
+        // every VERTEX enters and leaves the min-heap once
+            // recall that popping from a min-heap is O(log(n))
+            // recall that inserting into a min-heap is O(log(n))
+        // every EDGE may possibly need to call decrease_priority when we traverse the graph
+            // this is O(log(n)) as well
+        // the rest of the operations are O(1)
+
+    // then the total worst case time complexity is O(nlogn) + O(mlogn) = O(nlogn + mlogn) = O((n + m)logn)
+        
     return 0;
 }

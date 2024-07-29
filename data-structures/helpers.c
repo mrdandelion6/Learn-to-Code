@@ -4,12 +4,41 @@
 #include <stdio.h> 
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 void print_int_arr(int* arr, int size) {
     for (int i = 0; i < size; i++) {
         printf("%d ", arr[i]);
     }
     printf("\n");
+}
+
+int compile_tex() {
+    // compile tex into pdf
+
+    if (chdir("tex") != 0) {
+        perror("Failed to change directory");
+        return 1;
+    }
+
+    system("pdflatex output.tex; mv output.pdf ../");
+    
+    struct stat st = {0};
+    if (stat("tex_info", &st) == -1) {
+        if (mkdir("tex_info", 0700) == -1) {
+            perror("Failed to create directory");
+            return 1;
+        }
+    }
+
+    system("mv output.log tex_info/; mv output.aux tex_info/; mv output.out tex_info/");
+
+    if (chdir("..") != 0) {
+        perror("Failed to change directory");
+        return 1;
+    }
+
+    return 0;
 }
 
 void new_tex(char* text) {
@@ -103,7 +132,7 @@ void new_tex(char* text) {
         
     fclose(file);
     printf("created tex file\n");
-    system("cd tex; pdflatex output.tex; cd ..; mv tex/output.pdf .");
+    compile_tex();
 }
 
 void add_tex_output(char* text) {
@@ -134,6 +163,5 @@ void add_tex_output(char* text) {
     fprintf(file, "%%s\n\\end{document}", text);
     fclose(file);
 
-    // compile tex into pdf
-    system("cd tex; pdflatex output.tex; cd ..; mv tex/output.pdf .");
+    compile_tex();
 }
