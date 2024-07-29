@@ -1796,17 +1796,67 @@ int expandable_arrays() {
 
     // we can use our previously learned ammortization methods to see what the amortized time of add is
 
-    // accounting method:
-    // get(), set(), size() receive $1 and spend $1
-    // add() receives $3, costs $1 normally, costs $capacity when we need to double capacity
-        // if we need to double capacity and copy: 
-            // after we double it, the array is half full
-            // everything added after that will save $2, add() receives $3 and spends $1 when no copying is needed
-            // hence until the array is full again, we have saved $2 * (capacity/2) = $capacity
-            // this is enough to pay for the copying
+    // here is the IDEA:
+        // get(), set(), size() receive $1 and spend $1
+        // add() receives $3, costs $1 normally, costs $capacity when we need to double capacity
+            // if we need to double capacity and copy: 
+                // after we double it, the array is half full
+                // everything added after that will save $2, add() receives $3 and spends $1 when no copying is needed
+                // hence until the array is full again, we have saved $2 * (capacity/2) = $capacity
+                // this is enough to pay for the copying
 
-    // this analysis essentially shows that the occasional expensive operation of doubling the capacity is paid for by the many cheap operations of adding elements
+        // this analysis essentially shows that the occasional expensive operation of doubling the capacity is paid for by the many cheap operations of adding elements
         
+    // we first want to begin by proving capacity <= 2*size always.
+    // proof of capacity <= 2*size:
+        // WTS capacity <= 2*size always
+        // IH: at the start, capacity = 0, size = 0, hence capacity <= 2*size
+        // IS: clearly get(), size(), set() do not change capacity, so we only need to consider add()
+        // WTS: that add() maintains capacity <= 2*size. this is very trivial to show
+        // assume IH: capacity <= 2*size, WTS: capacity' <= 2*size' after add(
+
+        // case 1: no copying needed, size < capacity
+        // capacity' = capacity
+        // size' = size + 1
+        // note:
+            // capacity' = capacity <= 2*size
+            //                      <= 2*(size + 1)
+            //                      <= 2*size'
+
+        // case 2: copying needed, size = capacity
+        // capacity' = 2*capacity
+        // size' = size + 1
+        // note:
+            // capacity' = 2*capacity <= 2*size <= 2*(size + 1) = 2*size'
+    // qed
+
+    // now we can define a potential f(D_i) = 2*size_i - capacity_i
+    // then clearly f(D_i) >= 0 always by our proof above for the invariant: capacity <= 2*size
+
+    // now we must prove the following to compute amortized time a_i.
+    // f(D_n) - f(D_0) >= 0 for all sequences of n > n_o = 0 operations
+    // proof:
+        // f(D_n) - f(D_0) =  2*size_n - capacity_n - (2*size_0 - capacity_0)
+        //                 =  2*size_n - capacity_n - (2*0 - 0)
+        //                 >= 0
+
+    // given this we can compute the amortized time a_i = t_i + f(D_i) - f(D_{i-1}) 
+    // let s,c be the size and capacity for the array before the i'th operation
+    // note that get(), size(), set() do not change s nor c, and are O(1)
+    // now we analyze a_i for add:
+
+    // case 1: no copying needed, s < c:
+        // a_i = t_i + f(D_i) - f(D_{i-1})
+        //     = 1 + [2*(s+1) - c] - [2*s - c]
+        //     = 3
+
+    // case 2: copying needed: s = c:
+        // a_i = t_i + f(D_i) - f(D_{i-1})
+        //     = (c + 1) + [2*(s+1) - 2*c] - [2*s - c]
+        //     = 3 + c - c
+        //     = 3
+
+    // hence the amortised time is O(1)
 
     return 0;
 }
