@@ -1,7 +1,7 @@
 
 #define _GNU_SOURCE
 
-#include "helpers.h"
+#include "src/helpers.h"
 #include <stdio.h> 
 #include <stdlib.h>
 #include <string.h>
@@ -32,25 +32,39 @@ int main(int argc, char* argv[]) {
     int directed_graphs();
     int strongly_connected_components();
     int dijkstras_algorithm();
+    int amortized_analysis();
+    int amortized_aggregate_method();
+    int amortized_accounting_method();
+    int amortized_potential_method();
+    int expandable_arrays();
+    int fibonacci_heaps_intro();
+    int fibonacci_heap_insert();
+    int fibonacci_heap_union();
+    int fibonacci_heap_extract_min();
+    int fibonacci_heap_decrease_key();
+    
+
 
     // run
-    dijkstras_algorithm();
+    fibonacci_heap_extract_min();
 
     return 0;
 }
 
 int making_the_most_of_my_notes() {
-    // text notes for data structures might not be the best for learning, especially for those who are new.
+    // before reading anything else, you must know that you will need a basic understanding of data structures like arrays, linked lists, and trees to understand these notes. 
+
+    // anyhow, text notes for data structures might not be the best for learning, especially for those who are new.
 
     // while these notes are nice and compact, without a visual representation, it can be hard to understand the concepts.
 
-    // that's why i have a folder with figures and diagrams which can be renfered in an output.pdf file if you have a latex compiler installed and in the PATH of where you execute this program.
+    // that's why i have a folder with figures and diagrams which can be rendered in an output.pdf file whenever you run a function. you must have a latex compiler installed and in the PATH of where you execute this program for this to work
 
     // to enable this feature, keep TEX_SUPPORT as 1 at the top of this file, or set it to 0 to disable it if you don't have latex installed.
 
-    // these diagrams really help but are not crucial to these notes as i explain with text and pseudocode quite a bit anyways.
+    // these diagrams really help but are not crucial to these notes as i explain with text and pseudocode mostly anyways.
 
-    // you can also pass the argument "tex" to the program to enable the latex output if you want to keep the TEXT_SUPPORT variable as 0.
+    // you can also pass the argument "tex" to the program to enable the latex output if you want to keep the TEX_SUPPORT variable as 0.
 }
 
 int main_topics() {
@@ -954,7 +968,7 @@ int heaps() {
     // a heap is:
         // a binary tree
         // "nearly complete": every level i has 2^i nodes, except the bottom level; the bottom nodes flush to the left
-        // at each node n: priority(n) >= priority(n.left) and priority(n) >= priority(n.right). this is known as the heap priority
+        // "heap property": at each node n: priority(n) >= priority(n.left) and priority(n) >= priority(n.right). this is known as the heap priority
 
         // here is an example
         // note that each node is a priority which corresponds to a job
@@ -1749,7 +1763,7 @@ int amortized_potential_method() {
         // define a potential function, f(D_i)
         // prove that f(D_n) >= f(D_0) for all n >= n_o
         // let t_i be the time taken for the i-th operation
-        // and let a_i = t_i + f(D_i) - f(D_{i-1}), this is amortised time for the i-th operation
+        // and let a_i = t_i + f(D_i) - f(D_{i-1}), this isdxs amortised time for the i-th operation
 
     // for better understanding, let's look at an example with the multi-pop stack
     // recall: 
@@ -1860,3 +1874,271 @@ int expandable_arrays() {
 
     return 0;
 }
+
+int fibonacci_heaps_intro() {
+    // recall min heaps, aka binary min heaps:
+    // operations:
+        // get_min(): O(1)
+        // insert(x): O(log(n))
+        // extract_min(): O(log(n))
+        // decrease_key(x, k): O(log(n))
+
+    // but we can definitely do better than this for insert and decrease_key
+    // consider inserting an element; in theory all we need to do is check if that element is the new min, and if it is, set it as the new min
+    // same idea for decrease_key, we only need to check if the new key is less than the current key, and if it is, set it as the new key
+    // but the issue comes for extract_min, we need to found out what the new min is. in order to do this we need to have some sort of structure that keeps track of the min element
+
+    // for min-heaps, this structure causes insert and decrease_key to be O(log(n)) instead of our theoretical O(1)
+
+    // we will see how fibonacci heaps can help us achieve O(1) for insert and decrease_key 
+
+    // recall that binary min-heaps have the two properties:
+        // each layer is full, except possibly the last layer which is filled from left to right
+        // heap property: the key of a node is greater than or equal to the key of its parent
+
+    // fibonacci heaps ignore the first property, and only maintain the heap property
+    // moreover, fibonacci heaps not a binary tree, but rather a collection of trees that may not be binary trees
+
+    // fibonacci heaps have the following operations:
+        // insert(x): O(1)
+        // get_min(): O(1)
+        // extract_min(): O(log(n))
+        // decrease_key(x, k): O(1) amortized
+
+    // here is how fibonacci heaps are strucutred:
+        // we have a forest of min heaps (trees)
+        // the siblings of any node are doubly linked:
+
+        // e.g)
+
+        //                    |
+        //                    v
+        //      23 --- 7 ---- 3 --- 17
+        //             |      |    
+        //             14     5 --- 18
+        //             | 
+        //         35--25--18
+
+        // each parent connects to a SINGLE RANDOM child, and that child is parent of a doubly linked list of siblings (they are all children of the same parent)
+
+        // there is a pointer to the min node in the heap   
+        // in the example above, the min node is 3.
+        // the root nodes (23, 7, 3, 17) are not siblings, but they are doubly linked to each other circularly:
+        //        23 -> 7 -> 3 -> 17 -,
+        //        ^-------------------' 
+
+        // COMPONENTS OF FIBONACCI HEAPS
+        // fibonacci heap fields:
+            // root_list: a circular doubly linked list of the root nodes of the heaps
+            // min node: a pointer to the min node in the heap
+
+        // node fields:
+            // key: priority of the node
+            // left, right: pointers to the left and right siblings
+            // parent: pointer to the parent
+            // child: pointer to one child
+            // degree: number of children
+            // marked: boolean flag, true if the node has lost a child since it became a child of its current parent
+
+    return 0;
+}
+
+int fibonacci_heap_insert() {
+    // INSERTING INTO FIBONACCI HEAPS
+    // inserting into fibonacci heaps is very simple
+    // we create a new node with the key x
+    // we add it to the root list
+    // if the new node has a smaller key than the current min, we update the min
+
+    // the time complexity of insert is O(1):
+    // insert(H, k):
+        // new_root := new node(key=k)
+        // add new_root to H.root_list
+        // if k < H.min.key:
+            // H.min := new_root
+
+    // that's it, we don't do anything else.
+    // you might be wondering, doesn't this grow the root list linearly? yes, it does, but extract_min will handle this by merging different trees in the root list together
+
+    return 0;
+}
+
+int fibonacci_heap_union() {
+    // recall we mentioned merging heaps in the previous section, aka union
+    // before when we were looking at binary min heaps, they did not support a union operation
+
+    // we now introduce the union operation for fibonacci heaps
+    // union(H, H_1, H_2):
+        // """
+        // merges two fibonacci heaps H_1 and H_2 into a new fibonacci heap H
+        // """
+
+        // H.root_list := concatenate(H_1.root_list, H_2.root_list)
+        // if H_1.min.key <= H_2.min.key:
+            // H.min := H_1.min
+        // else:
+            // H.min := H_2.min
+        
+    // the time complexity of union is O(1)
+    // we note that this is a very simple operation and does not restructure the trees in any way, it just connects the root lists of the two heaps
+    return 0;
+}      
+
+int fibonacci_heap_extract_min() {
+    // the real work of fibonacci heaps comes in the extract_min operation
+    // extract_min(H):
+        // 0. remove x = H.min from H.root_list
+        // 1. add each child of H.min to H.root_list
+
+        // eg)
+        //                    |
+        //                    v
+        //      23 --- 7 ---- 3 --- 17
+        //             |      |
+        //             24     5 --- 18
+        //             |
+        //         35--6--18
+
+        // min is 3 so we remove 3 from the root list and add its children 5 and 18 to the root list
+
+        //  23 --- 7 ---- 17 --- 5 --- 18
+        //         |
+        //         24
+        //         |
+        //     35--6--18
+
+        // 2. H.min := any former child of H.min (can be wrong, we must "consolidate" the heap)
+
+        //                             |
+        //                             v
+        //  23 --- 7 ---- 17 --- 5 --- 18        for example, we set to 18, this was wrong!
+        //         |
+        //         24
+        //         |
+        //     35--6--18
+
+        // 3. consolidate(H) (also updates H.min)
+        // 4. return x
+
+    // the real work of extract_min is in the consolidate operation
+
+    // CONSOLIDATE IDEA:
+    // goal:
+        // we don't want a root list to be cluttered with a bunch of nodes
+        // we also don't want for a node to have a lot of children
+        // this is because we want to keep the time complexity of extract_min to be O(log(n))
+        // if we have a lot of nodes in the root_list or the min node has a lot of children, then the time complexity of extract_min will be O(n) when we check for the new min
+    // so we want:
+        // we want to end up with a root list with nodes of a UNIQUE degree
+        // remember, the degree of a node is the number of children it has
+        // so we want every node in the root list to have a unique degree
+    // the idea:
+        // repeat the following until all nodes in the root list have a unique degree:
+            // walk through root list
+            // remember degree of each node so far in an array A, where A[i] is the node with degree i
+            // if we see a node x with same degree of already seen node y, merge x into y
+                // u := max_key(x, y)
+                // v := min_key(x, y)
+                // add u to the children of v
+                // remove u from the root list
+                // update A[u.degree] to be None (we will only ever have 1 node in each A[i])
+                // update A[v.degree] to be v (since we merged u into v, v's degree increases by 1)
+                // note that this is an O(1) operation, we simply set u to be the child of v as v has a lower key and thus a higher priority
+
+        // update min from the root list
+    
+    // explanation for why this helps us achieve our goal:
+        // first of all, notice that we moved everything from the min root's children into the root list
+        // so all that remains to do now is make the root list smaller
+        // our goal achieves just this by merging nodes with the same degree
+        // once we do this, we end up with a root list with nodes of unique degree and the min node will have the smallest key of these nodes. then we just set a pointer to it 
+
+    // question arises: how to remeber the degree of nodes
+    // answer: maintain array A of pointers, A[i] points to the node in the root list with degree i
+
+    // here is the algorithm for consolidate:
+    // consolidate(H):
+    //    for each node n in H.root_list:
+    //        x := n
+    //        while A[x.degree] != null: (while loop because when we move x to another index degree after merging, we need to check again)
+    //            y := A[x.degree]
+    //            A[x.degree] := null
+    //            if x.key > y.key:
+    //                x, y := y, x (we want x to be the min node)
+    //            remove y from H.root_list
+    //            add y to x's children (x degree increases by 1)
+    //            y.marked := false (we use this later)
+    //        A[x.degree] := x
+    //   H.min := min of H.root_list
+
+    // so we see that the time complexity of extract_min is O(max_degree) where max_degree is the maximum degree of any node in the root list, because we repeat the while loop at most max_degree times
+
+    // now we do some analysis on how the trees formed in the root list look like
+    // we note that each tree will have a unique degree, so if D[i] is the degree of the i-th tree in the root list, then we may have something like D = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].
+
+    // these trees have a special name, they are called binomial trees
+    // binomial trees are trees that are formed by merging two binomial trees of the same degree
+    
+    new_tex(
+        "\\begin{center}\n"
+        "\\includegraphics[width=0.5\\textwidth]{../figures/binomial_trees.png}\n"
+        "\\end{center}"
+    );
+
+    // note that the children of binomial trees are also binomial trees
+
+    // then if we had binomial trees in our root list before calling extract_min, doing consolidate will maintain the property that the trees in the root list are binomial trees
+
+    // also note that in the root_list every binomial tree contains twice as many nodes as the previous binomial tree
+
+    // this means that every binomial tree of degree k has 2^k nodes
+    // degree 0: 1 node
+    // degree 1: 2 nodes
+    // degree 2: 4 nodes
+    // and so on..
+
+    // so tree with k nodes has a degree of log(k) (base 2)
+
+    // then we can now ask ourselves, what is the maximum degree of the trees in the root list?
+    // well consider a heap with 10 nodes.
+    // then our max degree must be 3, because if we had a tree of degree 4, then it would have 16 nodes, which is more than 10
+    // specifically, the max degree of a tree with n nodes is floor(log(n)) 
+
+    // recall we said that time complexity of extract_min is O(max_degree)
+    // then the time complexity of extract_min is O(log(n)) as max_degree <= log(n)
+
+    return 0;
+}
+
+int fibonacci_heap_decrease_key() {
+    // this is where we use the marked field
+    // node.marked is true if this node lost a child since being removed from root list
+    // before we dive into the method, let's just get an overview of the operation
+
+    // let x be the node we want to decrease the key of
+    // two possible cases:
+        // x.key < x.parent.key: heap property is violated, need to do stuff
+        // x.key >= x.parent.key: no need to do anything. remember that this is DECREASE key, so we only need to do something if the key is less than the parent's key. we will never increase the key, so dont need to worry about children
+
+    // if x.key < x.parent.key:
+        // we can't swap and do bubble up like we did with min heaps because we want O(1) time complexity, not O(log(n))
+        // we want to be as lazy as possible
+        // so all we will do is "cut out" x from its parent and add it to the root list
+        // if x.key < heap.min.key, we update heap.min to be x
+
+    // however, we still have a problem:
+    // 
+
+    
+
+    // cut child from parent: remove child from parent's children list and add it to the root list
+    // we do this when we decrease the key of a node and it becomes smaller than its parent
+
+    // cascading cut from some child node:
+        // keep going up to the root
+        // if we see an unmarked child, mark it and stop
+        // if we see a marked child, cut it and continue up
+
+    return 0;
+}
+
