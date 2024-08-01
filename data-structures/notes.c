@@ -2126,13 +2126,38 @@ int fibonacci_heap_decrease_key() {
         // so all we will do is "cut out" x from its parent and add it to the root list
         // if x.key < heap.min.key, we update heap.min to be x
 
-    // however, we still have a problem:
-    // 
+    // recap of what it means to cut:
+        // cut child from parent: remove child from parent's children list and add it to the root list
+        // we do this when we decrease the key of a node and it becomes smaller than its parent
 
+    // however, we still have a problem!!
+    // remember that we needed to keep the root list with binomial trees!
+    // we need our node degrees to grow logarithmically with our heap size,
+    // but they only grow logarithmically when we have all trees as binomial trees
+    // if we allow decrease_key to arbitrarily cut nodes from their parents, then we may end up with a root list that is not a list of binomial trees
     
+    // however, in practice things are not so bad
+    // situations where a tree loses a lot of nodes will probably be rare
+    // if we only cut out a few nodes here and there, then our trees will still somewhat resemble binomial trees
 
-    // cut child from parent: remove child from parent's children list and add it to the root list
-    // we do this when we decrease the key of a node and it becomes smaller than its parent
+    // but how can we be sure?
+    // this is where the most ingenious part of fibonacci heaps comes in:
+        // we make a compromise
+        // we only allow cutting out at most one child per node
+        // intuitively, this ensures we dont straw away too far from the original tree shapes
+
+    // for example, say we cut out a node from its parent:
+        // we mark the parent as marked to indicate that it has lost a child
+        // now suppose we cut out another child from the parent
+        // we will know that the parent has lost a child already since it is marked
+        // in this case, we will cut out the parent from its parent and add it to the root list as well
+        // we mark the cut out parent as unmarked now
+    
+    // at first this might not seem to make any sense. shouldn't we cut out fewer nodes to keep the tree structure intact?
+    // but think of it like this: we don't want trees with a large degree to contain few nodes.
+    // by cutting out the parent as well, we decrease the degree of the tree, and this is what we want
+    // we want trees with low nodes to have low degree, and trees with high nodes to have high degree
+        // i.e) we want to keep the tree structure as close to binomial trees as possible, where max degree is log(n)
 
     // cascading cut from some child node:
         // keep going up to the root
