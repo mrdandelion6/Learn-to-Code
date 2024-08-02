@@ -1566,6 +1566,53 @@ int  weighted_graphs() {
     // the higher the weight, the more expensive it is to traverse the edge
     // you can think of the weight as the distance between the vertices
 
+    // note for undirected graphs, the edge (u, v) must have the same weight as the edge (v, u)
+    // for direccted graphs (u, v) may have a different weight than (v, u)
+
+    // we store the weights in an adjaceny matrix or adjacency list
+    // consider the following weighted graphs:
+    if (TEX_SUPPORT) {
+        new_tex(
+            "\\begin{center}\n"
+            "\\includegraphics[width=0.5\\textwidth]{../figures/weighted_graph.png}\n"
+            "\\end{center}"
+        );
+    }
+    // WEIGHTED ADJACENCY MATRIX:
+        //       A     B     C     D     E
+        // A     0     4     2    inf   inf
+        // B     4     0     1     5    inf
+        // C     2     1     0    inf   inf
+        // D    inf    5    inf    0    inf
+        // E    inf   inf   inf   inf    0
+
+    // rather than 0s or 1s, we now store the distance between the vertices
+
+    // WEIGHTED ADJACENCY LIST
+        // A: [(B, 4), (C, 2)]
+        // B: [(A, 4), (C, 1), (D, 5)]
+        // C: [(A, 2), (B, 1)]
+        // D: [(B, 5)]
+        // E: []
+
+    // rather than having single values, we now have tuples of (vertice, distance)
+
+    return 0;
+}
+
+int msts() {
+    // we will learn about minimum spanning trees before getting into dijkstra's algorithm
+
+    // the #1 common task on weighted graphs is to find a spanning tree
+    // SPANNING TREE DEFINITION:
+        // a tree that covers all vertices
+        // a tree T such that every vertex v in V is an endpoint of at least one edge in T
+
+    // we also want to MINIMIZE the sum of the weights of the edges used!
+        // weight(T) = sum_{(u, v) in T}(weight(u, v))
+        // want T s.t T is a spanning tree, and want to achieve T s.t weight(T) is the minimum possible resulting sum of T's weights
+
+        
     return 0;
 }
 
