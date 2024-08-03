@@ -1,0 +1,34 @@
+{
+    "hello" : "welcome to my notes on json, json does not support comments",
+    "but" : "i can just add a string key value pair to act as a comment",
+    "json" : "stands for javascript object notation",
+    "json is" : "a lightweight data-interchange format",
+    "json is easy" : "for humans to read and write",
+    "like python dictionaries" : "json objects are key value pairs",
+    "types" : {
+        "string" : "text",
+        "number" : "integer or float",
+        "object" : "json object",
+        "array" : "list",
+        "boolean" : "true or false",
+        "null" : "empty"
+    },
+    "example" : {
+        "name" : "john",
+        "age" : 30,
+        "obj" : {
+            "key" : "value"
+        },
+        "married" : true,
+        "children" : ["anna", "peter"],
+        "pets" : null
+    },
+    "keys" : "must be strings",
+    "to parse" : "depends on the language",
+    "parsing_examples" : {
+        "python" : "json.loads()",
+        "javascript" : "JSON.parse()",
+        "php" : "json_decode()",
+        "ruby" : "JSON.parse()"
+    }
+}
