@@ -1612,7 +1612,15 @@ int msts() {
         // weight(T) = sum_{(u, v) in T}(weight(u, v))
         // want T s.t T is a spanning tree, and want to achieve T s.t weight(T) is the minimum possible resulting sum of T's weights
 
-        
+    // we can find MSTs using PRIM'S ALGORITHM or KRUSKAL'S ALGORITHM
+    // we will see these in the next sections
+    return 0;
+}
+
+int kruskals_algorithm() {
+
+
+
     return 0;
 }
 
@@ -2116,7 +2124,8 @@ int fibonacci_heap_extract_min() {
     //            add y to x's children (x degree increases by 1)
     //            y.marked := false (we use this later)
     //        A[x.degree] := x
-    //   H.min := min of H.root_list
+    //   if H.min.key > x.key:
+    //       H.min := x
 
     // so we see that the time complexity of extract_min is O(max_degree) where max_degree is the maximum degree of any node in the root list, because we repeat the while loop at most max_degree times
 
@@ -2207,9 +2216,51 @@ int fibonacci_heap_decrease_key() {
         // i.e) we want to keep the tree structure as close to binomial trees as possible, where max degree is log(n)
 
     // cascading cut from some child node:
-        // keep going up to the root
-        // if we see an unmarked child, mark it and stop
+        // keep going up to the root (recursively or iteratively) 
+        // if we see an unmarked child, mark it and break the iteration/recursion
         // if we see a marked child, cut it and continue up
+
+    // here is the algorithm for decrease_key:
+
+    // decrease_key(H, x, k):
+    //    if k >= x.key:
+    //        return (we don't increase keys)
+    //    x.key := k
+    //    y := x.parent
+
+    //    if y != null and y.key > x.key
+    //        cut(H, x, y) (cut x from y)
+    //        while y.parent != null:
+    //           if y.marked == false:
+    //               y.marked := true
+    //               break
+    //           else:
+    //               cut(H, y, y.parent)
+    //               y := y.parent
+    //    if x.key < H.min.key:
+    //        H.min := x 
+
+    // and here is the algorithm for cut:
+
+    // cut(H, x, y):
+    //    remove x from y's children (involve's some O(1) operations)
+    //    add x to H.root_list
+    //    x.marked := false
+    //    if x.key < H.min.key:
+    //        H.min := x
+    return 0;
+}
+
+int fibonacci_heap_marking() {
+
+    // lets recap exactly when we mark and unmark nodes
+    // MARKING:
+        // only occurs from decrease_key calls: when we cut out a child, if the parent is unmarked and in the root list, we mark it. if it was already marked, we cut out the parent as well. if it was in the root list, we do not mark it.
+
+    // UNMARKING:
+        // 1. cutting: when we cut anything out we unmark it
+        // 2. consolidating: when we merge two nodes, we unmark the node that turns into a child
+
 
     return 0;
 }
