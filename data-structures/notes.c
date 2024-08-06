@@ -42,11 +42,12 @@ int main(int argc, char* argv[]) {
     int fibonacci_heap_union();
     int fibonacci_heap_extract_min();
     int fibonacci_heap_decrease_key();
-    
+    int fibonacci_heap_marking();
+    int disjoint_sets();
 
 
     // run
-    fibonacci_heap_extract_min();
+    disjoint_sets();
 
     return 0;
 }
@@ -1618,8 +1619,25 @@ int msts() {
 }
 
 int kruskals_algorithm() {
+    // kruskal's algorithm finds the minimum spanning tree of a weighted graph
+
+    // it begins by first sorting all the edges in the graph by weight and putting them in a min-priority queue
+    // we then iterate through the edges by calling extract_min() on the min-priority queue and adding the edge to the MST if it DOESN'T CREATE A CYCLE
+
+    // that's it pretty much.
+    // the algorithm is simple and efficient, and the time complexity is O(|E|log|E|)
+    // this is because we use mergesort to sort the edges, and the rest is just O(|E|) operations
+
+    // to check if adding an edge creates a cycle, we usually use "clusters" or "disjoint sets" to keep track of the vertices that are connected
+
+    // we check if the two vertices of the edge are in the same cluster, if they are, then adding the edge would create a cycle. we can do this by having an array of size |V| where each index is a vertex and the value is the cluster it belongs to
 
 
+    return 0;
+}
+
+int prims_algorithm() {
+    // TODO: prims algorithm
 
     return 0;
 }
@@ -2265,3 +2283,24 @@ int fibonacci_heap_marking() {
     return 0;
 }
 
+int disjoint_sets() {
+    // disjoint sets are, well, a collection of sets that are disjoint
+    // disjoint sets have the following operations:
+        // 1. make-set(x); create a set that contains x
+        // 2. find-set(x); return the representative of the set that contains x
+        // 3. union(S1, S2); merge the sets S1 and S2 or..
+        // 4. union(x, y); merge the sets that contain x and y
+
+    // recall we were using this for kruskal's algorithm
+
+    // linked list implementation:
+    // each set is a linked list
+    // x.set is a pointer to x's owning linked list
+    // find-set(x) merely returns x.set.head, so O(1)
+    // union(S1, S2) is merging two linked lists
+    // we choose to always move the smaller list into the larger one
+
+    // note that union(S1, S2) is 
+
+    return 0;
+}
