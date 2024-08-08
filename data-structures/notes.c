@@ -2304,3 +2304,268 @@ int disjoint_sets() {
 
     return 0;
 }
+
+int hashing() {
+    // hashing is a technique that allows us to store and retrieve data in O(1) time complexity
+    // reclal that a dictionary is an ADT that supports the following operations on a set of elements with well-ordered key-value pairs:
+        // insert(k, v): insert a key-value pair
+        // delete(k): delete the node (i.e. key-value pair) with key k
+        // search(k): return the value/node associated with key k
+
+    // now lets ask some questions which will motivate why we need hashing
+    
+    // 1. if we know the keys are integers from 1 to K, what is a fast and simple way to represent a dictionary?
+        // ANS: allocate an array of size K and store an element with key i in the (i-1)'th index of the array.
+
+    // 2. what is the worst case time complexity of each of the operations?
+        // ANS: O(1) for all operations
+
+    // 3. what may be a problem with dirrect addressing?
+        // ANS: if the keys are not bounded by a reasonable number, the array will be huge and the space will be inefficient.
+    
+    // example 1: reading a text file
+    // suppose we want to keep track of the frequencies of each letter in a text file.
+
+    // 4. why is this a good application of direct addressing?
+        // ANS: there are only 256 ASCII characters, so we could use an array of 256 cells where the i-th cell stores the frequency of the i-th character
+
+    // example 2: reading data file of 32-bit integers
+    // suppose we want to keep track of the frequencies of each 32-bit integer in a data file
+
+    // 5. why is this a bad application of direct addressing?
+        // ANS: there are 2^32 possible 32-bit integers, so we would need an array of size 2^32, which is infeasible
+
+    // nowe we introduce the idea of hashing
+        // the range of keys is large
+        // but many keys are not "used"
+        // don't need to allocate space for all possible keys
+
+    // we introduce the HASH TABLE
+        // suppose we have a universe set U of keys
+        // we allocate a table (array) of size m where m < |U|. we call this the hash table
+        // we use a HASH FUNCTION h : U -> {0, 1, ..., m-1} to map keys to indices in the table
+            // note that this means h is not injective
+            // there exists x, y in U s.t x != y and f(x) = f(y) since m < |U|
+        // x gets stored in the position h(x) in the hash table
+
+    // but as h is not injective, we can have what are called "collisions".
+    // how we deal with collisions is called "collision resolution". when we study hashing, we mostly study collision resolution
+
+    // COLLISION RESOLUTION
+        // we have a collision when two keys map to the same index
+        // we need a way to resolve this
+        // we will study different collision resolution techniques
+
+    // here is some intuition behind hashing techniques:
+    // say we whave a small address book and one of the letters fills up.
+    // for example, everything for the letter "N" fills up. where do we add the next N entry?
+        // flip to the next page
+        // have an overflow page at the very end
+        // write a little note explaining where to find the rest of the N entries
+
+    // now here are two general collision resolution approaches:
+        // note: we refer to the position in the hash table as a "bucket"
+    
+    // 1. CLOSED ADDRESING:
+        // keys are always stored in the "BUCKET" they hash to.
+        // we use additional data structure to store the keys in the same bucket
+        // this clumps up the keys in the same bucket
+
+        // eg)
+        // we could have each bucket act as a linked list, and we just probe down the linked list to insert/delete/search if there is a collision.
+        // we see a concrete explanation of this known as "chaining" in the next section
+
+    // 2. OPEN ADDRESSING:
+        // give a general rule of where to look next if a collision occurs in a bucket
+        // i.e give directions to another bucket
+        // this fills up many buckets`
+
+        // eg)
+        // linear probing: if a collision occurs, we just look at the next bucket in the table
+
+    // recap of hashing:
+        // we have a dictionary {k: v}
+        // we want quick access to v given k
+        // we use a hash function to map k to an index in a hash table
+            // we do this because it enables O(1) time complexity if the hash function is O(1)
+            // i.e we access a value v by the index i = h(k) in the hash table. so T[h(k)] = v
+        // hash functions will end up being injective for space reasons
+        // the rest of hashing entails dealing with collisions from these injective hash functions
+    return 0;
+}
+
+int chaining() {
+    // chaining is a technique used in closed addressing
+    // the idea of chaining: story a doubly linked list at each entry in the has table
+
+    // vertical view of our hash table:
+    // 0 [] -> nil
+    // 1 [] -> nil
+    // 2 [] -> [k2] <-> [k1] -> nil
+    // 3 [] -> nil
+    // 4 [] -> [k5] <-> [k4] <-> [k3] -> nil
+
+    // note that h(k1) = h(k2) = 2
+    // note that h(k3) = h(k4) = h(k5) = 4
+
+    // this is known as chaining.
+    
+    // INSERTION:
+    // all we do is insert the new key at the head of the linked list at the bucket it hashes to in O(1)
+    // insert(k, v):
+        // i := h(k)
+        // prev_head = T[i]
+        // T[i] := new node(key=k, value=v)
+        // T[i].next := prev_head
+        // if prev_head != nil:
+        //     prev_head.prev := T[i]
+
+    // SEARCH:
+    // search(k):
+        // i := h(k)
+        // x := T[i]
+        // while x != nil and x.key != k:
+        //     x := x.next
+        // return x
+
+    // DELETION:
+    // delete(k):
+        // x := search(k)
+        // if x != nil:
+        //     if x.prev != nil:
+        //         x.prev.next := x.next
+        //     else:
+        //         T[h(k)] := x.next
+        //     if x.next != nil:
+        //         x.next.prev := x.prev
+
+    // CHAINING COMPLEXITY
+    // we assume we can compute the hash function h in constant time.
+    // insert(k, v) takes O(1) time as shown above.
+    // delete(k) takes:
+        // n := search(k) - ?
+        // delete(n) - O(1)
+
+    // search(k) time complexity is more complicated to analyze, but we will see that it is O(n) in the worst case.
+
+    // first let us consider the worst case for chaining. we begin by asking some questions:
+
+    // 1. what happens if |U| > m * n, where m is the number of buckets and n is the average number of keys in each bucket?
+        // ANS: by pigeon hole principle, any given hash function will put at least n key-value pairs in the same bucket
+
+    // 2. what is the worsts case?
+        // ANS: every entry of the table has no elements except for one entry which has all the elements
+
+        // eg)
+        // 0 [] -> nil
+        // 1 [] -> nil
+        // 2 [] -> [kn] <-> ... <-> [k2] <-> [k1] -> nil
+        // 3 [] -> nil
+        // 4 [] -> nil
+
+    // hence the worst case time complexity of search is O(n) when all keys hash to the same bucket
+
+    return 0;
+}
+
+int simple_uniform_hashing() {
+
+    // we now introduce the idea of simple uniform hashing.
+    // this is just a concept from basic probability theory that we will use to analyze the performance of hashing.
+
+    // we assume a hash function h has the simple uniform hashing property:
+        // any element is equally likely to hash into any of m buckets, independently of where other elements have hashed to
+        // h distributes elements of U evenly across the m buckets
+
+    // formally,
+        // sample space: set of elements with key v alues from U
+        // for any probability distribution on U we have,
+            // let X be a random variable that represents a possible key value from U
+            // Pr[h(X) = i] = 1/m for all i = 0, 1, ..., m-1
+            // sum_{k in U_i} Pr[X=k] = 1/m, where U_i = {k in U: h(k) = i}
+                // i.e, the sum the probabilities of the key being in the i-th bucket is 1/m 
+
+    return 0;
+}
+
+int load_factor() {
+    // we now introduce the idea of the load factor
+    // we motivate this with the following question:
+
+    // 1. if the table has n elements, how many elements would you expect in any one entry of the table?
+        // ANS: n/m, where m is the number of buckets. this is by simple uniform hashing
+
+    // we call this n/m ration the load factor of the hash table denoted by alpha. since i can't type alpha, we will just say 'a'
+    // then, a = n/m
+
+    // the simple uniform hashing assumption may or mayh not be accurate depending on U, h, and the probability distribution of Pr[X=k] where the support of X is U
+    return 0;
+}
+
+int average_case_analysis() {
+    // we now analyze the average case time complexity of searching in a hash table with chaining
+    // we analyze this using the probabilistic expectation
+
+    // let T_k be a random variable which counts the number of elements checked when searching for key k
+    // let L_i be the list at entry i in the hash table
+    // note T_k = |L_i| worst case
+
+    // note that either we are searching for an item that is in the table or not in the table
+    
+    // 1. unsuccessful search:
+        // E(T) = sum_{k in U} Pr[X=k] * T_k
+        //      = sum_{i=1}^{m} sum_{k in U_i} Pr[X=k] * T_k
+        //      = sum_{i=1}^{m} sum_{k in U_i} Pr[X=k] * |L_i| (since k is not in L_i, we search all of it)
+        //      = (1/m) sum_{i=1}^{m} |L_i| (because sum_{k in U_i} Pr[X=k] = 1/m for simple uniform hashing)
+        //      = n/m (since all of the |L_i|'s sum to n total elements in the table)
+        //      = a
+
+    // 2. successful search:
+        // TODO
+    return 0;
+}
+
+int probe_sequences() {
+    // each bucket in the has table stores a fixed number c of elements
+    // this means we can only use the table when n <= m*c
+    // for simplicity, let's use c = 1. so each bucket only stores 1 element
+
+    // when inserting a new element if we get a collision,
+        // find a new bucket to insert the element
+        // we need to know where we put it: for future retrieval
+        // search a well defined sequence of other locations in the has table, until we find one that's not full
+
+    // this sequence is called a "probe sequence"
+    // many methods for generating a probe sequence. for example:
+        // linear probing: try T[ (h(k) + i) mod m ] for i = 0, 1, 2, ...
+        // quadratic probing: try T[ (h(k) + c1*i + c2*i^2) mod m ] for i = 0, 1, 2, ... and define c1, c2
+        // double hashing: try T[ (h(k) + i*h'(k)) mod m ] for i = 0, 1, 2, ... and define h' as a second hash function
+
+    // very simple ideas. let's quickly take a look at each.
+
+    // LINEAR PROBING:
+        // s_o = h(k) is called the home location for the item
+        // the problem we have is clustering
+        // when we hash to a location within a group of filled locations, we have to probe through the group to find an empty location
+
+    // QUADRATIC PROBING:
+        // this also shares the same problem with clustering.
+
+    // what is the cause of clustering?
+    // the cause of clustering is that the probe sequence is the same for all keys that hash to the same location
+    // to get around this, we can use double hashing.
+
+    // DOUBLE HASHING:
+        // in double hashing, we have a second hash function h' to calculate step size. this second hash function is different from the first one, so we get a different probe sequence for each key that hashes to the same location
+        // there is a chance that the hash function h' also has a collision, but this can be avoided by choosing a good h'
+
+        // we want to choose h' such that if h(k1) = h(k2), then h'(k1) != h'(k2)
+
+    return 0;
+}
+
+int open_addressing_complexity() {
+    // we now analyze the time complexity of open addressing
+
+    return 0;
+}
