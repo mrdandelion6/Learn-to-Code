@@ -1632,12 +1632,41 @@ int kruskals_algorithm() {
 
     // we check if the two vertices of the edge are in the same cluster, if they are, then adding the edge would create a cycle. we can do this by having an array of size |V| where each index is a vertex and the value is the cluster it belongs to
 
+    // kruskal(G)
+        // E, V := edges and vertices of G
+        // T := new container for edges
+        // L := edges sorted in increasing order of weight
+        // for each vertex v in V:
+            // v.cluster := make-cluster(v)
+
+        // for each (u, v) in L:
+            // if u.cluster != v.cluster:
+                // T.add((u, v))
+                // merge-clusters(u, v)
+
+        // return T
 
     return 0;
 }
 
 int prims_algorithm() {
-    // TODO: prims algorithm
+    // results in an MST just like kruskal's algorithm
+
+    // prim's algorithm is very similiar to dijkstra's algorithm.
+    // the difference between prim's and kruskal's algorithms is that kruskal's algorithm builds the tree from any edges in the entire graph, whereas prim's expands the tree from an arbitrary vertex
+
+    // we keep a list of visited nodes and a min-priority queue of edges
+    // we start at an arbitrary vertex and add its edges to the min-priority queue
+    // we then extract the min edge from the min-priority queue and add it to the MST
+
+    // so for each vertex we have:
+        // priority
+        // predecessor
+
+    // and we also have our MST tree
+
+    // the priorities are stored in the min-priority queue, and the predecessors are stored in a table
+    // keep priority as infinity for all vertices except the start vertex at beginning
 
     return 0;
 }
@@ -2283,7 +2312,7 @@ int fibonacci_heap_marking() {
     return 0;
 }
 
-int disjoint_sets() {
+int disjoint_sets_linked_lists() {
     // disjoint sets are, well, a collection of sets that are disjoint
     // disjoint sets have the following operations:
         // 1. make-set(x); create a set that contains x
@@ -2300,14 +2329,105 @@ int disjoint_sets() {
     // union(S1, S2) is merging two linked lists
     // we choose to always move the smaller list into the larger one
 
-    // note that union(S1, S2) is 
+    // note that union(S1, S2) is not going to be O(1).
+        // this is because we need to update all the .set pointers of the elements in the smaller list
+        // we make everything in smaller.set point to larger.head (O(smaller.size)), and we update "stitch" the smaller list to the larger list's end, i.e. larger.tail.next = smaller.head (O(1), if we keep a pointer to tails)
+        // hence the time complexity of union(S1, S2) is O(min(|S1|, |S2|))
+
+    // but what is the amortized time complexity of union? say we do a total of k operations of make-set, find-set, and union, with n of those k operations being make-set.
+        // in the worst case, our smaller list will have n/2 elements
+        // in the best case, our smaller list will have 1 element
+        // we have a total of n nodes
+
+    // operations make-set and find-set are O(1) for a total of O(k) max
+    // now consider, suppose we did all n operations of make-set, and now we have n sets of size 1
+    // in the worst case, we will go like this:
+        // {1, 1, ..., 1} -> {2, 2, ..., 2} -> {4, 4, ..., 4} -> ... -> {n/2, n/2} -> {n}
+        // where each number represents the size of the sets
+        // then each .set pointer is updated at most log(n) times
+        // for example, consider the final set of size 1 at the start.
+        // it is updated into sets of size 2, 4, ..., n/2, n
+        // hence it is updated log(n) times
+        // there are n sets, so the total number of updates is n*log(n) at most
+
+    // so for k operations we have:
+        // k + n*log(n)  <= k + k*log(n) = O(k*log(n))
+        // amortized = O( klog(n) / k ) = O(log(n))
+
+    return 0;
+}
+
+int disjoint_sets_forest() {
+    // each set is a tree
+    // pointers from children to parents
+    // root points to itself
+    // each node stores rank: upper bound on height of tree rooted at node, i.e. node.rank >= node.height
+    
+    // note that this is essentially the reverse of what we would have for regular trees, where the pointers go from parents to children.
+    // in our case, we have pointers from the children to its parent (single parent)
+
+    // make-set(x)
+        // root := new node(value=x, rank=0)
+        // root.parent := root
+        // return root
+
+    // now let's look at union
+    // union makes root of smaller a child of the root of taller tree
+    
+    // union(node1, node2):
+        // link(find-set(node1), find-set(node2))
+
+    // note that find-set() is the same as "find-root()"
+
+    // link(root1, root2):
+        // if root1.rank > root2.rank:
+            // root2.parent := root1
+        // else:
+            // root1.parent := root2
+            // if root1.rank = root2.rank:
+                // root2.rank ++
+
+    // this type of union is known as "union by rank"
+        // it helps keep the trees "relatively flat"
+        // i.e., we minimize the height of the trees
+        // this helps for when we do find-set, as we will have to traverse the tree to find the root
+
+    // now we look at find-set.
+    // simply finds the root of the tree
+
+    // find-set(x):
+        // if x != x.parent:
+            // return find-set(x.parent)
+        // return x
+
+    // PATH COMPRESSION
+    // path compression is a technique that helps us reduce the height of the trees
+
+    // find-set updates parent link directly to root
+    // the ranks are not updated.
+
+    // find-set(node):
+        // if node.parent != node:
+            // node.parent := find-set(node.parent)
+        // return node.parent
+
+    // so running find-set(x) "compresses" x and all of its ancestors, i.e, makes them point directly to the root
+
+    // the best disjoint set implementation is forests using union by rank and path compression
+    // worst case time complexity for a sequence of k operations with n make-sets is O(k log*(n)) where log*(n) is the number of times you need to take the log of n to get a number < 1.
+
+    // the log*(n) function grows extremely slowly, so it is virtually a constant
+    // then the amortized time complexity of the operations is O(log*(n))
+    // the full-proof is omitted.
+
+    // note that this means that the best implementation of kruskal's algo has a time complexity of O(|E|log|E| + |E|log*(|V|)) 
 
     return 0;
 }
 
 int hashing() {
     // hashing is a technique that allows us to store and retrieve data in O(1) time complexity
-    // reclal that a dictionary is an ADT that supports the following operations on a set of elements with well-ordered key-value pairs:
+    // recall that a dictionary is an ADT that supports the following operations on a set of elements with well-ordered key-value pairs:
         // insert(k, v): insert a key-value pair
         // delete(k): delete the node (i.e. key-value pair) with key k
         // search(k): return the value/node associated with key k
@@ -2502,7 +2622,7 @@ int load_factor() {
     return 0;
 }
 
-int average_case_analysis() {
+int hashing_average_case_analysis() {
     // we now analyze the average case time complexity of searching in a hash table with chaining
     // we analyze this using the probabilistic expectation
 
