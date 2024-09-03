@@ -57,7 +57,9 @@ CREATE TABLE teams (
     -- and you might say, "well, why not just store the team name in the users table and get rid of the teams table?" 
     -- in our case we could do that but suppose we had a column called "team_location" as well, or just a lot of columns related to the team. it is better design to encapsulate all the team data in a separate table and reference it with a foreign key.
 
--- SQL COMMANDS
+-- so SQL is not ony used to create, read, update, and delete data (CRUD), but it also gives data a structure.
+
+-- SQL COMMANDS & STATEMENTS
 -- now we go over some basic SQL syntax
 -- SQL commands are used to communicate with a database. some common commands are SELECT, INSERT, UPDATE, DELETE, CREATE, and DROP.
 -- recall we used CREATE to create tables above. here are some other commands:
@@ -65,6 +67,9 @@ CREATE TABLE teams (
 -- SELECT
 -- SELECT is used to retrieve data from a database. it is the most commonly used SQL command. the data is returned in a table format, and referred to as a result set. here's an example:
 SELECT * FROM users WHERE age > 18; -- this will return all the rows from the "users" table where the age is greater than 18
+-- we say the entire line above is a "statement"
+-- the column is sage, and the table name is users, these are known as 'identifiers' in the statement
+-- in this case, we are selecting all rows by using the asterisk (*), with the filter that the age is greater than 18
 
 -- INSERT
 -- INSERT is used to add new data to a database. here's an example:
