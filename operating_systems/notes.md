@@ -10,6 +10,7 @@ in older days, there was no OS. this worked because the hardware was very simple
 
 ### Main goals of an operating system
 - **PRIMARY REASON: convenience** - make the computer easier to use
+- 
 - **SECONDARY REASON: efficiency** - make the computer run faster
   - note that you have limited resources, you need something to manage which process gets what resources and when
 
