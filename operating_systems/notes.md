@@ -2,7 +2,7 @@
 
 ## What is an operating system ?
 
-a very low layer of software that manages hardware resources and provides a set of services for application software. in other words, a very convennient abstract for hardware access.
+a very low layer of software that manages hardware resources and provides a set of services for application software. in other words, a very convenient abstraction for hardware access.
 
 they also provided restricted access to hardware resources like disks etc.
 
@@ -10,6 +10,7 @@ in older days, there was no OS. this worked because the hardware was very simple
 
 ### Main goals of an operating system
 - **PRIMARY REASON: convenience** - make the computer easier to use
+- 
 - **SECONDARY REASON: efficiency** - make the computer run faster
   - note that you have limited resources, you need something to manage which process gets what resources and when
 
