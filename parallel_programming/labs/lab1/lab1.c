@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 // ------------
 // This code is provided solely for the personal and private use of
 // students taking the CSC367H5 course at the University of Toronto.
@@ -15,6 +17,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "time_util.h"
 
 
 #define NVECS 10000
@@ -63,7 +66,13 @@ int main()
 
 	//TODO: measure time (in milliseconds) taken to execute avg_vec_len()
 	double time_msec = 0.0;
+
+	struct timespec start, end;
+	clock_gettime(CLOCK_MONOTONIC, &start);
 	double avg_len = avg_vec_len(matrix);
+	clock_gettime(CLOCK_MONOTONIC, &end);
+
+	time_msec = timespec_to_msec(difftimespec(end, start));
 
 	printf("%f\n", avg_len);
 	printf("%f\n", time_msec);
