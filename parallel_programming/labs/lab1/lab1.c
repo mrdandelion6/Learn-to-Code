@@ -64,7 +64,6 @@ int main()
 {
 	generate(matrix);
 
-	//TODO: measure time (in milliseconds) taken to execute avg_vec_len()
 	double time_msec = 0.0;
 
 	struct timespec start, end;

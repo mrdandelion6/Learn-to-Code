@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 // ------------
 // This code is provided solely for the personal and private use of
 // students taking the CSC367H5 course at the University of Toronto.
@@ -15,11 +17,15 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "time_util.h"
 
+// corresponds to number of columns (i,e row length)
+#define NVECS 10000 
 
-#define NVECS 10000
+// corresponds to number of rows (i,e column length)
 #define NDIMS 10000
 
+// so matrix is NDIMS x NVECS
 
 static double ranf(void)
 {
@@ -37,22 +43,23 @@ void generate(double m[NDIMS][NVECS])
 }
 
 
-//TODO: optimize
 double avg_vec_len(const double m[NDIMS][NVECS])
 {
-	double len_sum = 0.0;
+	double squared_vector_sums[NVECS] = {0.0};
 
-	for (int i = 0; i < NVECS; i++) {
-		double s = 0.0;
-		for (int j = 0; j < NDIMS; j++) {
-			s += m[j][i] * m[j][i];
+	for (int j = 0; j < NDIMS; j++) {
+		for (int i = 0; i < NVECS; i++) {
+			squared_vector_sums[i] += m[j][i] * m[j][i];
 		}
-
-		double len = sqrt(s);
-		len_sum += len;
 	}
 
-	return len_sum / NVECS;
+	double len_sum = 0.0;
+
+	for ( int i = 0; i < NVECS; i++ ) {
+		len_sum += sqrt(squared_vector_sums[i]);
+	}
+
+	return len_sum / NVECS; // average
 }
 
 
@@ -61,10 +68,15 @@ double matrix[NDIMS][NVECS];
 int main()
 {
 	generate(matrix);
-
-	//TODO: measure time (in milliseconds) taken to execute avg_vec_len()
+ 
 	double time_msec = 0.0;
+	struct timespec start, end;
+	clock_gettime(CLOCK_MONOTONIC, &start);
 	double avg_len = avg_vec_len(matrix);
+
+	clock_gettime(CLOCK_MONOTONIC, &end);
+
+	time_msec = timespec_to_msec(difftimespec(end, start));
 
 	printf("%f\n", avg_len);
 	printf("%f\n", time_msec);

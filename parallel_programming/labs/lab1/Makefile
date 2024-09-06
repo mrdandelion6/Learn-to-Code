@@ -12,8 +12,8 @@
 # -------------
 
 CC = gcc
-CFLAGS += -std=gnu11 -Wall -Werror -g3 -O3 -DNDEBUG
-LDFLAGS += -lm
+CFLAGS += -std=gnu11 -Wall -Werror -g3 -O3 -DNDEBUG -pg
+LDFLAGS += -lm -pg
 
 all: lab1 lab1-opt
 
