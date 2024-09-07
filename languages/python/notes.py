@@ -1,6 +1,7 @@
 
 # hello welcome to my notes on python
-# there won't be much notes on anything here aside from a few harder things.
+# these notes are designed for someone who is already proficient in python.
+# these notes provide knowledge on some of the more advanced and unusual things in python
 
 def contents():
     lambda_in_python()
