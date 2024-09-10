@@ -4,13 +4,16 @@ Welcome to my code learning repository. This repository is a collection of my no
 
 
 ## Notes I've Made
-Here are some languages and topics I have made a good amount of notes on so far. Some may not be complete yet, but have ample notes to get you started.
+My notes are split into 2 categories: languages and topics.
 
-- `C` : systems programming, pipes, processes, and sockets
-- `Shell Script` 
+### Languages
+Here are some languages I have made a good amount of notes on so far. Some may not be complete yet, but have ample notes to get you started.
+
+- `C` : systems programming, pipes, processes, and sockets. an introduction to low level programming.
+- `Bash` 
 - `JavaScript` : DOM
-- `Python & Jupyter` : data analysis + ml
-- `R` : data analysis + ml
+- `Python & Jupyter` : advanced notes on python and some jupyter notebooks
+- `R`
 - `Data Structures`
 - `HTTP`
 
@@ -76,7 +79,6 @@ Make sure your IDE is using the Python interpreter from the virtual environment 
 Learn data analysis and a little ML using R. Made for someone who has never seen R before. Located in the `r` directory.
 
 `notes.Rmd` will contain detailed notes on using R. See [r/README](r/README.md) for setting up R in VS Code or also [read my article](https://towardsdev.com/setting-up-r-for-vs-code-c03a6fda311d) on Medium
-
 
 ---
 
