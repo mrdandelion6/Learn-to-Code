@@ -62,12 +62,16 @@ the OS uses **dual-mode operation** which consists of two modes: a **user mode**
 all of these are privileged
 
 ### What are interrupts?
-an interrupt is a hardware signal that causes that CPU to jump to a predefined instruction called the interrupt hanlder. this is used to handle events like I/O completion, hardware errors, etc.
+an interrupt is a hardware signal that causes that CPU to jump to a predefined instruction called the interrupt handler. this is used to handle events like I/O completion, hardware errors, etc.
 
 when an interrupt happens,
 - CPU goes into kernel mode
 - CPU disables interrupts (we can't have a new interrupt occur while we are handling an interrupt)
 
+interrupts can be invoked by the hardware or the software. they signal to the cpu that the device has an event that needs attention. 
+- interrupts signal errors or requests off OS intervention (a system call). often called an exception or a trap.
+
+interrupts cause cpu to jump to a predefined routine which is known as the interrupt handler.
 
 
 ## Bootstrapping
@@ -110,3 +114,236 @@ switch(A, B)
 ```
 
 and then we return from the trap handler into process B. 
+
+
+## Threads & Processes
+
+### requesting OS Services
+
+- operating system and user programs are isolated from each other
+- but OS provides service to user programs
+- so the question is how do they communicate?
+
+#### user space
+- contains the user process
+
+#### kernel space
+OS controls: memory management, scheduling, file system, I/O
+
+- the answer is: **system calls**
+
+recall some system calls in C, like `open()`, `read()`, `write()`, etc. these are all system calls.
+
+### assembly review
+
+consider the following code in C:
+```c
+int pinkbunny(int x, int y) {
+  int i = 10;
+  return x + y + i;
+}
+
+int main() {
+  int r = 2;
+  int q = 3;
+  int result = pinkbunny(r, q);
+  printf("result is %d\n", result);
+  return 0;
+}
+
+```
+
+we will implement pseduo assembly for the above code.
+
+the first thing we do is save the caller's registers to the stack. such as:
+- eax
+- ecx
+- edx
+
+these are the registers that the caller expects to be preserved. 
+
+```assembly
+pinkbunny:
+  addi sp sp -8
+  sw t0 0(sp)
+  sw t1 4(sp)
+
+  # the actual code
+  addi t0 x0 10
+  add a0 0(sp) 4(sp)
+  addi a0 a0 t0 
+  # a0 is where we're expecting to return the result
+
+  addi sp sp 8
+  jr ra
+
+# main code starts here
+  addi t0 x0 2
+  addi t1 x0 3
+  jal ra pinkbunny
+  # print a0 (it contains return value)
+```
+
+## boundary crossings
+
+### getting into kernal mode.
+- we need an explicit system call. 
+- need a hardware interrupt
+- software or trap execution
+  - recall from our assembly examples, we need to store the return address
+  - need to store the registers of the caller
+
+this is a "context switch". 
+
+### enforcing restrictions
+we don't want the user to be able to do everything. we want to restrict the user's access to the hardware.
+
+#### user mode
+- user mode: user programs run in this mode. they can't access hardware directly. they have to go through the OS to access hardware.
+
+#### system mode
+- system mode: the OS runs in this mode. it can access hardware directly.
+- also known as kernel mode
+
+### determining what handler to use
+
+the OS determines what handler to use because the "reason" is stored in a register and is used to invoke a **handler**. 
+
+in `notes.c` for C, you can see we have similiar notes on **signal handlers**, but these are not the same thing. they are however very similiar. 
+
+## viewing system call interface
+
+- user program calls C library function with arguments
+- C library functioin passes arguments to the OS
+  - includes a system call identifier
+
+### walking through an example
+
+- we start in user mode, where we have some code to be executed.
+- we have a specific system call **int 0x80** that we use to switch to kernel mode.
+- the int stands for interrupt.
+
+the **0x80** is the interrupt number. this is the number that the OS uses to determine what system call to execute. 
+
+#### verifying arguments
+- ther kernel also has to verify the arguments that can be passed in registers. 
+- the result of the system call is stored in EAX.
+
+### system calls in linux
+we name the system calls with a number X, where X is the number of parameters.
+
+for example, in C we have `write()`:
+```c
+write(int fd, const void *buf, size_t count);
+```
+we can see that this function has 3 parameters, so in the kernal it is called `SYSCALL_DEFINE3`.  
+
+#### making a system call:
+1. the kernel assigns each system call type a system call number
+2. kernel initializes a table of function pointers ffor each system call number
+3. user process sets up system call number and arguments
+4. user process runs int N (where N is the system call number)
+5. context switch to kernel mode and invokes kernel's interrupt handler for X 
+6. kernel looks up **syscall table** using system call number
+7. kernel invokes the corresponding function 
+8. kernel returns by running *iret* which is the interrupt return
+
+### interprocess communication
+
+recall forking from our C notes. this is an example of interprocess communication.
+
+- **fork()** creates a new process by duplicating the calling process. this actually ends up being very inefficient because it duplicates the entire process, and this is very expensive.
+
+### threads
+if we want to make a parallel program, we can use **threads**. threads are a lightweight process. 
+- threads can solve a single problem concurrently and can easily share code, heap, and global variables.
+
+note that threads are part of the same process, so they all have the same PID. each thread however, has its own unique TID: thread ID.
+
+#### what exactly is a thread?
+
+a thread is a is a single control flow through a program
+- a control flow is a sequence of instructions that are executed sequentially
+
+we say a p rogram with multiple control flows is *multi-threaded*.
+
+note that the OS must interact with multiple running programs, so it is naturally multi-threaded.
+
+this gives us a new memory diagram:
+
+- stack (t1)
+- guard region
+- stack (t2)
+- guard region
+- stack (t3)
+- guard region
+
+#empty space
+
+- heap
+- static data
+- text/code
+
+we now have guard regions between each stack. this is to prevent one stack from overwriting another stack. we want to have a separate stack for each thread.
+
+this design allows for very cheap concurrency.
+
+### kernel level threeads
+
+- modern OS' have taken the execution aspect of a process and separate it into thread asbtract
+
+- the OS now manages threads and processes..
+
+  - all thread operations are done in the kernel
+  - the OS schedules all of th threads in the system
+
+### kernel threads limitations
+- kernel level threads make concurrency cheap than processes
+- however, for fine-grained concurrency, kernel threads are too heavy. too much overhead from context switching.
+
+for "fine-grained" we need even cheaper threads, which is where **user-level threads** come in.
+
+### user-level threads
+
+to  make threads cheap and fast, need to be implemented at user level
+- kernel threads are managed by OS
+- user threads are managed entirely by the run time system
+
+user level threads are smalelr and faster:
+- simply represented by a PC, registers, stack, and a small thread control block (TCB)
+
+this allows creating a new threading, switching between threads, and sychnronizing threads to be done via **procedure call**, i.e., no kernel involvment.
+
+### user-level threads limitations
+
+user level threads are not a perfect solution, there is a trade off.
+
+- user level threads are not visible to the kernel
+- consequently, the OS can make poor decisions:
+  - scheduling a process with only IDLE threads
+  - blocking a process whose thread intitated an I/O, even though the process has other threads that could run etc.
+
+basically the OS just doesnt really know whats going on with user level threads.
+
+solving this requires communication between user level and OS. i.e., system calls.
+
+
+### hybrid threads
+
+another possibility is to use  both kernel and user level threads
+- can associate a user level thread with a a kernel-level thread.
+
+we can have all the user level threads in a process share the same kernel level thread. this is called a **many-to-one** model.
+
+or we can have each user level thread have its own kernel level thread. this is called a **one-to-one** model.
+
+we can also have some combination of the two, called a **many-to-many** model.
+
+### thread libraries
+
+a standardized API for creating and managing threads is the POSIX thread library, or **pthread**.
+
+- it specifies the interface, but not the implementation.
+
+excellent tutorial: https://computing.llnl.gov/tutorials/pthreads/
+
