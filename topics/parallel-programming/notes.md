@@ -182,3 +182,63 @@ let's make some assumptions to demonstrate this idea of prefetching:
 for example, if each iteration takes 7 cycles and a cache miss is 49 cycles, then we can hide the latency of the cache miss by prefetching the data 7 elements ahead of time.
 
 to clarify, when we say each iteration takes 7 cycles, we mean that the the processor takes 7 cycles to execute the code in one loop. 
+
+## threads
+
+threads are a way to have multiple tasks running concurrently. threads are lightweight processes that share the same memory space. threads are useful for parallelism.
+ 
+
+### why threads over processes?
+
+processes take a lot more overhead. in short, threads are just more lightweight. the main difference is that threads share the same memory space, while processes do not.
+
+threads are all the same process, but they have different stacks. so they all have the same PID, but they have different TIDs. whereas processes all have their own PID and don't share memory space.
+
+### pthreads
+
+a standard interface for creating and managing threads in C is called **pthreads**. pthreads is a library that allows us to create and manage threads.
+
+here is an example of how to create a thread in C using pthreads:
+
+```c
+#include <pthread.h>
+#include <stdio.h>
+#define NUM_THREADS     5
+
+void *PrintHello(void *threadid)
+{
+   long tid;
+   tid = (long)threadid;
+   printf("Hello World! It's me, thread #%ld!\n", tid);
+   pthread_exit(NULL);
+}
+
+int main (int argc, char *argv[])
+{
+   pthread_t threads[NUM_THREADS];
+   int rc;
+   long t;
+   for(t = 0; t < NUM_THREADS; t++) {
+      printf("In main: creating thread %ld\n", t);
+      rc = pthread_create(&threads[t], NULL, PrintHello, (void *)t);
+      if (rc) {
+         printf("ERROR; return code from pthread_create() is %d\n", rc);
+         exit(-1);
+      }
+   }
+
+   /* Last thing that main() should do */
+   pthread_exit(NULL);
+}
+```
+
+so we have a few things going on here. first of all, we are using the `<pthread.h>` library. 
+
+from this library, we are using `pthread_create` to create threads. this function takes 4 arguments:
+1. the thread object
+2. the thread attributes
+3. the function to run
+4. the arguments to pass to the function
+
+in this case, we are creating 5 threads, and each thread is running the `PrintHello` function. the `PrintHello` function takes a `void *` argument, so we need to cast it to a `long` before we can use it.
+
