@@ -178,3 +178,7 @@ and for the 32-bit system it is the same, but with an "e" instead of an "r". for
 buffer overruns are a common security vulnerability in C programs. they occur when a program writes more data to a buffer than it can hold. this can cause the program to crash, or worse, allow an attacker to execute arbitrary code on the system.
 
 see the c program in `code_examples/buffer_overun.c`
+
+```c
+
+```
