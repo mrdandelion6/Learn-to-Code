@@ -1,4 +1,4 @@
-# Cybersecurity
+# cybersecurity notes
 
 ## relevant tools
 
@@ -14,6 +14,13 @@ you will want the following debugging tools:
 - gdb
 - valgrind
 - strace
+
+don't worry if you don't know these, we will cover the basics along the way. but what you really need to know (that i won't be covering) is the following:
+- python
+- C
+- bash
+
+if you don't know these, you're cooked. go read my notes on them first.
 
 
 ## ssh'ing into an ip address
@@ -33,6 +40,16 @@ Unable to negotiate with `ip_address` port 22: no matching key exchange method f
 this is because the server is using an outdated key exchange method. we can listen to the server's offer, but we just end up running into a different error message.
 
 the reason we are looking into this is because we will be working work old machine images that may have security vulerabilities. it will be easier to exploit these vulnerabilities while we are ssh'd into the machine.
+
+### red hat 7.2
+
+for my notes, i will be using a very old red hat 7.2 machine. specifically, we are using: rh72 2.4.7-10. we will be using this machine to learn about cybersecurity. you can find a zip for the vm in `cyber-security/VMs/RH72BufferOverruns
+
+for the VM we are using, the command to `ssh` into it can be found in `jots.md`, but i add it here as well:
+```
+ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -c 3des-cbc hacker@10.10.10.12
+```
+where `10.10.10.12` is the ip address of the machine we are trying to ssh into.
 
 ## components of a computer system
 
@@ -118,7 +135,17 @@ now let's add a break point at the start of main and run gdb:
 
 if do run, we see we are at the start of the main function since we added our breakpoint.
 
-we can also disassemble the main function with the following command:
+instead of typing `break`, we can also just type `b`. we could also break at a specific line number if we would like. for example:
+```bash
+(gdb) b 64
+```
+
+and to run, we could have used `r` instead. similarly, we can also step through code using the `step` command or `s` for short:
+```bash
+(gdb) step
+``` 
+
+moving on, we can also disassemble the main function with the following command:
 
 ```bash
 (gdb) disassemble main
@@ -134,9 +161,16 @@ we can also see all the information about the registers with the following comma
 
 for this to work, we need to have executed some code (for example, we we set a breakpoint before).
 
-note that we see many different register names like "ebp, esp, eip" or "rbp, rsp, rip". the "e" stands for "extended" and the "r" stands for "register". you might see "r" on a 64-bit system and "e" on a 32-bit system.
+note that we see many different register names like "ebp, esp, eip" or "rbp, rsp, rip". the "e" stands for "extended" and the "r" stands for "register". you might see "r" on a 64-bit system and "e" on a 32-bit system. we will list what these are for in the next section.
 
-we will list what these are for in the next section.
+we can also use the command `x / 32` to see the next 32 bytes of memory. x stands for "examine" and 32 is the number of bytes we want to see. for example:
+
+```bash
+(gdb) x / 32 $esp
+```
+the above command will show us the next 32 bytes of memory starting from the stack pointer.
+
+depending on the architecture, gdb might show us the memory in different ways. for example, on a 32-bit system, gdb might show us the memory in 4-byte chunks, while on a 64-bit system, gdb might show us the memory in 8-byte chunks.
 
 ## x86-64 registers
 
@@ -177,7 +211,7 @@ and for the 32-bit system it is the same, but with an "e" instead of an "r". for
 
 buffer overruns are a common security vulnerability in C programs. they occur when a program writes more data to a buffer than it can hold. this can cause the program to crash, or worse, allow an attacker to execute arbitrary code on the system.
 
-see the c program in `code_examples/buffer_overun.c`
+see the c program in `code_examples/stack/stack.c`
 
 ```c
 

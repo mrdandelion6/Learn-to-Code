@@ -19,6 +19,23 @@ client
 
 # python
 env
+__pycache__
+
+# django
+# byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# other django files
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+db.sqlite3
+*.sqlite3-journal
 
 # r
 SUDS.md
@@ -30,4 +47,5 @@ tex_info
 
 !.gitignore
 
-# uni
+# cyber
+stack
