@@ -348,3 +348,111 @@ a standardized API for creating and managing threads is the POSIX thread library
 excellent tutorial: https://computing.llnl.gov/tutorials/pthreads/
 
 
+# synchronization
+
+in  this section we will be discussing synchronization, locks, and semaphores.
+
+## why do we need synchronization?
+- all boils down to scheduling
+note that we have:
+- multiple threads/processes that need to run
+- some mechanism to switch betweewn them, i.e, context switches.
+
+so we need some policy for choosing the next process to run. 
+
+- this policy may be preemptive: OS stops execution for a process with the promise that it will be executed later
+
+### two main uses of synchronization
+
+#### 1. enforcing a single use of a shared resource
+- called the critical section problem
+
+### critical section problem
+
+refers to when we have multiple threads that are accessing shared data. we need to ensure that only one thread can access the shared data at a time.
+
+recall, when threads access data at the same time, this can lead to **racing**: when the output of a program depends on the order of execution.
+
+we want to ensure that only one thread can access the shared data at a time. even for stuff like printing to a terminal. the order of the outputs may be different for different runs, but the output shouldn't be mixed. example:
+```bash
+HelloWord
+WorldHello
+```
+these are fine, but we don't want:
+```bash
+HWoerllod
+```
+that is, we don't want the threads the write the console concurrently.
+
+#### 2. control order of thread execution
+- e.g) parent waits for the child to finish 
+
+now we look at some examples for critical section problem.
+
+thread A
+```
+money = getMoney()
+addMoney(100)
+```
+
+thread B
+```
+```
+
+### mutual exclusion
+we use this to prevent multiple threads from accessing shared data at the same time.
+
+given:
+- a set of n threads, T1, T2, ..., Tn
+- a set of shared resources between threads
+- a segment of code which accessing shared resources
+
+we want to ensure:
+- only one thread can execute in the critical section at a time
+- all other threads are forced to wait on entry 
+- when a thread leaves teh CS (critical section) another can enter
+
+
+the idea is that we each thread needs permission to enter a CS, in it's **entry** section. when a thread is done with the CS, it exits the CS in the **exit** section.
+
+threads that are not in the CS, entry, or exit sections are in the **remainder** section.
+
+### critical section requirements
+so a breakdown of the requirements of the critical section:
+1. mutual exclusion
+2. progress:
+- only threads not in the reamainder section can influence the hcoiceo f which thread enters next, and the choice cannot be postponed indefinitely.
+3. bounded waiting, i.e, no starvation:
+- there is a limit to how long a thread needs to wait before entering CS. no thread is "starved" indefinitely.
+
+let us take a look at some solutions to the critical section problem and see how whether they satisfy these requirements. 
+
+...
+
+#### atomic
+all of the above solutions are "atomic". this means that once they start, they will finish without interruption. either that or they will not start at all.
+
+## syncrhonication primitives
+some more solutions to the critical section problem:
+- semaphores
+- locks
+- condition variables
+- monitors
+
+### semaphores
+
+semaphores are an ADT that provideds synch.
+
+they consist of:
+- an integer counter variable accessed only through 2 atomic operations
+- the atomic operation wait - decrement the counter and block until sempahore is free
+- the atomic operation signal - increment the counter and unblock a waiting thread
+- a queue of waiting threads
+
+
+### locks
+
+locks are another synchronization primitive. they are similiar to a binary semaphore.  
+
+#### test and set
+the **test and set** instruction is an atomic instruction that sets a register to 1 and returns the previous value of the register. 
