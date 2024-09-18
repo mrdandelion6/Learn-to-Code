@@ -174,7 +174,7 @@ depending on the architecture, gdb might show us the memory in different ways. f
 
 ## x86-64 registers
 
-### general purpose registers
+we will mostly only be inspecting the stack pointer, frame pointer, and instruction pointer but here's a list of all the registers and what they are used for:
 
 rax: accumulator
 - used for arithmetic operations
@@ -194,13 +194,13 @@ rsi: source index
 rdi: destination index
 - used for string operations
 
-rbp: base pointer
+rbp: **base pointer** aka frame pointer
 - points to the base of the stack frame.
 
-rsp: stack pointer
+rsp: **stack pointer**
 - points to the top of the stack
 
-rip: instruction pointer
+rip: **instruction pointer**
 - points to the next instruction to be executed
 
 
@@ -241,7 +241,7 @@ void f1() {
 
 int main() {
     int (*f) (void);
-    // this is a function pointer
+    // this is a function **pointer**
     // recall the syntax: int (*f) (void) means that f is a pointer to a function that returns and integer and takes no arguments (void)
     
 
@@ -265,8 +265,84 @@ this may seem obvious or trivial, but we extend this idea to buffer overruns and
 
 buffer overruns are a common security vulnerability in C programs. they occur when a program writes more data to a buffer than it can hold. this can cause the program to crash, or worse, allow an attacker to execute arbitrary code on the system.
 
-see the c program in `code_examples/stack/stack.c`
+see the c program in `code_examples/bufferoverruns/stack.c`
 
 ```c
+#include<stdio.h>
+
+// global variables, available to the whole program
+char c;
+short s;
+int i;
+long l;
+float f;
+double d;
+
+int sumNums(int n, int m){
+	int i;
+	int sum=0;
+	char c[16];
+	i=n;
+	while(i<m){
+		sum=sum+i;
+		i=i+1;
+	}
+	
+	/*
+	 *  modify this so 
+	 * that the return address is overwritten with the address of hacked
+	c[0]=0xb0;
+	c[1]=0x25;
+	c[2]=0x33;
+	c[3]=0x55;
+	*/
+
+	return sum;
+}
+void f1(int a, int b, int c, int d){
+
+}
+void hacked(){
+	printf("I've been hacked\n");
+}
+int main(int argc, char ** argv){
+	sumNums(3,7);
+	f1(1,2,3,4);
+	f1(1,2,3,4);
+}
 
 ```
+
+we will compile this with the `-g` flag:
+```bash
+gcc -g stack.
+```
+
+and run it with gdb:
+```bash
+gdb ./stack
+```
+
+we can then use `list` to list the sumNums and main function, then use `b` to set some breakpoints:
+```bash
+listSumnums 
+b 93 # nefore the "modify this" comment
+list main
+b 112 # on the call to sumNums
+```
+
+we can then examine the memory at the stack pointer with the following command:
+```bash
+x/32w $esp
+```
+
+this will show us the next 32 words of memory starting from the stack pointer. 
+
+if we tried doing just `x/32`, we might get a message like "Cannot access memory at address 0x0" since we are trying to access memory that we don't have permission to access. we include the `$esp` to tell gdb to start at the stack pointer.
+
+
+## smashing the stack
+
+in this section we'll show how to exploit a buffer overrun to execute arbitrary code on the system. we'll use the following C program as an example:
+
+```c

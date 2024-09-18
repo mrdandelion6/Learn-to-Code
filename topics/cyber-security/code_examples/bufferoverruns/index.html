@@ -1,0 +1,67 @@
+<html>
+	<body>
+		<h3>Tutorial Week 3 (under RH7.2)</h3>
+See <a href=http://www.cs.toronto.edu/~arnold/347/06f/tutorials/CStack/stack/stack.c>last weeks lecture</a> for help.
+In particular, you probably need to understand the layout of the stack as well
+as some tools...
+<xmp>
+/*
+ * gcc -o stack -g stack.c
+ * gcc -S -o stack.s stack.c
+ * gdb stack
+ * try the following gdb commands:
+ * list sumNums
+ * break 86
+ * run
+ * print i
+ * step
+ * print i
+ * info registers
+ * display i
+ * print &sum
+ * print &main
+ * x/6w 0xbffff9e0
+ * disassemble main
+ */
+</xmp>
+		<ol>
+			<li> As we did in lecture, modify <a href=stack.c>stack.c</a> so that upon return from sumNums, hacked gets called.
+			<li> 
+				Modify <a href=internalHack.c>internalHack.c</a> so that 
+				<code>hacked</code> is executed upon return from <code>f()</code>
+				<ol type="a">
+				<li> Draw a picture of the stack right after <code>c[0]='A'</code> is executed.
+					Your picture should look like the one in last weeks tutorial.
+				<li> Find the address of function hacked
+				<!-- 
+				<li> Locate the return address on the stack
+				<li> Locate the address of c[0]
+				-->
+				<li> Determine how to reference the return address on the stack via c[]
+				<li> Explain the following lines of code...
+<xmp>
+ref=(int *)(c+99);
+printf("%x\n",ref);
+*ref=&hacked;
+</xmp>
+					including why 'Hacked' is printed when 99 is modified appropriately.
+				</ol>
+			</li>
+			<li> 
+				Modify <a href=target1.c>target1.c</a> so that 
+				<code>hacked</code> is executed upon return from <code>f()</code>. Your modifications are limited to shellcode.
+			</li>
+			<li> 
+				Modify <a href=target1.c>target1.c</a> so that 
+				<code>/bin/sh</code> is executed upon return 
+				from <code>f()</code>. 
+				Your modifications are limited to shellcode.
+				<b>Hint:</b> See <a href=http://www.cs.toronto.edu/~arnold/347/06f/lectures/smashStack/notes/shellcode.txt>my shellcode notes</a> very bottom.
+			</li>
+			<li> 
+				For the last exploit, explain what would happen if target1 was running as root?
+			</li>
+		</ol>
+		<!-- http://blogs.msdn.com/larryosterman/ -->
+	</body>
+</html>

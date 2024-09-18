@@ -1,0 +1,42 @@
+Lionel,
+Please see the week 02 tutorial under
+
+        http://www.cs.toronto.edu/~arnold/347/08f/index.html
+
+Your job: Supervise them as they work on the exercises. You should offer  
+advice. DO NOT SOLVE THEM FOR STUDENTS. These exercises will be part of
+their first assignment. As well, the important point is for them to 
+understand the tools as well as to understand how the buffer overrun 
+actually happens.
+
+If you like, you can list the tools they need to solve the problems...
+your job is to answer questions. Feel free to work through question 1.
+
+Date: Tue, 16 Sep 2008 19:31:04 -0400 (EDT)
+From: Arnold Rosenbloom <arnold@cs.toronto.edu>
+To: dude.krec@utoronto.ca
+Subject: Re: csc347 - tutorial
+
+By the way, we started to smash the stack. We covered...
+
+        http://www.cs.toronto.edu/~arnold/347/08f/tutorials/CStack/stack/stack.c
+
+I have modified the tutorial, please see the week 2 tutorial
+
+        http://www.cs.toronto.edu/~arnold/347/08f/tutorials/bufferoverruns/
+
+and the solution to question 1 at...
+
+        http://www.cs.toronto.edu/~arnold/347/08f/tutorials/bufferoverruns/stackSolution.c
+
+we actually went over this in class. You might want to go over 1 with them, walk them through, gcc,
+gdb, info registers, print &hacked etc. Please send questions!! Let me know if you want me to walk you
+through all of this on the phone (or in person).
+
+By the way, all of this takes place on the RH7.2 vm. Finally, the addresses will necessarily be off a
+bit. the offset (44) should not be. That is, don't be surprised if the addresses on your stack are
+shifted from those on mine. You can walk them through 1, but let them work on 2 and 3 (with your
+help). These may appear on their first assignment.
+
+Send questions!!
+
