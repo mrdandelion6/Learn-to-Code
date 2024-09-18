@@ -1,4 +1,4 @@
-#include <stdio.h>
+
 int main() {
     int x[] = {2, 4, 6, 8, 10}, y = 3, *z;
     
