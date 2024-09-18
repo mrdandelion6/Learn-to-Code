@@ -399,3 +399,196 @@ we see that we are setting the stack size using `pthread_attr_setstacksize`.
 - `pthread_equal(pthread_t t1, pthread_t t2)`: compares two thread IDs
 - `pthread_cancel(pthread_t thread)`: sends a cancellation request to the specified thread
 - `pthread_once(pthread_once_t *once_control, void (*init_routine)(void))`: ensures that a routine is called only once
+
+
+## decomposition and tasks
+
+- decomposition: diving the computation in a program into tasks that could be executed in parallel.
+
+
+- we say a "task" is a unit of computation that can be extracted from the main program.
+
+## matrix vector multiplication
+
+we can consider the problem of having to multiply a matrix M by a vector v.
+
+```
+M = | 1 2 3 |
+    | 4 5 6 |
+    | 7 8 9 |
+
+v = | 1 |
+    | 2 |
+    | 3 |
+```
+
+the multiplication `Mv` would produce a row vector of size 3.
+
+```
+
+```
+
+
+
+
+## task dependencies
+tasks are not independent if they depend on other tasks
+
+- a task might need data provided by other tasks, and we would have to wait until that input is ready
+
+we can easily model task dependencies with a directed graph. each node represents a task, and each edge represents a dependency.
+
+## granularity
+
+### fine grained
+we say that our tasks are "fine-grained" if we have multiple small tasks
+
+### coarse grained
+we say that our tasks are "coarse-grained" if we have fewer, larger tasks
+
+### tasks communication
+
+ideally we have zero communication between tasks, but realistically we will need to communicate to bring things together.
+
+
+for fine grained tasks, we will have a lot of communication overhead. for coarse grained tasks, we will have less communication overhead and more computation in each task.
+
+we would need to consider the tradeoff between computation and communication.
+
+## degree of concurrency
+
+we calculate two kinds of degrees of concurrencies:
+
+1. the maximum degree of concurrency
+
+this is the maximum number of tasks that can be executed at the same time.
+
+2. the average degree of concurrency
+
+this is the average number of tasks that can be executed at the same time. we can calculate summing the parallelism of tasks at each level and dividing by the number of levels.
+
+## task interactions
+
+a limiting factor to how much parallelism can help us.
+
+task interactions are not just dependencies, but rather just communication in general. for example if we have something stored in task A that we need to access for other tasks, we would need to communicate that data. and this doesn't necessarily need to be a "dependency", because we wouldn't have to "wait" for task A to finish before we access this data.
+
+for showing this we would use a graph with more edges for interactions. essentially a superset of the dependencies graph.
+
+## mapping tasks to processes
+
+- mapping is the job of assigning tasks to processes
+
+recall that a process is an instance of a program running on a computer. we would want to map tasks that communicate/depend with each other a lot to the same process to lessen overhead.
+
+similiarly, we can map processes to processors. typically we have a 1-1 mapping, but we can have multiple processes on one processor.
+
+### what is a processor ? 
+recall that a processor is a physical chip that executes instructions. a processor can have multiple cores, and each core can execute instructions independently. 
+
+## data decomposition
+
+- we want to partition the data based on which computations are performed
+- use the data partitioning to perform the decomposition of computation into tasks
+
+we have several partitioning strategies:
+- partition output data
+- partition input data
+- partition both input and output data
+- partition intermediate data
+
+## exploratory decomposition
+- a common approach for problems that involve a wide search space for potential solutions
+- essentially, we search for a solution in parallel
+- example: path finding, sokoban, etc.
+
+
+
+## speculative decomposition
+- similar to speculative execution in CPUs
+- suppose we have some branches that may or may not be taken
+- we can execute all of those branches in parallel and do some computation
+- we pick the correct branch and discard the rest
+ 
+
+## hybrid decomposition
+this is a simple idea. for example, we can combine input data decomposition with task decomposition. we first partition the input data, and then we partition the tasks based on the input data partitions.
+
+## characteristics of tasks
+
+we now discuss some defining characteristics of tasks 
+- task generation: whether a task is generated dynamically or statically
+- task sizes: whether the task sizes will be uniform (all the same size) or non-uniform (different sizes)
+- size of data for each task
+
+### task generation
+
+**static task generation**
+
+static task generation is when we will know all the tasks in advance for a problem.
+
+for example, for **mergesort**, we will always be splitting the tasks in a binary fashion, so we can know all the tasks in advance.
+
+**dynamic task generation**
+
+dynamic task generation is when the number of tasks we will generate can vary for the problem based on the input we get.
+
+for example **quicksort**, we could have different kinds of generations depending on the pivot we choose.
+
+### task sizes and data associated with eeac task
+
+task sizes are obviously proportional to how much time it will take to finish the task. 
+
+**uniform task sizes**
+
+will roughly all take the same amount of time to finish.
+
+**non-uniform task sizes**
+
+will take different amounts of time to finish.
+
+for example again, mergesort will have uniform task sizes, while quicksort will have non-uniform task sizes.
+
+the same idea applies for the data associated with each task.
+
+## characteristics of task interactions
+
+- static vs dynamic
+- regular vs irregular
+- read only vs read write
+- one way vs two way
+
+### static vs dynamic
+
+**static task interactions**
+
+each task interacts at predetermined times with a predetermined set of tasks. 
+
+**dynamic task interactions**
+
+the interactions are not predetermined and can change based on the input. these are harder to write parallel programs for.
+
+### regular vs irregular
+
+**regular task interactions**
+
+if the interaction "patterns" have a spatial structure that can easily be exploited to split up the tasks.
+
+**irregular task interactions**
+
+if the interaction "patterns" do not have a spatial structure that can easily be exploited to split up the tasks.
+
+### read only vs read write
+
+**read only task interactions**
+
+these are interactions where each task may only have to read from other tasks. 
+
+for example in a matrix multiplication, each task may only need to read from other tasks, but never write to them. the write happens at the end, but that's not between the concurrent tasks, that's just a dependency.
+
+**read write task interactions**
+
+these are interactions where each task may have to read and write to other tasks. 
+
+for example in a graph traversal, each task may have to read and write to other tasks. consider a parallel BFS, we would need to update the queue which the other tasks would rely on.
+

@@ -204,7 +204,7 @@ rip: instruction pointer
 - points to the next instruction to be executed
 
 
-and for the 32-bit system it is the same, but with an "e" instead of an "r". for example, eax instead of rax.
+and for **the** 32-bit system it is the same, but with an "e" instead of an "r". for example, eax instead of rax.
 
 
 ## buffer overruns
