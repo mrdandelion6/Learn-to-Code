@@ -207,6 +207,60 @@ rip: instruction pointer
 and for **the** 32-bit system it is the same, but with an "e" instead of an "r". for example, eax instead of rax.
 
 
+## WYSINWYX
+
+what you see is not what you execute. this is one of the most fundamental ideas in computer security. the idea is that your source code may seem fine, but what happens in the background at a low level may include hidden vulnerabilities.
+
+for example, consider the following code:
+```c
+set(password, '\0', len);
+free(password);
+```
+where `password` is some pointer to a string that contains sensitive data and len is the length of the string. a compiler might attempt to "optimize" this code never actually compiling code to call `set` because it sees that the memory is never used later on. this would leave the password in memory, even after it has been freed.
+
+the idea is that we can't trust the source code for program security. a better security check would be to examine the compiled code and test for vulnerabilities there. you never know what the compiler might do to your code.
+
+another such example is cases where libraries not part of the standard library are used. for example, in C, if you want to make a multithreaded program, you would typically use `pthread.h`, but this is an external library not part of the standard C framework. hence the compiler might create security risks for multithreaded programs that it would otherwise not have for single-threaded programs. 
+
+### unexpected function pointer behavior
+
+below is an example of how we can implicitly call a function pointer by manipulating memory:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void f2() {
+    printf("hello from f2\n");
+}
+
+void f1() {
+    printf("jaja from f1\n");
+}
+
+int main() {
+    int (*f) (void);
+    // this is a function pointer
+    // recall the syntax: int (*f) (void) means that f is a pointer to a function that returns and integer and takes no arguments (void)
+    
+
+    int diff = (char*)&f2 - (char*)&f1; 
+    // gives offset between f1 and f2
+
+    f = &f1;
+    f = (int (*)())((char*)f + diff); 
+    // f now points to f2
+    
+    (*f)(); 
+    // indirect call to f2
+}
+```
+not that we simplify took the difference between the memory addresses of the two functions and added that to the memory address of the first function. this allowed us to call the second function using the function pointer.
+
+this may seem obvious or trivial, but we extend this idea to buffer overruns and other security vulnerabilities. what if we could manipulate memory to call a function that we shouldn't be able to call? this is the basis of many security vulnerabilities.
+
+
 ## buffer overruns
 
 buffer overruns are a common security vulnerability in C programs. they occur when a program writes more data to a buffer than it can hold. this can cause the program to crash, or worse, allow an attacker to execute arbitrary code on the system.
