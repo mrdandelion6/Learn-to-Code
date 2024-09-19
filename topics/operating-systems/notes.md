@@ -427,7 +427,7 @@ so a breakdown of the requirements of the critical section:
 
 let us take a look at some solutions to the critical section problem and see how whether they satisfy these requirements. 
 
-...
+// TODO: add notes on the critical section problem
 
 #### atomic
 all of the above solutions are "atomic". this means that once they start, they will finish without interruption. either that or they will not start at all.
@@ -450,9 +450,11 @@ they consist of:
 - a queue of waiting threads
 
 
-### locks
+### locks / mutexes
 
-locks are another synchronization primitive. they are similiar to a binary semaphore.  
+locks are another synchronization primitive. they are similiar to a binary semaphore. the only difference is that locks are "owned" by the thread that acquires them, whereas semaphores are not owned by any thread. so a semaphore can be released by any thread, but a lock can only be released by the thread that acquired it.
+
+we also call locks **mutexes**. this stands for "mutual exclusion".
 
 #### test and set
 the **test and set** instruction is an atomic instruction that sets a register to 1 and returns the previous value of the register. 
