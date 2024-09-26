@@ -48,6 +48,13 @@ here are some of the general topics that we will be covering in these notes:
 
 might not get to social engineering.. not sure at the moment.
 
+## stuff to protect
+- personal security
+- operations security
+- communications security
+- network security
+- information security
+
 ## relevant tools
 
 you will need the following languages:
@@ -69,6 +76,24 @@ don't worry if you don't know these, we will cover the basics along the way. but
 - bash
 
 if you don't know these, you're cooked. go read my notes on them first.
+
+# resources
+- virus total
+	- virus total is a website that allows you to scan files for viruses. you can upload a file to the website, and it will scan the file with multiple antivirus engines. this can help you determine if a file is safe to open.
+- kali linux
+	- kali linux is a linux distribution that is designed for penetration testing and security auditing. it comes with a number of tools that can be used to test the security of a system.
+- US cert
+	- the united states computer emergency readiness team is a division of the department of homeland security that is responsible for analyzing and reducing cyber threats and vulnerabilities.
+- haveibeenpwned
+	- have i been pwned is a website that allows you to check if your email address has been involved in a data breach. you can enter your email address on the website, and it will tell you if your email address has been compromised.
+- https://openwrt.org/
+	- openwrt is an open-source firmware for routers that can be used to improve the security of your network. it comes with a number of features that can help you secure your network, such as a firewall, intrusion detection system, and vpn support.
+- sectools
+	- sectools is a website that lists a number of security tools that can be used to test the security of a system. the website is organized by category, such as:
+- vulnerability scanners
+	- general scanner tools
+- forensic tools
+
 
 # terminology
 
@@ -104,6 +129,67 @@ we also further break down the CIA triad into the following:
 #### A: accountability
 - maintaining identity and activity logs
 
+## more terminology
+
+- **exploit a vulnerability**: to take advantage of a vulnerability to gain unauthorized access to a system.
+- **prevention**: to stop an exploit from occurring. eg) prevent smashing the stack by randomizing the stack.
+- **detection**: to identify an exploit after it has occurred. eg) detect a buffer overrun by monitoring the stack. another example, *Tripwire* is a tool that can be used to detect changes to files on a system.
+- **recovery**: to recover from an exploit after it has occurred. eg) recover from a buffer overrun by restoring the stack to a previous state.
+- **scanning**: probe systems on the internet to find vulnerabilities. eg) use *nmap* to scan a network for open ports.
+- **vulernability scanner**: a tool that can be used to scan for known weaknesses
+- **sniffer**: software that captures network trafffic while in transit. eg) *wireshark* is a popular sniffer.
+
+## more more terminology
+- **exploit**: a ready to run program that takes advantage of a vulnerability
+- **side-channel attack**: eavesdropping, acoustic keyboard eavesdropping
+- **root kit**: software designed to hide the fact that a system has been compromised. for example, replace `ls` on a unix system to hide the fact that rogue processes are running.
+- **leet speak**: a form of writing that replaces letters with numbers or symbols. for example, "hacker" might be written as "h4ck3r". this is often used by hackers to obfuscate their code.
+- **honeypot**: a server that acts as a decoy to lure attackers. for example, a server that is intentionally left unpatched to attract attackers.
+- **threat modelling**: a formal approach to security
+- **penetration testing**: a simulated attack on a system to identify vulnerabilities. for example, using *nmap* to scan a network for open ports.
+- **red team**: a group of security experts who simulate attacks on a system. for example, a group of hackers who try to break into a company's network.
+- **blue team**: a group of security experts who defend a system against attacks. for example, a group of security analysts who monitor a company's network for suspicious activity.
+- **purple team**: a group of security experts that communicate between the red and blue teams. for example, a group of security analysts who coordinate the response to a security incident.
+
+you don't need to memorize these terms, but you should be familiar with them and understand their meaning.
+
+## defender vs attacker principles
+1. the defender must defend all points; the attacker can choose the weakest point
+2. the defender can defend only against known attacks; the attacker can probe for unknown vulnerabilities
+3. the defender must be constantly viligant; the attacker can strike at will
+4. the defender must play by the rules; the attacker play dirty
+
+### defender principles
+
+#### compartmentalization
+- separate systems so that a compromise in one system does not affect the others. for example, use a firewall to separate a web server from a database server.
+- if one thing gets taken over, should not be able to take over other parts
+
+#### multiple layers of security
+- use multiple layers of security to protect against different types of attacks. for example, use a firewall, intrusion detection system, and antivirus software.
+- get other people to check your work
+
+#### don't volunteer information
+- attacks commonmly work in the dark and perform reconnaissance to uncover information about a target. don't make it easy for them. 
+- dont show context, dont show your hand
+
+#### fail safely
+- if a system is compromised, it should fail in a safe manner. for example, if logins aren't working because of an internal issue, the rest of the web page should be working while only logins are halted.
+
+#### practice simplicity
+- the simpler a system is, the easier it is to secure. for example, use a simple password policy that is easy to enforce.
+
+## the ten immutable laws of security
+1. if a bad actor can persuade you to run his program on yoru computer, it's not your computer anymore
+2. if a bad actor can alter the os on yoru computer, its not your computer anymore
+3. if a bad actor has unrestricted physicsal access to your computer, its not your computer anymore
+4. if you allow a bad actor to upload programs to your website, it's not your website anymore
+5. weak passwords trump strong security
+6. a computer is only as secure as the administrator is trustworthy
+7. encrypted data is only as secure as the decryption key
+8. an out of date virus scanner is only marginally better than no virus scanner at all
+9. absolute anonymity isn't practical, in real life or on the web
+10. technology is not a panacea (solution or remedy for all difficulties or diseases)
 
 ## common vulnerabilities
 
