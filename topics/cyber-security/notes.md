@@ -1,5 +1,53 @@
 # cybersecurity notes
 
+## welcome
+
+welcome to my notes on cybersecurity. in these notes, we will learn about the basics of cybersecurity, including common vulnerabilities, exploits, and impacts. we will also learn how to write secure code and how to protect against common attacks.
+
+disclaimer: these notes are for educational purposes only. do not use this information to attack systems that you do not own or have permission to attack. hacking is illegal and unethical. always get permission before testing the security of a system.
+
+my notes will involve both hands on code examples and just general notes on cybersecurity. do not try to replicate the code examples on systems that you do not own or have permission to attack. also don't do it on any machine that you care about. i will be using a virtual machine for our code examples.
+
+# general topics
+
+here are some of the general topics that we will be covering in these notes:
+
+### software security
+- what is bad code
+- writing good cade
+- buffer overruns
+- sql injections
+- xss: cross site scripting
+
+### system security
+- how to protect your system
+- permissions
+- scripts
+- hardware
+- passwords
+- instrusion detection
+- fingerprinting
+
+### network security
+- firewalls
+- networking
+- processes
+- scanning networks
+- footprinting
+- routing
+
+### cryptography
+- how to keep secrets
+- share them with only specified party
+- know you are communicating with the right party
+
+### social engineering
+- fishing
+- people
+- and trust
+
+might not get to social engineering.. not sure at the moment.
+
 ## relevant tools
 
 you will need the following languages:
@@ -22,6 +70,72 @@ don't worry if you don't know these, we will cover the basics along the way. but
 
 if you don't know these, you're cooked. go read my notes on them first.
 
+# terminology
+
+we will introduce some terminology that we will be using throughout these notes:
+
+- **vulnerability**: a weakness in a system that can be exploited by an attacker.
+- **exploit**: to use a vulnerability
+- **impact**: the effect of an exploit
+
+## CIA triad
+
+the CIA triad is a model that is used to describe the core principles of information security. it stands for:
+
+#### C: confidentiality
+- ensuring that data is only accessible to those who are authorized to access it.
+#### I: integrity
+- ensuring that data is not altered by unauthorized users. information remains unchanged in transit and rest.
+#### A: availability
+- ensuring that data is available when needed to authorized users.
+
+we also further break down the CIA triad into the following:
+
+### vulerable system CIA
+- a system becomes vulernable when it is compromised..
+
+### subsequent system CIA
+- but what are the subsequent effects of a system being compromised?
+
+### more fine grained CIA
+
+#### A: authentication
+- ensuring that a user, data, or software is genuine
+#### A: accountability
+- maintaining identity and activity logs
+
+
+## common vulnerabilities
+
+we list the most common vulernabilities in order of how common they are, to motivate us to learn about them:
+1. out-of-bounds writes
+2. improper neutralization of input during web page generation
+3. improper neutralization of input used in SQL commands
+4. out-of-bounds reads
+
+and here are some more (unordered):
+- null pointer dereference
+- use after free (when a program tries to access memory that has already been freed)
+- hard coding credentials
+- integer overflow
+
+
+## writing secure code
+
+here's some terminology to consider to when writing secure code:
+
+#### assessment
+- analysis of the environment and the system security requirements. what piece of software does this program run in (iOS, android, etc)?
+- during this phase you create and document a security policy and plans for implementing that policy.
+
+#### protection
+- implementing a secuirity plan. this includes implementing security controls, such as firewalls, intrusion detection systems, and antivirus software.
+
+#### detection
+- identifying security incidents. this includes monitoring the network for unusual activity, such as unauthorized access attempts.
+
+#### response
+- responding to security incidents. this includes investigating the incident, containing the incident, and recovering from the incident.
 
 ## ssh'ing into an ip address
 
@@ -341,4 +455,117 @@ this will show us the next 32 words of memory starting from the stack pointer.
 if we tried doing just `x/32`, we might get a message like "Cannot access memory at address 0x0" since we are trying to access memory that we don't have permission to access. we include the `$esp` to tell gdb to start at the stack pointer.
 
 
-#
+## SQL injections
+
+before we get into SQL injections, here's some brief background on SQL:
+
+### SQL intro
+
+SQL stands for Structured Query Language. it is a language used to interact with databases. it is used to create, read, update, and delete data in a database. let's see some syntax
+
+```SQL
+CREATE TABLE users (
+	id INT PRIMARY KEY,
+	name VARCHAR(100),
+	age INT
+);
+
+
+INSERT INTO users (id, name, age) VALUES (1, 'Alice', 25);
+
+SELECT * FROM users;
+
+UPDATE users SET age=26 WHERE name='Alice';
+
+DELETE FROM users WHERE name='Alice';
+
+DROP TABLE users;
+```
+
+each of these commands is a **SQL query**. a SQL query is a string that is sent to a database to perform some operation.
+
+
+### PHP intro
+
+PHP is a server-side scripting language. it is used to create dynamic web pages. PHP code is executed on the server, and the result is sent to the client as HTML. PHP code is embedded in HTML code using special tags. let's see some syntax:
+
+```php
+
+<?php
+	$name = $_GET['name'];
+	$age = $_GET['age'];
+	
+	echo "Hello, $name. You are $age years old.";
+?>
+```
+
+### injections
+
+we will now show some examples of how PHP code can be vulnerable to SQL injections.
+
+
+the above code is vulnerable to **PHP injections**. this is when an attacker sends malicious input to a PHP script. this input is then executed as code on the server. this can allow an attacker to read, write, or delete data from the database.
+
+for example, consider the following code:
+
+```php
+<?php
+	$name = $_GET['name'];
+	$age = $_GET['age'];
+	
+	$query = "SELECT * FROM users WHERE name='$name' AND age='$age'";
+	$result = mysqli_query($conn, $query);
+?>
+```
+
+if an attacker sends the following input to the script:
+
+```
+name=alice' OR '1'='1' -- &age=25
+```
+
+the query will be:
+
+```sql
+SELECT * FROM users WHERE name='alice' OR '1'='1' --' AND age='25'
+```
+
+this query will return all the rows in the users table, since `'1'='1'` is always true. the `--` is a comment in SQL, so the rest of the query is ignored. this allows the attacker to read all the data in the database.
+
+essentially, using ' affter the name allows the attacker to inject their own SQL code into the query. this is a SQL injection. we can use **prepared statements**.
+
+### prepared statements
+
+prepared statements are a way to prevent SQL injections. they allow us to separate the query from the data. this way, the data is never executed as code. here's an example of how to use prepared statements in PHP:
+
+```php
+<?php
+	$name = $_GET['name'];
+	$age = $_GET['age'];
+	
+	$query = "SELECT * FROM users WHERE name=? AND age=?";
+	$stmt = mysqli_prepare($conn, $query);
+	mysqli_stmt_bind_param($stmt, "si", $name, $age);
+	mysqli_stmt_execute($stmt);
+?>
+```
+
+or in python:
+
+```python
+import sqlite3
+
+connection = sqlite3.connect('example.db')
+cursor = connection.cursor()
+
+cursor.execute('SELECT * FROM users WHERE name=? AND age=?', (username, password))
+
+user = cursor.fetchone()
+
+connection.close()
+```
+
+in this example, the `?` are placeholders for the data. the data is then bound to the placeholders using `mysqli_stmt_bind_param`. this way, the data is never executed as code, so SQL injections are prevented. this may seem trivial, but a lot of security vulnerabilities come down to simple mistakes like this. in fact, a third of all security vulnerabilities are due to SQL injections.
+
+let's just take a second to understand the code as well, in case you are unfamiliar with SQL. the sqlite3 is a library that allows us to interact with an sqlite database. we first connect to the database, then create a **cursor** object. a cursor is used to execute SQL queries. it's just like a cursor in a text editor, it points to a specific location in the database.  
+
