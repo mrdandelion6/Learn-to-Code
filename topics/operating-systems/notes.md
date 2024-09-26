@@ -1,6 +1,11 @@
 # OS notes
 
-## What is an operating system ?
+## prerequisites
+- C programming
+- assembly programming
+- light systems programming knowledge
+
+# what is an operating system ?
 
 a very low layer of software that manages hardware resources and provides a set of services for application software. in other words, a very convennient abstract for hardware access.
 
@@ -8,15 +13,14 @@ they also provided restricted access to hardware resources like disks etc.
 
 in older days, there was no OS. this worked because the hardware was very simple but nowadays it's very unfeasible because of the complexity of hardware.
 
-### Main goals of an operating system
+## main goals of an operating system
 - **PRIMARY REASON: convenience** - make the computer easier to use
-- 
 - **SECONDARY REASON: efficiency** - make the computer run faster
   - note that you have limited resources, you need something to manage which process gets what resources and when
 
 these two goals can often conflict with each other. for example, a more secure system might be less convenient to use.
 
-### Roles of an OS
+## roles of an OS
 - **being a virtual machine**: extends and simplifices interface to physical hardware as mentioned before. also provides a library of functions accessible through an API.
   
 - **resource manager**: manages resources like CPU, memory, disk, etc. provides an environment 
@@ -24,7 +28,7 @@ these two goals can often conflict with each other. for example, a more secure s
 - **system controller**: controls the execution of programs, and prevents errors and improper use of the computer. protects against unauthorized access.
 
 
-### Main components of an operating system
+## main components of an operating system
 - memory management
 - synchronization
 - inter-process communication
@@ -34,7 +38,7 @@ these two goals can often conflict with each other. for example, a more secure s
 - device drivers
 - networking
 
-## How to make OS faster?
+## how to make OS faster?
 **limited direct execution**
 - we want to set up CPU so that the the next instruction is fetched from the code of the current process. this is called **direct execution**.
 
@@ -43,15 +47,15 @@ these two goals can often conflict with each other. for example, a more secure s
 **key abstraction**: "the process"
 - this includes everything OS needs to know to manage running programs 
 
-## Protection Domains
+# protection domains and CPU modes
 
-
-the OS uses **dual-mode operation** which consists of two modes: a **user mode** and a **kernel mode**, also known as **system mode**.
+CPUs uses **dual-mode operation** which consists of two modes: a **user mode** and a **kernel mode**, also known as **system mode**. these are the primary two modes of operation for the CPU and will be the focus of the next few sections.
 
 - **user mode**: the mode in which the user programs run. the user programs can't access hardware directly. they have to go through the OS to access hardware. this is to prevent user programs from messing with the hardware.
 
+- **kernel mode**: the mode in which the OS runs. the OS can access hardware directly. you have access to privileged instructions and operations.
 
-### Privileged Instructions/Operations
+## privileged instructions/operations
 - setting mode bits
 - disabling interrupts
 - enabling interrupts
@@ -61,7 +65,7 @@ the OS uses **dual-mode operation** which consists of two modes: a **user mode**
 
 all of these are privileged
 
-### What are interrupts?
+## what are interrupts?
 an interrupt is a hardware signal that causes that CPU to jump to a predefined instruction called the interrupt handler. this is used to handle events like I/O completion, hardware errors, etc.
 
 when an interrupt happens,
@@ -73,19 +77,22 @@ interrupts can be invoked by the hardware or the software. they signal to the cp
 
 interrupts cause cpu to jump to a predefined routine which is known as the interrupt handler.
 
+# processes review
 
-## Bootstrapping
+we will now briefly review processes and how they work
+
+## bootstrapping
 bootstrapping is the process of starting a computer from a powered-off state. 
 - the hardware stores a small program called the **bootstrap loader** in non volaltile memory. this program is executed when the computer is powered on.
 
 
-## What is a process?
+## what is a process?
 a process is a program in execution. it consists of the following:
 - program counter
 - stack
 - data section
 
-### representation of a process
+## representation of a process
 a process is represented by a **process control block (PCB)**: a data structure that contains information about the process. it includes:
   - process state
   - program counter
@@ -95,46 +102,8 @@ a process is represented by a **process control block (PCB)**: a data structure 
   - accounting information
   - I/O status information
 
-## context switch
-
-a context switch is the process of saving the state of a process or thread, so that it can be restored and resume execution at a later point. this is done so that multiple processes can be executed concurrently. 
-
-for example, say we are in process A and we want to switch to process B. we would: 
-- we save the hardware registers of process A to the kernel stack
-- move to kernal mode
-- jump to trap handler which will load the registers of process B from the kernel stack
-
-**handling the trap**:
-Call *switch()* routine 
-```
-switch(A, B)
-  save regs(A) to proc-struct(A)
-  restore regs(B) from proc-struct(B)
-  switch to k-stack(B)
-```
-
-and then we return from the trap handler into process B. 
-
-
-## Threads & Processes
-
-### requesting OS Services
-
-- operating system and user programs are isolated from each other
-- but OS provides service to user programs
-- so the question is how do they communicate?
-
-#### user space
-- contains the user process
-
-#### kernel space
-OS controls: memory management, scheduling, file system, I/O
-
-- the answer is: **system calls**
-
-recall some system calls in C, like `open()`, `read()`, `write()`, etc. these are all system calls.
-
-### assembly review
+# assembly review
+quick review of assembly: registers and instructions.
 
 consider the following code in C:
 ```c
@@ -153,7 +122,7 @@ int main() {
 
 ```
 
-we will implement pseduo assembly for the above code.
+we will implement pseudo assembly for the above code.
 
 the first thing we do is save the caller's registers to the stack. such as:
 - eax
@@ -184,9 +153,49 @@ pinkbunny:
   # print a0 (it contains return value)
 ```
 
-## boundary crossings
+# switching between user and kernel
 
-### getting into kernal mode.
+this is a very important topic to understand. so far we have seen that CPU runs 
+
+recall that the CPU has two modes: user mode and kernel mode as we talked about [here](#protection-domains).
+
+### requesting OS Services
+
+- operating system and user programs are isolated from each other
+- but OS provides service to user programs
+- so the question is how do they communicate?
+
+#### user space
+- contains the user process
+
+#### kernel space
+OS controls: memory management, scheduling, file system, I/O
+
+- the answer is: **system calls**
+
+recall some system calls in C, like `open()`, `read()`, `write()`, etc. these are all system calls.
+
+## context switch
+
+a context switch is the process of saving the state of a process or thread, so that it can be restored and resume execution at a later point. this is done so that multiple processes can be executed concurrently. 
+
+for example, say we are in process A and we want to switch to process B. we would: 
+- we save the hardware registers of process A to the kernel stack
+- move to kernel mode
+- jump to trap handler which will load the registers of process B from the kernel stack
+
+**handling the trap**:
+Call *switch()* routine 
+```
+switch(A, B)
+  save regs(A) to proc-struct(A)
+  restore regs(B) from proc-struct(B)
+  switch to k-stack(B)
+```
+
+and then we return from the trap handler into process B. 
+
+### getting into kernel mode.
 - we need an explicit system call. 
 - need a hardware interrupt
 - software or trap execution
@@ -226,29 +235,31 @@ in `notes.c` for C, you can see we have similiar notes on **signal handlers**, b
 the **0x80** is the interrupt number. this is the number that the OS uses to determine what system call to execute. 
 
 #### verifying arguments
-- ther kernel also has to verify the arguments that can be passed in registers. 
+- the kernel also has to verify the arguments that can be passed in registers. 
 - the result of the system call is stored in EAX.
 
 ### system calls in linux
 we name the system calls with a number X, where X is the number of parameters.
 
-for example, in C we have `write()`:
+for example, in C we have `write()` :
 ```c
 write(int fd, const void *buf, size_t count);
 ```
-we can see that this function has 3 parameters, so in the kernal it is called `SYSCALL_DEFINE3`.  
+we can see that this function has 3 parameters, so in the kernel, we initially call `SYSCALL_DEFINE3` to define the system call. more details below  
 
-#### making a system call:
+### making a system call:
 1. the kernel assigns each system call type a system call number
 2. kernel initializes a table of function pointers ffor each system call number
 3. user process sets up system call number and arguments
-4. user process runs int N (where N is the system call number)
+4. user process runs **int N** (where N is the system call number), note that **int** is an assembly instruction that generates a software interrupt
 5. context switch to kernel mode and invokes kernel's interrupt handler for X 
 6. kernel looks up **syscall table** using system call number
 7. kernel invokes the corresponding function 
 8. kernel returns by running *iret* which is the interrupt return
 
-### interprocess communication
+# threads & processes
+
+## interprocess communication
 
 recall forking from our C notes. this is an example of interprocess communication.
 
@@ -335,9 +346,7 @@ another possibility is to use  both kernel and user level threads
 
 we can have all the user level threads in a process share the same kernel level thread. this is called a **many-to-one** model.
 
-or we can have each user level thread have its own kernel level thread. this is called a **one-to-one** model.
-
-we can also have some combination of the two, called a **many-to-many** model.
+or we can have each user level thread have its own kernel level thread. this is called a **one-to-one** model. we can also have some combination of the two, called a **many-to-many** model.
 
 ### thread libraries
 
@@ -456,5 +465,75 @@ locks are another synchronization primitive. they are similiar to a binary semap
 
 we also call locks **mutexes**. this stands for "mutual exclusion".
 
+
+### deadlock vs starvation
+- deadlock: when two or more threads are waiting for each other to release a resource
+- starvation: when a thread is waiting indefinitely to enter a critical section
+
+
+## advanced synchronization issues
+we will introduce how synchronization can get complex when we also have conditions to consider.
+
+for example, let us consider the consumer-producer problem. 
+
+### consumer producer problem
+recall from our C notes, the consumer producer problem is a classic synchronization problem. mainly, we need to ensure that we are not reading from an empty buffer, and we are not writing to a full buffer. simultaneously, we need to ensure that we are not reading and writing at the same time. let us use our current knowledge of semaphores to solve this problem.
+
+```c
+
+
+```
+
+
+### condition variables
+
+
+### reader writer problem
+this problem is similiar to the consumer, producer problem, except readers can read the data concurrently with each other, but writers must have exclusive access to the data.
+
+
+### monitors
+
+monitors are a high level synchronization primitive that combines locks, condition variables, and a data structure into a single package. monitors are a way to encapsulate shared data and the operations that can be performed on that data. 
+
+for example, we can have a monitor to solve the consumer producer problem.
+
+
+#### hoare
+
+#### mesa
+
+### implementing a monitor
+
+note that monitors are not part of the C standard library, so we have to implement them ourselves.
+
+let's implement some functions for our monitor:
+
+```c
+void add_to_buff(buf_t* b, int val) {
+  lock_acquire(b->buflock);
+  
+  while (b-> nelements == NULL) {
+    // this loop blocks so we dont write to a full buffer
+
+    // we use a condition variable to block the thread
+
+    cv_wait(b->not_full, b->buflock);
+    // note that b->buflock is released when we wait. this is so that other threads can access the buffer, and possibly signal the condition variable.
+  }
+
+  b->data[b->position_index] = val;
+  b->position_index = (b->position_index + 1) % b->size;
+  b->nelements++;
+
+  cv_signal(b->not_empty); // signal that the buffer is not empty since we added an element
+  lock_release(b->buflock);
+}
+
+```
+
+
+
 #### test and set
 the **test and set** instruction is an atomic instruction that sets a register to 1 and returns the previous value of the register. 
+

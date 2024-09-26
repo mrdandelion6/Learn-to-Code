@@ -339,3 +339,6 @@ x/32w $esp
 this will show us the next 32 words of memory starting from the stack pointer. 
 
 if we tried doing just `x/32`, we might get a message like "Cannot access memory at address 0x0" since we are trying to access memory that we don't have permission to access. we include the `$esp` to tell gdb to start at the stack pointer.
+
+
+#
