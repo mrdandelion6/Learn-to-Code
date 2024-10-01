@@ -592,3 +592,33 @@ these are interactions where each task may have to read and write to other tasks
 
 for example in a graph traversal, each task may have to read and write to other tasks. consider a parallel BFS, we would need to update the queue which the other tasks would rely on.
 
+# measuring performance
+
+## gprof
+`gprof` is a performance analysis tool for linux. there are many other tools like `perf`, `valgrind`, etc. `gprof` is a good tool for profiling C programs.
+
+to use `gprof`, you need to compile your program with the `-pg` flag. for example, if you have a file called `program.c`, you would compile it like so:
+
+```bash
+gcc -pg program.c
+```
+
+then you would run your program like normal. after you run your program, you will see a file called `gmon.out` in your directory. you can then run `gprof` on your program to see the profiling information. for example, if you have a program called `program`, you would run `gprof` like so:
+
+```bash
+gprof ./program
+```
+
+you can also save the output to a file like so:
+
+```bash
+gprof ./program > output.txt
+```
+
+when we do this, `gprof` automatically looks for the `gmon.out` file in the current directory. so if you didn't compile with the `-pg` flag, you will get an error when you run `gprof`. suppose you have multiple `gmon.out` files (gmon1.out, gmon2.out, ... gmonk.out), you can specify which one to use like so:
+
+```bash
+gprof ./program gmon1.out > output.txt
+```
+
+now let us go over the output of `gprof`. the output of `gprof` is divided into two parts: the flat profile and the call graph.
