@@ -537,3 +537,64 @@ void add_to_buff(buf_t* b, int val) {
 #### test and set
 the **test and set** instruction is an atomic instruction that sets a register to 1 and returns the previous value of the register. 
 
+# scheduling
+- recall that the OS acts as a resource manager for many threads and processes
+- the OS treats the processes and threads as the same in linux
+- the OS will switch between processes and threads to give the illusion of concurrency
+
+we now focus on how the OS allocates the CPU to processes and threads. this is called **scheduling**.
+
+## processor scheduling
+- efficiently schedule processes to increase CPU utilization
+- want to maxomize **job throughput** 
+- want to overlap I/O and computation
+
+### ready queue
+- the OS maintains a **ready queue** of processes that are ready to run
+- want to know how OS decides which process to run next from the ready queue
+
+### scheduling policies
+
+lets start with thinking of the simplest policy:
+- first come first serve
+- let the process run to completion without interruption
+
+consider the following process table:
+
+| process | arrival time | service time |
+|---------|--------------|--------------|
+| A       | 0            | 3            |
+| B       | 2            | 6            |
+| C       | 4            | 4            |
+| D       | 6            | 5            |
+| E       | 8            | 2            |
+
+
+if we do it like this, we see that processes end up waiting a lot. in total, the processes waits 23 units of time. this give an average wait time of 4.6 units of time.
+
+we can now try another approach, what if we run the process with the shortest service time first (while keeping start times the same)? doing it like this means the processes would execute in the following order:
+```
+A, B, E, C, D
+```
+this ends up giving a total wait time of 18 units of time, and an average wait time of 3.6 units of time. however there is a big issue with this kind of scheduling: **starvation**. this is when a process never gets to run. suppose we have a process that has a very long service time, it will never get to run if new short processes keep coming in.
+
+### scheduling goals
+- fairness
+- avoid starvation
+- enforce all scheduling policies
+- balance, all parts of the system should be used
+
+#### batch systems
+- for batch systems, main goal is to maximize throughput
+- this is just like users submit jobs to a batch queue, and the OS runs them in the background
+- turnaround time - mnimize the time between submission and completion
+- CPU utilization - keep the CPU busy
+
+#### interactive systems
+- main goal is to minimize response time
+- response time - time between a request and the response
+- this contrasts to batch systems where we want to maximize throughput
+
+#### real-time systems
+- not about response time or throughput, but about meeting deadlines
+- needs to be predictable
