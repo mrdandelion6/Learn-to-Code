@@ -116,8 +116,8 @@ the CIA triad is a model that is used to describe the core principles of informa
 
 we also further break down the CIA triad into the following:
 
-### vulerable system CIA
-- a system becomes vulernable when it is compromised..
+### vulnerable system CIA
+- a system becomes vulnerable when it is compromised..
 
 ### subsequent system CIA
 - but what are the subsequent effects of a system being compromised?
@@ -156,7 +156,7 @@ you don't need to memorize these terms, but you should be familiar with them and
 ## defender vs attacker principles
 1. the defender must defend all points; the attacker can choose the weakest point
 2. the defender can defend only against known attacks; the attacker can probe for unknown vulnerabilities
-3. the defender must be constantly viligant; the attacker can strike at will
+3. the defender must be constantly vigilant; the attacker can strike at will
 4. the defender must play by the rules; the attacker play dirty
 
 ### defender principles
@@ -170,8 +170,8 @@ you don't need to memorize these terms, but you should be familiar with them and
 - get other people to check your work
 
 #### don't volunteer information
-- attacks commonmly work in the dark and perform reconnaissance to uncover information about a target. don't make it easy for them. 
-- dont show context, dont show your hand
+- attacks commonly work in the dark and perform reconnaissance to uncover information about a target. don't make it easy for them. 
+- don't show context, don't show your hand
 
 #### fail safely
 - if a system is compromised, it should fail in a safe manner. for example, if logins aren't working because of an internal issue, the rest of the web page should be working while only logins are halted.
@@ -180,9 +180,9 @@ you don't need to memorize these terms, but you should be familiar with them and
 - the simpler a system is, the easier it is to secure. for example, use a simple password policy that is easy to enforce.
 
 ## the ten immutable laws of security
-1. if a bad actor can persuade you to run his program on yoru computer, it's not your computer anymore
-2. if a bad actor can alter the os on yoru computer, its not your computer anymore
-3. if a bad actor has unrestricted physicsal access to your computer, its not your computer anymore
+1. if a bad actor can persuade you to run his program on your computer, it's not your computer anymore
+2. if a bad actor can alter the os on your computer, its not your computer anymore
+3. if a bad actor has unrestricted physical access to your computer, its not your computer anymore
 4. if you allow a bad actor to upload programs to your website, it's not your website anymore
 5. weak passwords trump strong security
 6. a computer is only as secure as the administrator is trustworthy
@@ -193,7 +193,7 @@ you don't need to memorize these terms, but you should be familiar with them and
 
 ## common vulnerabilities
 
-we list the most common vulernabilities in order of how common they are, to motivate us to learn about them:
+we list the most common vulnerabilities in order of how common they are, to motivate us to learn about them:
 1. out-of-bounds writes
 2. improper neutralization of input during web page generation
 3. improper neutralization of input used in SQL commands
@@ -223,6 +223,10 @@ here's some terminology to consider to when writing secure code:
 #### response
 - responding to security incidents. this includes investigating the incident, containing the incident, and recovering from the incident.
 
+# virtual machines
+
+we will be using virtual machines to run our code examples. a virtual machine is a software that allows you to run multiple operating systems on a single physical machine. this allows you to run different operating systems on the same hardware. we will be using virtual machines to run old operating systems that have known vulnerabilities. this will allow us to learn about cybersecurity by exploiting these vulnerabilities.
+
 ## ssh'ing into an ip address
 
 how can we ssh into an old machine where we have the ip address?
@@ -251,7 +255,7 @@ ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -c 3des-cbc hacker@10.10.10.12
 ```
 where `10.10.10.12` is the ip address of the machine we are trying to ssh into.
 
-## components of a computer system
+# components of a computer system
 
 ### CPU
 - executes instructions
@@ -271,9 +275,9 @@ now we ask the question. when we compile a program, it turns into an executable 
 
 well it depends on the CPU's architecture. the CPU looks at the instruction and determines what to do with it based on where the byutes are located and what values they are. we often represent these instructions in hex, because hex is a compact form.
 
-## hexidecimal
+### hexadecimal
 
-hexidecimal is a base 16 number system. it uses the digits 0-9 and the letters A-F. it is used to represent binary data in a more compact form.
+hexadecimal is a base 16 number system. it uses the digits 0-9 and the letters A-F. it is used to represent binary data in a more compact form.
 
 ### converting between hex and binary
 
@@ -406,8 +410,147 @@ rip: **instruction pointer**
 
 and for **the** 32-bit system it is the same, but with an "e" instead of an "r". for example, eax instead of rax.
 
+# linux file system permissions
+in this section we learn about the different file system permissions in linux. we will use the following commands:
+- chmod
+    - to change file permissions
+- chown
+    - to change the owner of a file
+- chgrp
+    - to change the group of a file
+- find
+    - to find files
+- groups
+    - to see what groups a user is in
+- id
+    - to see the user id
+- ls
+    - to list files
+- mkdir
+    - to make a directory
+- stat 
+    - to see the status of a file
+- touch 
+    - to create a file or update the timestamp of a file
 
-## WYSINWYX
+some more commands you will want to know are:
+- cat 
+    - to concatenate files (print the contents of a file)
+- grep 
+    - to search for a pattern in a file. uses regular expressions.
+- less 
+    - to view a file one page at a time
+- wc 
+    - to count the number of lines, words, and characters in a file
+  
+- sudo 
+    - to run a command as the super user
+
+**a note on sudo**
+
+sudo is a command that allows you to run a command as the "super user". this is essentially the root user, which has the highest level of permissions on a linux system. certain commands require root permissions to run. however, you should always understand why a command requires root privileges.
+
+## users, groups, and permissions
+
+every user has a user id (uid) and a group id (gid). the uid is a unique number that identifies the user, while the gid is a unique number that identifies the group. linux doesn't actually care about the user's name, it only cares about the uid and gid.
+
+to see the uid and gid of a user, you can use the `id` command:
+
+```bash
+id
+```
+
+this will display something like
+```
+uid=1004(student) gid=1006(student) groups=27(sudo),116(admin),1006(student)
+```
+
+the name of the user and group is in parentheses. moreover, `groups` shows all the groups that the user is in. if you want to see only the group names you can add the `-nG` flag:
+
+```bash
+id -nG
+
+# output
+student sudo admin
+```
+
+to see specifically only the uid, you can use the `-u` flag, same for the gid:
+
+```bash
+id -u
+id -g
+```
+
+
+### what are groups?
+groups are well, groups of users. a user can be in multiple groups. groups are used to manage permissions on files and directories. it is a convenient way to give multiple users access to the same files.
+
+when a user creates a file, the file is owned by the user and the group that the user is in. the user has a set of permissions that determine what they can do with the file. there are three types of permissions: 
+- read
+- write
+- execute
+
+note that the filesystem path of the group file is `/etc/group`. you can check for yourself using `man group`.
+
+#### root group
+
+the root group is a special group that has all permissions on all files. this is the group that root belongs to. so "root" is a user and a group. to root group always has `gid=0`. you can see this by running `id -g root`.
+
+```bash
+id -g root
+
+# output
+0
+```
+
+you could also check the group file and use `grep` to find the root group:
+
+```bash
+cat /etc/group | grep -i "root"
+
+# output
+root:x:0:
+```
+
+## file permissions
+
+you can check the permissions of a file by doing `ls -l dir`. this will show you the permissions of every file in the directory `dir`. or you can specify the path to a file like `ls -l /path/to/file`.
+
+```bash
+ls -l /etc/group
+
+# output
+-rw-r--r-- 1 root root 978 2024-10-02 17:49 /etc/group
+```
+
+you can also use the `stat` command to see the permissions of a file. stat will show you a lot of information about the file, including the permissions. for example:
+
+```bash
+stat /etc/group
+
+# output
+  File: `/etc/group'
+  Size: 978             Blocks: 8          IO Block: 4096   regular file
+Device: 801h/2049d      Inode: 99421       Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+student@ubuntu804Server:~$ .000000000 -0400Modify: 2024-10-02 17:49:25.000000000 -0400Change: 2024
+```
+
+here, we see Access: (0644/-rw-r--r--). the `0644` is the octal representation of the permissions. if you want to see the permissions in octal, you can use the `-c` flag:
+
+```bash
+stat -c %a /etc/group
+
+# output
+644
+```
+
+the `%a` is a format string that tells stat to display the permissions in octal. you can see all the format strings by running `man stat`.
+
+
+# WYSINWYX
+
+now we will begin to really learn about cybersecurity. 
 
 what you see is not what you execute. this is one of the most fundamental ideas in computer security. the idea is that your source code may seem fine, but what happens in the background at a low level may include hidden vulnerabilities.
 
@@ -461,7 +604,7 @@ not that we simplify took the difference between the memory addresses of the two
 this may seem obvious or trivial, but we extend this idea to buffer overruns and other security vulnerabilities. what if we could manipulate memory to call a function that we shouldn't be able to call? this is the basis of many security vulnerabilities.
 
 
-## buffer overruns
+# buffer overruns
 
 buffer overruns are a common security vulnerability in C programs. they occur when a program writes more data to a buffer than it can hold. this can cause the program to crash, or worse, allow an attacker to execute arbitrary code on the system.
 
@@ -541,7 +684,7 @@ this will show us the next 32 words of memory starting from the stack pointer.
 if we tried doing just `x/32`, we might get a message like "Cannot access memory at address 0x0" since we are trying to access memory that we don't have permission to access. we include the `$esp` to tell gdb to start at the stack pointer.
 
 
-## SQL injections
+# SQL injections
 
 before we get into SQL injections, here's some brief background on SQL:
 
