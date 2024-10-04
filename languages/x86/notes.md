@@ -2,6 +2,42 @@
 
 welcome to my notes on x86 assembly language. this is a work in progress, so please bear with the emptiness.
 
+# memory
+
+in order to understand x86 assembly language, it is important to understand how memory works in a computer. we won't do a deep dive into it but you must understand that each process has its own memory space, which is divided into several segments. you may have often heard of a "memory table" or "memory map" which shows how memory is divided into different segments. here is a standard memory table for a process:
+
+```
+------------------------ higher memory
+| kernel space         |
+|----------------------|
+| stack                |
+| (grows downwards)    |
+|----------------------| <- stack pointer (esp)
+|                      |
+|----------------------|
+| heap                 |
+| (grows upwards)      |
+|----------------------|
+| uninitialized data   |
+| (bss)                |
+|----------------------|
+| initialized data     |
+| (data)               |
+|----------------------|
+| text/code            |
+| (read-only)          |<- instruction pointer (eip) aka program counter
+|----------------------|
+| unmapped memory      |
+------------------------ 0x00000000 (lower memory)
+```
+
+each process has its own memory space such as the one shown above. spoiler, this memory is actually **virtual memory** which is managed by the operating system. if you want to learn more about this read my [operating system notes](../../topics/operating-systems/notes.md). but for our purposes, we can think of this as the memory space of a process. 
+
+### kernel space
+- this is the memory space used by the operating system kernel. it is protected from user processes, and is used to store the kernel code and data structures.
+- you might wonder, "why does each process have its own kernel space?" well, even though the operating system kernel manages all processes, having a separate kernel space for each process acts as a sort of unique interface for each process to interact with the kernel. this is important for security and stability reasons.
+- attempting to access kernel space from user space will result in a segmentation fault.
+
 # registers
 
 registers are small, fast storage locations in the cpu that are used to store data that the cpu is currently working with. they are the lowest level of memory storage in the cpu, and are used to store data that the cpu is currently working with. the cpu uses these registers to perform arithmetic operations, move data around, and more.
@@ -67,4 +103,4 @@ mul eax, 2 ; multiply the value in the eax register by 2
 div eax, 4 ; divide the value in the eax register by 4
 ```
 
-note that ; is used to indicate a comment in assembly language. comments are ignored by the assembler, and are used to explain what the code is doing.
+note that `;` is used to indicate a comment in assembly language. comments are ignored by the assembler, and are used to explain what the code is doing.
