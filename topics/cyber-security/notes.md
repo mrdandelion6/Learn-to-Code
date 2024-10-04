@@ -448,7 +448,8 @@ some more commands you will want to know are:
 
 **a note on sudo**
 
-sudo is a command that allows you to run a command as the "super user". this is essentially the root user, which has the highest level of permissions on a linux system. certain commands require root permissions to run. however, you should always understand why a command requires root privileges.
+sudo is a command that allows you to run a command as the "super user". users that are part of the sudo group can run commands as the super user. this allows them to perform administrative tasks, such as installing software or changing system settings. this is not the same as being the root user. there is only one root user on a system, and they have full control over the system. more on root later.
+
 
 ## users, groups, and permissions
 
@@ -502,14 +503,88 @@ id -g root
 # output
 0
 ```
+the above will look for a user named "root" and return the gid of that user.
 
 you could also check the group file and use `grep` to find the root group:
 
 ```bash
-cat /etc/group | grep -i "root"
+grep -i "root" /etc/group
 
 # output
 root:x:0:
+```
+
+we could also use `getent`. `getent` is a command that gets entries from a database. in this case, we are getting the entry for the shadow group. the `gid` for the shadow group is always `42`. 
+
+`getent` actually shows us the entire entry for the shadow group, which includes the group `name:password:gid:members` (in that format).  now we will use `getent` to get the entry for the root group:
+
+```bash
+getent group root
+
+# output
+root:x:0:
+```
+
+we see that for our password, we have an `x` which means that the password is stored in the `/etc/shadow` file and we can't see it. and for the members, we see nothing. however, we know that we should have the `root` user as a member of the `root` group. the reason for this is because `getent` only shows supplementary group memberships. so any primary group memberships are not shown.
+
+#### root vs sudo
+`sudo` is only a group, whereas `root` is a user and a group. users in the `sudo` group are allowed to use `sudo` command to elevate their privileges. `root` always has the highest privileges on a system. `sudo` doesn't have higher privileges than `root`, it just allows users to temporarily access root-level privileges.
+
+#### shadow group
+
+the shadow group is another special group that has permissions to view the `/etc/shadow` file. this file is used for managing user passwords. note that there is no user named "shadow" unlike for `root`. we can see the gid of the shadow group by using `grep`, or we could also use `getent`:
+
+```bash
+getent group shadow
+
+# output
+shadow:x:42:
+```
+
+#### find command
+
+the `find` command is used to search for files in a directory. you can use it to search for files based on their name, size, or permissions. for example, to find all files in the current directory that have the name "file.txt", you can use the following command:
+
+```bash
+find . -name file.txt
+```
+
+you can also  find all files owned by a specific user by using the `-user` flag:
+
+```bash
+find . -user username
+```
+
+similarly, if you wanted to find all files owned by a specific group, you could use the `-group` flag:
+
+```bash
+find . -group groupname
+```
+
+and if you want to find all files that have a specific permission, you can use the `-perm` flag:
+
+```bash
+find . -perm 644
+```
+
+and if you want only directories, you can use the `-type` flag:
+
+```bash
+find . -type d
+```
+
+what's even more interesting is the `-exec` flag. this flag allows you to execute a command on the files that are found. for example, to delete all files that have the name "file.txt", you can use the following command:
+
+```bash
+find . -name file.txt -exec rm {} \;
+```
+
+the `{}` is a placeholder for the file that is found, and the `\;` is used to terminate the command.
+
+now imagine if we wanted to elevate a permission of all files in a directory. we could use the following command:
+
+```bash
+find /path/to/directory -type f -perm 777 -exec chmod 750 {} \;
 ```
 
 ## file permissions
