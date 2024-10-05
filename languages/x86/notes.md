@@ -1,4 +1,4 @@
-# x86 notes
+    # x86 notes
 
 welcome to my notes on x86 assembly language. this is a work in progress, so please bear with the emptiness.
 
@@ -104,3 +104,80 @@ div eax, 4 ; divide the value in the eax register by 4
 ```
 
 note that `;` is used to indicate a comment in assembly language. comments are ignored by the assembler, and are used to explain what the code is doing.
+
+## specific instructions
+
+a quick and dirty list of some common instructions. this is not exhaustive, but it should give you a good starting point.
+
+**mov**
+- moves data from one location to another
+```assembly
+mov eax, 10 ; move the value 10 into the eax register
+```
+
+**add**
+- adds two values together
+```assembly
+add eax, ebx ; eax = eax + ebx
+add eax, 0FH ; eax = eax + 0FH
+```
+note that `0FH` is a hexadecimal number, `0FH` = `15` in decimal. the `0F` gives 15, and the `H` indicates that it is a hexadecimal number.
+
+**sub**
+- subtracts one value from another
+```assembly
+sub eax, ebx ; eax = eax - ebx
+sub eax, -0FH ; eax = eax - (-0FH)
+```
+note that `-0FH` is a negative hexadecimal number, `-0FH` = `-15` in decimal. the `-` indicates that it is a negative number.
+
+**pxor**
+- performs a bitwise xor operation on two packed data elements
+```assembly
+pxor xmm0, xmm1 ; xmm0 = xmm0 ^ xmm1
+```
+
+**jmp**
+- jumps to a different part of the program
+```assembly
+jmp label ; jump to the label
+```
+
+**call**
+- calls a function
+```assembly
+call function ; call the function
+```
+
+**ret**
+- returns from a function
+```assembly
+ret ; return from the function
+```
+
+**movdqa**
+- moves 128 bit aligned data from one register to another or from memory to a register
+```assembly
+movdqa xmm1, [eax] ; move 128 bits of data from the memory location pointed to by eax into xmm1
+```
+
+**pcmpeqb**
+- compares two packed data elements for equality
+- stands for "packed compare equal byte"
+```assembly
+pcmpeqb xmm0, xmm1 ; compare xmm0 and xmm1 for equality
+```
+note that each `xmm` register holds 16 bytes. if we compare `xmm0` and `xmm1` for equality, we compare each byte in `xmm0` with the corresponding byte in `xmm1`. if the i'th byte is equal, we set xmm0[i] to 0xFF, otherwise we set xmm0[i] to 0x00.
+
+for example, consider the following values in `xmm0` and `xmm1`:
+```assembly
+xmm0 = 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F
+xmm1 = 00 01 02 10 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F
+
+pcmpeqb xmm0, xmm1 ; compare xmm0 and xmm1 for equality
+```
+after the comparison, `xmm0` will contain:
+```assembly
+FF FF FF 00 FF FF FF FF FF FF FF FF FF FF FF FF FF
+```
+this is because all bytes are equal except for the 3rd byte (with first byte being zero'th).
