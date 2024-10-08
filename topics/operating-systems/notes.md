@@ -948,3 +948,15 @@ idea: increase page size
 - this reduces the number of pages, and thus the number of PTEs
 - however, this increases internal fragmentation
 - suppose a process needs 1 byte, but the page size is 4KB, then we have 4KB - 1 byte of internal fragmentation
+
+**solution**: use **multilevel page tables** 
+
+- multilevel page tables (aka hierachical page tables) are a way to reduce the size of the page table
+- instead of having a single large page table, the address space is divided into multiple levels of page tables
+
+### multilevel page tables
+- the address space is divided into multiple levels of page tables
+- the top level page table is stored in memory, this is the **page directory**
+- the page directory contains pointers to the next level of page tables
+- the next level of page tables contains pointers to the actual frames in memory
+- this is like a l
