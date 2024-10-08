@@ -598,3 +598,216 @@ this ends up giving a total wait time of 18 units of time, and an average wait t
 #### real-time systems
 - not about response time or throughput, but about meeting deadlines
 - needs to be predictable
+
+
+## types of CPU scheduling
+- long term scheduling
+- short term scheduling
+- medium term scheduling
+
+#### long term scheduling
+- used in batch systems, not common today
+
+#### medium term scheduling
+- aka, memory scheduling
+- happens infrequently
+- decides which processes to swap in and out of memory
+
+#### short term scheduling
+- the actual "scheduler"
+- runs very frequently
+- decides which process to run next
+- aka "dispatching"
+- the goal is to minimize the turnaround time and maximize CPU utilization
+
+
+### dispatching
+- we now investigate what happens when the OS decides to switch between processes
+- select next thread from the ready queue
+- save currenetly running thread state (unless the thread is exiting)
+- restore state if tge bext thread
+  - this is called a **context switch**
+  - restore registers, program counter, etc.
+
+
+### when we schedule
+
+**when a thread blocks**:
+
+now consider when the running thread blocks, for example receives a SIGSETOP or makes a system call. now the OS has to decide what to pick next.
+
+**when a thread is ready**:
+
+when a thread is ready to run, the OS has to decide how to add it to the ready queue.
+
+## types of scheduling
+**non-preemptive:**
+- once a process starts running, it runs to completion
+- good for batch systems
+- not good for interactive systems
+- our firt come first serve example was non-preemptive
+
+**preemptive:** 
+- the OS can stop a process and start another one
+- promises to run the process later
+- recall our shortest job first example, we can have a preemptive version of this, **shortest time to completion first**
+
+### how xan we estimate expected service time?
+- programmer estimate
+- historical data
+- can be shortest next CPU burst for interactive jobs
+
+## scheduling algorithms
+
+### round robin
+- the ready queue is circular
+- pre-emptive
+- designed for time-sharing systems
+- each process gets a time slice called a **quantum**
+- we need to choose the quantum size
+
+#### choosing the quantum size
+- if quantum -> inf, then its the same as first come first serve
+- if quantum -> 0, then we have a lot of context switches
+- we want q to be large with respect to the context switch time, but small with respect to the user's point of view so it seems like they are running concurrently
+  - we want q >>> context switch time because it will end up being that we just spend all our time context switching
+
+for example recall our table,
+| process | arrival time | service time |
+|---------|--------------|--------------|
+| A       | 0            | 3            |
+| B       | 2            | 6            |
+| C       | 4            | 4            |
+| D       | 6            | 5            |
+| E       | 8            | 2            |
+
+if we do time quantums, we could have processes that need more than 1 quantum to complete. this can lead to having a returning process arrive at the same time as a new process. in this case we would need to decide some policy for which process to run next. 
+
+suppose we have a quantum of 2 units of time, and we choose to run new processes first. then we would have the following schedule:
+```
+
+```
+
+
+## priority scheduling
+- a priority p is associated with each thread
+- highest priority job is selected from ready queue (could be preemptive or non-preemptive)
+- enforcing this policy can be difficult
+  - a low priority job could starve
+  - a low priority task may prevent a high priority task from running by holding a resource
+
+### priority inversion
+- a low priority task holds a resource that a high priority task needs
+- there is a real example, the Mars Pathfinder mission, where a low priority task held a resource that a high priority task needed. this caused the high priority task to be delayed.
+
+#### mars rover pathfinder bug
+- there was a shared information bus
+- the bus was held by a low priority task
+
+### multi level queue scheduling
+- we can have multiple queues with different priorities
+- the queues can all have different scheduling algorithms
+
+for example, suppose we have 3 queues:
+- batch processes (FCFS)
+- interactive processes (round robin)
+- system processes (SJF: shortest job first)
+
+we can assign a priority on the priority queues. the reason for this extra layer of complexity is that it enables us to organize scheduling better. 
+- for example, suppose we have *n* priority queues, we can have threads that do not finish their time quantums in the highest priority.
+
+# memory management in OS
+
+## memory hierarchy
+- registers (2KB)
+- l1 cache (32 - 128KB)
+- l2 cache (2 - 4 MB)
+- l3 cache (4 - 16 MB) 
+- DRAM / main memory (4 - 64 GB)
+- disk: SSD, HDD (64 GB - 4 TB)
+
+note the sizes are just rough estimates. varies of course. 
+
+- accessing the first byte in a sequence of memory is slower because you have to position the disk head. 
+- for example, in an HDD it takes 100,000 times longer to access the first byte than the next one after that, but for DRAM its only 4 times longer.
+- this means on a hard disk, we would want to access the data sequentially because the physical repositioning of the disk head is slow.
+- this means the hard disk is good for large sequential reads, but not for random reads.
+
+we want to avoid going to the disk at all costs. but we still need to store all the data somewhere. so the DRAM acts as a cache for the disk.
+- performance depends on the efficient use of DRAM
+- now we ask, **how can the OS help with this**
+
+the answer is: **virtual memory**
+
+## virtual memory
+- only a limited amount of physical memoru
+- every active process needs memory, need to provide the illusion of "infinite" memory to each process
+
+**goals**:
+- efficiency
+- transparency
+- protection
+
+### efficiency
+- make use of memory wisely
+
+note that,
+- some portions of memory are in DRAM
+- some are in the disk
+- need to transfer the data back and forth between the disk and DRAM
+
+we want to keep stuff in DRAM that we think will be used again.
+
+### transparency
+- data moves back and forth between RAM and disk
+- programmer shouldnt have to worry about this
+
+we want to create an illusion of having more memory than the size of the DRAM.
+- give each process its own view of memory.
+  - a large contiguous address space starting at address 0. this simplifies memory allocation
+- decouple the data 
+
+### fixed partitioning
+- each process gets a fixed partition to use in memory
+- OS occupies a separate partition
+- each process is granted its own partition
+
+cons of this:
+- if we assign the same block size to each process, we might waste memory where some processes don't use all of their memory. this is called **internal fragmentation**.
+- if program needs more memory, the programmer has to deal with that (**overlays**)
+- number of partitions is limited, this limits number of possible active processes
+
+what if we try unequal sized partitions?
+- diversify the sizes of the partitions
+- have some policy where we assign each process to a queue corresponding to a partition size
+- we try to get the smallest partition that fits the process
+
+issue is that the processes may end up fighting for the same partition when there are multiple processes that fit the same partition size, even tho they could fit in a larger partition.
+
+### dynamic partitioning
+- we can assign the processes regions of memory as they request it
+
+cons
+- causes **external fragmentation**:
+  - when we have a lot of small holes in memory that are too small to fit a process
+  - a solution to this is **compaction** where we move all the processes to one end of memory and free up the other end
+  - however, this is expensive because we have to update all the pointers to the memory
+  - also requires process to be relocatable, and now the process has to be aware of this
+- need to know the maximum size of a process in advance
+  - can we know this?
+  - sort of..
+  
+
+### virtual memory!
+- the solution to the above problems
+- we use **paging** instead
+
+
+## paging
+
+- page tables map virtual memory to physical memory
+- virtual memory is essentially an "abstraction" that the program sees
+- the program thinks it has a large contiguous address space starting at 0
+- the page table maps the virtual memory to physical memory
+
+## copy on write
