@@ -811,3 +811,140 @@ cons
 - the page table maps the virtual memory to physical memory
 
 ## copy on write
+- TODO: add notes on copy on write
+
+## page tables
+- the page table is a data structure that maps virtual memory to physical memory
+- the page table is stored in memory
+- the page table is indexed by the virtual address
+- the page table contains the physical address
+
+### how to translate virtual memory to physical memory
+- for now, we will assume that we can fit the virtual address space in physical memory contiguously (even though we can't and need to use paging to split it up)
+- naturally, programmers dont know what physical memory is available, need to translate the virtual memory to physical memory. 
+- need to manage many things for memory like relocation.
+
+### address binding
+programs must be in memory to be executed!
+- program binary is laoded into ap rocess' address space- needs memory for code (instructions) and data
+- addresses in program must be translated to real physical addresses
+- programmers use symbolic addresses (variable names), to refer to memory locations. this is a very fundamental idea!!
+
+now we ask, when do "bind symbolic addresses to physical addresses"?
+- option 1: **compile time**:
+  - need to know what memory the process wil use during compile time
+  - we call this code, *absolute code* since binary contains real addresses
+  - this is not very flexible as no relocation is possible.
+  old MS-DOS programs use this
+
+
+- option 2: **load time**:
+  - compiler translates symbolic addresses to **logical addresses** that are **relocatable**
+  - linker translates addresses from obj files to logical, absolute addresses within the binary executable
+  - the issue with this is that the binary executables produced would not be relocatable. this is because the addresses are hardcoded into the binary executable.
+  - the problem with this is then we can't run multiple instances of the same program at the same time and we can't guarantee that the memory will be available at the same address every time.
+
+- option 3: **execution time**:
+  - the OS loads the program into memory and then translates the logical addresses to physical addresses
+  - this is the most flexible option
+  - the OS can move the program around in memory as it sees fit
+  - the OS can also run multiple instances of the same program at the same time
+  - the executable simply stores virtual addresses starting at 0
+  - when a program starts to run the OS decides where in physical memory to place its address
+
+here is the translation process for execution time binding:
+- step 1: set base register, i.e, the starting address of the program in physical memory
+- step 2: physical address can be translated by: physical address =  base register + virtual address
+
+this way, the instructions in teh executable do NOT need to be modified. note that we need a **bound register**, so we don't want the program to access memory outside of its address space.
+
+now recall our initial assumption: that we can fit the entire virtual address space in physical memory. this is not true, so we need to use **paging**. we cannot have **contiguous** memory.
+
+recall we touched on this before: as processes come and go we will have "holes" in memory. i.e, places where nothing can fit because the memory is too small. this is called **external fragmentation**.
+
+recall **compaction**: we move all the processes to one end of memory and free up the other end. this is expensive because we have to update all the pointers to the memory. this is why we use **paging** instead.
+
+### placement algorithms
+placement algorithms are used to decide where to place a process in memory.
+- best fit
+- first fit
+- worst fit
+- next fit
+
+### relocation
+- placing addresses in contiguous blocks of memory is our challenge
+- we can't use our simple translation process anymore, we can't do physical address = base register + virtual address.
+- **NEED TO USE PAGING**
+
+# paging
+- logically partition physical memory into equal fixed size blocks called **frames**
+- divide processes' memoppry into chunks of the same size called **pages**
+- any page can be assigned to any frames!!
+  - external fragmentation is eliminated
+  - internal fragmentation is at most a part of one page per process
+- processible page frame sizes are restricted to powers of 2
+
+paging needs **page tables** to map virtual memory to physical memory. no longer using a base register address. 
+
+## page tables
+- these are stored in OS memory (recall the OS section at the top of memory diagrams)
+- virtual addresses now interpreted as: **page number + page offset**
+
+### translating with page tables
+- suppose addresses are 17 bits and pages are 1024 bytes, just as an example.
+  - least significant 10 bits of address would need to provide the offset, because each page is 1024 bytes, we need 2^10 bits to map to each byte in the page.
+  - most significant 6 bits provide page number
+  - the maximum number of pages is then 2^6 = 64 pages
+
+now we can calculate page numbers and offsets for a given address by simply using bit shift operations.
+- for example, to get the page number, we can do: `address >> 10` (this shifts the address 10 bits to the right)
+- to get the offset, we can do: `address & 0x3FF` (this zeroes the most significant 6 bits)
+
+now consider 32-bit virtual addreses and 4096 byte pages. we would need 12 bits for the offset leaving 20 bits for the page number. this means we can have 2^20 pages. we sometimes refer to the virtual page number as **VPN.**
+
+## page table entries
+here is an example of a page table entry:
+```
+--------------------------------
+| M | R | V | Prot | Frame #   |
+--------------------------------
+```
+note that this varies entirely based on the architecture of the system.
+
+- M: modified bit
+  - set to 1 if the page has been modified
+  - we want to keep track of this because we don't want to write to the disk if the page hasn't been modified
+- R: reference bit
+  - set to 1 if the page has been referenced (accessed)
+  - we want to keep track of this because we want to know which pages are being used
+- V: valid bit
+  - set to 1 if the page is in memory
+  - set to 0 if the page is on disk, we call this a **page fault**
+  - if 0, need to load the page from disk (page fault)
+- Prot: protection bits
+  - read, write, execute permissions
+  - similiar to file permissions but different
+  - for example, want to protect pages that correspond to OS memory
+- Frame #: frame number
+  - the physical frame number that the page is in
+  - if the page is not in memory, this is the frame number that the page will be loaded into
+
+### where are pages tables stored?
+- too big to fit into MMU (memory management unit)
+- stored in protected OS memory
+
+#### page limitations
+- biggest limitation is space
+
+suppose we need the following:
+- need one PTE per page
+- 32 bit virtual addresses with 4KB pages
+- suppose we need 4 bytes per PTE
+- then we need 4MB / page table
+- then for 100 processes, need 400 MB just for page tables, which is a lot of memory
+- now for **modern processors** that have 64 bits.. ends up being 16 petabytes of memory just for page tables
+
+idea: increase page size
+- this reduces the number of pages, and thus the number of PTEs
+- however, this increases internal fragmentation
+- suppose a process needs 1 byte, but the page size is 4KB, then we have 4KB - 1 byte of internal fragmentation
