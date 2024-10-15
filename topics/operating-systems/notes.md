@@ -959,4 +959,225 @@ idea: increase page size
 - the top level page table is stored in memory, this is the **page directory**
 - the page directory contains pointers to the next level of page tables
 - the next level of page tables contains pointers to the actual frames in memory
-- this is like a l
+- this is a way to reduce the size of the page table
+
+however multilevel page tables can become inefficient if we have to traverse multiple levels of page tables to get to the actual frame in memory. this is why we use a **translation lookaside buffer (TLB)**.
+
+## TLB
+- the TLB is a cache for the page table
+- the TLB is a small, fast memory that stores the most recently used page table entries
+- the TLB is indexed by the virtual page number
+
+so this is how address are read,
+
+### read access:
+- CPU reads the virtual address
+- TLB does a lookup using the **page number** of the address
+- common cose: TLB hit
+  - page number matches
+  - returns a page table entry for the mapping to the address
+  - TLB validates that the **PTE protection** allows reads
+  - PTE specifies the physical frame which holds the page
+  - MMU (memory management unit) combines physical address and offset to get the physical address
+  - MMU reads from that physical address and returns a value to the CPU
+- uncommon case: TLB miss. can have either one of the following cases:
+  - TLB does not have a PTE mapping for the page number
+  - PTE exists, but the memory access violates PTE protection bits
+
+
+### PTE protection 
+PTES have protection bits that specify the permissions for the page. for example. this is very similiar to linux file permissions.
+- read, write, execute permissions
+
+### TLB misses
+lets examine the TLB miss case. we will consider what happens when the TLB does not have a PTE mapping for the page number first.
+
+if TLB does not have a PTE mapping for the page number. then we have 2 possibilities:
+- MMU loads PTE into TLB from the in-memory page table
+
+
+# page policy decisions
+- page tables, MMU, aTLB, etc. are mechanisms that make virtual memory possible
+- now we'll look at some policy decisions that the OS has to make
+
+*policies to consider*
+- demand paging (fetch policy)
+- page replacement
+- page fault handling
+
+## demand paging
+this is the OS' perspective for demand paging:
+- pages are evicted to disk when memory is full
+- pages loaded from disk when referenced again
+- references to evicted pages causes a TLB miss
+  - if PTE was invalid, we have a page fault.
+
+we say demand paging is when we load pages from disk to memory on demand as needed. this is a fetch policy.
+
+### demand paging process
+- demand paging is also used when a process first starts up
+- when a process is created it has
+  - a brand new page table with all valid bits off
+  - no pages in memory
+- when a process starts executing
+  - instructions fault on code and data pages
+  - faulting stops when all necessary code and data pages are in memory
+  - only code and data needed by ap rocess needs to loaded 
+
+### costs of demand paging
+- on demand paging is expensive
+- we would have to load pages from disk to memory every time we have a page fault, i.e, want to access a page that is not in memory
+
+alternatively, we can use **pre-paging**. for example with on demand paging we would have something like the following:
+```
+load  A
+... fetch A
+run
+load  B
+... fetch B
+run
+```
+
+with pre-paging we would have something like the following:
+```
+load  A
+... fetch A and B
+run
+load  B
+run
+```
+
+the issue with pre-paging is that we may end up loading pages that we don't need. this is called **thrashing**.
+
+## placement policy
+- in paging s ystems, memory management hardware can translate to any virtual-to-physical mapping equally well
+
+then we ask why would we prefer some mappings over others?
+- NUMA (non-uniform memory access) systems
+  - any processor can access entire memory, but local memory is faster (L1, L2, L3 cache)
+
+that being said, the placement policy has a much greater impact on performance than the replacement policy.
+
+## replacement policy
+- when a page fault opccurs, the OS loads the faulted page from disk into memory
+- need to choose a page to evict from memory to make room for the new page
+
+### evicting the best page
+- goal  of replacement algorithm is to minimize the number of page faults
+- replacement algos are evaluated on a *reference string* of memory accesses 
+
+### optimal page replacement
+in theory if we knew the future, we could choose the page that will be used the farthest in the future. this is called the **optimal page replacement** algorithm. 
+
+we call this the **Belady's optimal algorithm**. this is the best possible algorithm because it has the lowest number of page faults.
+
+but in reality, we can't know the future. so belady's algorithm is just an ideal to aim for.
+
+generally, we have two types of page misses:
+- cold misses: when a page is accessed for the first time. this is unavoidable.
+- capacity misses: when a page is accessed again after being evicted. this is avoidable. caused by limited memory.
+
+a practical algorithm we might think of immediately is FIFO:
+- FIFO: we evict the page that has been in memory the longest
+  - this might be good because we "expect" that recently accessed pages may be accessed again
+  - but this is not always the case, this is an assumption
+
+FIFO suffers from "belady's anomaly":
+- increasing the number of frames can increase the number of page faults
+
+### LRU
+- LRU: least recently used
+- this is a sort of modification of FIFO
+- we bump a page to the front of the queue when it is accessed
+- we evict pages that have not been used for the longest time 
+
+LRU is known as a **stack algorithm**. we can implement LRU with a stack. we can also implement LRU with a **circular queue**.
+
+stack algos do not exhibit belady's anomaly. this is because the stack is always increasing in size, so we always have the most recently used pages in memory.
+
+### implementing LRUs
+- how can we keep track of the order of pages?
+- if we store floats for time stamps, this will take a lot of space in memory
+- we could also keep pages in a *stack*, but this is expensive because we have to move all the pages every time we access a page.
+
+in other words, implementing LRU exactly is expensive to implement, so we use approximations. LRU approximates belady's algo, and we approximate LRU.
+
+### approximating LRU
+- use the PTE reference bit
+- basic idea
+  - initially all R bits are zero; as processes execute bits are set to 1 for pages thatr are used
+  - periodically examine the R bits, we do not know the *order* of use, but we know pages that were (or were not) used
+- additional reference bits algorithm:
+  - keep a counter for each page
+  - periodically shift the counter right by 1 bit
+  - set the most significant bit to the value of the reference bit
+  - the page with the smallest counter is the least recently used
+
+however, we don't even need the additional reference bits algorithm. we can use the following:
+
+### second chance algorithm
+- LRU-like algorithm
+- when a page is accessed
+  - if ref bit 0 is, replace the page
+  - if ref bit is 1, clear ref bit 
+
+
+### clock algorithm
+- clock algorithm is a modification of the second chance algorithm
+- replace page that is "old enough"
+- arrange all of physical page frames in a big circle
+- when we need to evict a page we look at a page in the circle
+- if the ref bit is 0, we replace the page. the new page is inserted in the circle where the old page was and the ref bit is set to 1
+- if the ref bit is 1, we clear the ref bit and move to the next page in the circle
+- note that the ref bit is a bit that is set to 1 when the page is accessed
+
+this is a really simple yet effective algorithm.
+
+## page buffering
+- so far we implicitly assumed that the replacement algo is run and a victim page is selected when a new a page needs to be brought in
+- most of these algos are too csotly to run on every page fault we get
+
+so what we can do is use a *paging daemon*,
+- maintain a pool of free pages (free page list): this is a list of pages that are not being used
+- run replacement algo when a pool becomes too small, we say this is a "low water mark". free enough pages to at once replenish the pool, i.e, get a "high water mark"
+- this uses a dedicated kenrel thread called the *paging daemon*
+- on a page fault, grab a frame from the free list
+- frames on the free list still hold previous contents, can be rescued if virtual page is referenced before reassignment
+
+## thrashing
+- thrashing is when the system spends most of its time swapping pages in and out of memory
+- possible causes:
+  - too many processes
+  - too many pages per process
+  - too small a page size
+  - too small a memory size
+
+- possible solutions:
+  - reduce the number of processes
+  - reduce the number of pages per process
+  - increase the page size
+  - increase the memory size
+
+## CPU utilization and paging
+- CPU utilization is the percentage of time the CPU is busy
+- if we have mostly I/O heavy processes, CPU util is low
+- if we have compute intesive processes, CPU util is high
+
+
+## addressing page tables
+- where should we store these?
+- we before thought of storing the page tables in physical memory 
+- what if we stored them in virtual memory?
+- we would then need page tables for the page tables. so this is not really a good idea.
+
+## swap space
+- swap space is a region of the disk that is used to store pages that are not in memory
+- we can use swap space to store pages that are not in memory
+
+how do we store swap?
+- option 1: having a raw disk partition
+  - pros: fast
+  - cons: not flexible
+- option 2: using ordinary large files
+  - pros: flexible
+  - cons: slow
