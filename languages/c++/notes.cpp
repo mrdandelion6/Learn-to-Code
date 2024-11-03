@@ -18,6 +18,7 @@
 // BASIC CONCEPTS
 int what_is_cpp();
 int compiling_cpp();
+int compilation_flags();
 int cmake();
 int stdin_stdout();
 
@@ -161,6 +162,72 @@ int what_is_cpp() {
 
 
 int compiling_cpp() {
+    // compiling C++ is very similiar to compiling C. 
+    // C++ has its own compiler, just like C.
+    // recall that C uses the GNU C compiler (gcc).
+    // similarly, C++ uses g++
+
+    // the compilation process for C++ is much more complex than for C.
+    // C is just a procedural programming language, so its compilation at the file level mostly consists 
+    // of simply turning C source code into machine code. 
+    // whereas C++ is a multi-paradigm language that supports many high level things like oops, templates
+    // and exceptions. 
+    // this leads to a much more complex compilation process for C++.
+
+    // the compilation process for C++ itself is also very similiar to C.
+    // recall in C:
+    // 1. preprocessing
+        // the C preprocessor cleans up the source code (#include and #define statements)
+    // 2. compilation
+        // the C compiler turns the source code for each .c file into assembly code (.s)
+    // 3. assembly
+        // the C assembler turns the assembly code into object code. assembly code is human-readable (like x86 or ARM), whereas the object code is direct binary (machine code)
+    // 4. linking
+        // the C linker takes all the object code (.o files) and links them together into a single binary executable
+
+    // for C++ the process is very similiar:
+    // 1. preprocessing
+        // the C++ preprocessor cleans up source code (#include and #define) 
+        // also cleans up macros that can handle templates (more on templates later)
+        // the output source file typically has an (.i) extension
+    // 2. compilation
+        // the C++ compiler also compiles source code into assembly code (.s)
+        // however, this process is much more complex for C++ as mentioned before.
+        // there is much more complexity (OOP, templates, etc.)
+    // 3. assembly
+        // the C assembler takes the assembly code for each file and turns it into object code (.o or .obj)
+    // 4. linking
+        // and finally, just like C, the object code is linked together at the end to form one executable.
+        // the final executable doesnt need to have a specific extension but it may have .out (unix) or .exe (windows), or it may have none
+
+    // one final question for this section: why do we have assembly code and object code?
+    // you may be wondering what the point is of having assembly code and object code. why not just directly make the executable?
+
+    // why assembly code?
+    // the reason we want assembly code is because it creates architecture specific code. 
+    // for example, many computers use x86 or ARM architecture, but the actual binary for each computer may be different.
+    // having assembly code allows for a portable low level code that can quickly be translated to the proper binary (object) code for each computer.
+    
+    // why object code?
+    // the reason we would want object code rather than just directly going to an executable is because of many reasons.
+    // 1. modular compilation (invidiual recompilation):
+        // we can have a binary object file for each separate source file, which allows us to recompile and reassemble only one binary object at a time.
+        // this means if we have one just one c++ source file out of a hundred that are all linked together, we do not need to recompile binaries for the whole program.
+        // we only would need to recompile the object code for the single source file and relink all the object files together.
+    // 2. linking external and standard libraries:
+        // external binaries such as those for the C++ standard library can be linked together if we have an object code stage.
+        // the C++ standard library headers do not have source files, but rather object files for their implementation.
+        // (makes sense, why would u want source code, you would have to recompile it each time and libraries can be big).
+        // hence it becomes seamless to join libraries together with your code if you have a stage whhere you link together all the object files
+    // 3. improved compiler optimizations
+        // having an object file for each separate source file allows the compiler to make smarter optimizations as the binaries are separate.
+        // further optimizations are made upon linking.
+
+    return 0;
+}
+
+int compilation_flags() {
+    // now lets finally take a look at how compilation commands look like in C++
 
 
     return 0;
@@ -236,15 +303,92 @@ int stl() {
 
     // the concept is exactly the same in C++.
     // we include headers that are either .h or .hpp files like so:
-    // #include <vector>
-    // notice that we did not include a '.h'
-
+    // #include "example.hpp"
+    // for headers part of the C++ standard library, we do not include a .h or .hpp.
+    // for instance:
+        // #include <vector>
+    // note that this is only for C++ standard library headers! 
     
+    // STL vs C++ standard library
+    // now the main topic of this section: the STL
+    // STL stands for standard template library, which consists of certain iterators and data structures in C++
+    // the STL is part of the C++ standard library, i.e; the STL is a subset of the C++ standard library
+    // (at least as far as i know, but there seems to be debate around this topic so do your own research).
 
+    // STL specifically refers to the components originally designed by Alexander Stepanov which 
+    // focus on containers, iterators, algorithms, and function objects.
+
+    // STL headers include:
+    // containers
+    // #include <vector>
+    // #include <list>
+    // #include <deque>
+    // #include <queue>
+    // #include <stack>
+    // #include <set>
+    // #include <map>
+
+    // algorithms
+    // #include <algorithm>
+
+    // iterators
+    // #include <iterator>
+
+    // function objects (functors)
+    // #include <functional>  
+
+    // meanwhile, here are some examples of headers part of C++ standard library but not in STL:
+    // I/O streams
+    // #include <iostream>
+    // #include <fstream>
+    // #include <sstream>
+
+    // string handling
+    // #include <string>
+
+    // exception handling
+    // #include <exception>
+    // #include <stdexcept>
+
+    // C++ time
+    // #include <chrono>
+
+    // threading
+    // #include <thread>
+    // #include <mutex>
+    // #include <condition_variable>
+
+    // smart pointers and memory
+    // #include <memory>
+
+    // all C compatibility headers
+    // #include <cstdio>
+    // #include <cstring>
+    // #include <cmath>
+    // etc...
+
+    // regular expressions
+    // #include <regex>
+
+    // random numbers
+    // #include <random>
+
+    // type support
+    // #include <typeinfo>
+    // #include <type_traits>
+
+    // the main idea of the STL is that it provides several useful datastructures and algorithms for C++.
+    // this is a big upgrade from C in terms of high-level usage.
+    // remember in C, we do not even have dyanmic arrays and must implement everything ourselves.
+    // with C++ we don't have to dedicate extra files to reinvent the wheel. simply just use the already implemented DSA from STL.
 
     return 0;
 }
 
+int containers_algorithms() {
+
+    return 0;
+}
 
 int references() {
 
