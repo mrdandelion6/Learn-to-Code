@@ -9,7 +9,7 @@
 // we will start with the basics, and eventually move on to more advanced topics
 // these notes assume you are ALREADY FAMILIAR WITH C and have a decent understanding of programming
 // if you are not familiar with C, read my C notes first.
-// if you are fairly new to programming, you will likely want to use this notes in addition with other resoruces to fill in any gaps.
+// if you are fairly new to programming, you will likely want to use this notes in addition with other resources to fill in any gaps.
 
 // below, we have a bunch of function prototypes that each represent a topic
 // you can jump to the function definition for each prototype to see a specific topic
@@ -57,7 +57,7 @@ int memory_model();
 int auto_keyword();
 int nullptr_keyword();
 int uniform_initialization();
-int constexprr();
+int const_expr();
 
 // ADVANCED TOPICS
 int multithreading();
@@ -140,7 +140,7 @@ int what_is_cpp() {
     // less<>, greater<>, etc.
 
     // people often say the C++ standard library is a superset of STL, but i am not sure how accurate this is!
-    // the main takeaway regarding the STL, is that it provides common datastructures and algorithms (much like the Java Collections Framework)
+    // the main takeaway regarding the STL, is that it provides common data structures and algorithms (much like the Java Collections Framework)
     // this is a big difference from C where we have to make everything ourselves.
 
 
@@ -149,7 +149,7 @@ int what_is_cpp() {
     // for example, suppose you have functions or variables defined somewhere (for example inside a library).
     // now a potential issue is that if somewhere else those some functions/variables are redefined again.
     // in order for the compiler to know which variable/function to refer to, we define the different functions/variables inside a namespace, and refer to it from there.
-    // this is similiar to python packages, for example when we import np and reference np.array()
+    // this is similar to python packages, for example when we import np and reference np.array()
 
     // one of the most common namespaces is std. 
     // we use :: (known as the scope resolution operator)
@@ -162,7 +162,7 @@ int what_is_cpp() {
 
 
 int compiling_cpp() {
-    // compiling C++ is very similiar to compiling C. 
+    // compiling C++ is very similar to compiling C. 
     // C++ has its own compiler, just like C.
     // recall that C uses the GNU C compiler (gcc).
     // similarly, C++ uses g++
@@ -174,7 +174,7 @@ int compiling_cpp() {
     // and exceptions. 
     // this leads to a much more complex compilation process for C++.
 
-    // the compilation process for C++ itself is also very similiar to C.
+    // the compilation process for C++ itself is also very similar to C.
     // recall in C:
     // 1. preprocessing
         // the C preprocessor cleans up the source code (#include and #define statements)
@@ -185,7 +185,7 @@ int compiling_cpp() {
     // 4. linking
         // the C linker takes all the object code (.o files) and links them together into a single binary executable
 
-    // for C++ the process is very similiar:
+    // for C++ the process is very similar:
     // 1. preprocessing
         // the C++ preprocessor cleans up source code (#include and #define) 
         // also cleans up macros that can handle templates (more on templates later)
@@ -198,7 +198,7 @@ int compiling_cpp() {
         // the C assembler takes the assembly code for each file and turns it into object code (.o or .obj)
     // 4. linking
         // and finally, just like C, the object code is linked together at the end to form one executable.
-        // the final executable doesnt need to have a specific extension but it may have .out (unix) or .exe (windows), or it may have none
+        // the final executable doesn't need to have a specific extension but it may have .out (unix) or .exe (windows), or it may have none
 
     // one final question for this section: why do we have assembly code and object code?
     // you may be wondering what the point is of having assembly code and object code. why not just directly make the executable?
@@ -210,7 +210,7 @@ int compiling_cpp() {
     
     // why object code?
     // the reason we would want object code rather than just directly going to an executable is because of many reasons.
-    // 1. modular compilation (invidiual recompilation):
+    // 1. modular compilation (individual recompilation):
         // we can have a binary object file for each separate source file, which allows us to recompile and reassemble only one binary object at a time.
         // this means if we have one just one c++ source file out of a hundred that are all linked together, we do not need to recompile binaries for the whole program.
         // we only would need to recompile the object code for the single source file and relink all the object files together.
@@ -218,7 +218,7 @@ int compiling_cpp() {
         // external binaries such as those for the C++ standard library can be linked together if we have an object code stage.
         // the C++ standard library headers do not have source files, but rather object files for their implementation.
         // (makes sense, why would u want source code, you would have to recompile it each time and libraries can be big).
-        // hence it becomes seamless to join libraries together with your code if you have a stage whhere you link together all the object files
+        // hence it becomes seamless to join libraries together with your code if you have a stage where you link together all the object files
     // 3. improved compiler optimizations
         // having an object file for each separate source file allows the compiler to make smarter optimizations as the binaries are separate.
         // further optimizations are made upon linking.
@@ -377,9 +377,9 @@ int stl() {
     // #include <typeinfo>
     // #include <type_traits>
 
-    // the main idea of the STL is that it provides several useful datastructures and algorithms for C++.
+    // the main idea of the STL is that it provides several useful data structures and algorithms for C++.
     // this is a big upgrade from C in terms of high-level usage.
-    // remember in C, we do not even have dyanmic arrays and must implement everything ourselves.
+    // remember in C, we do not even have dynamic arrays and must implement everything ourselves.
     // with C++ we don't have to dedicate extra files to reinvent the wheel. simply just use the already implemented DSA from STL.
 
     return 0;
