@@ -21,7 +21,14 @@ int compiling_cpp();
 int cmake();
 int stdin_stdout();
 
-// CORE FEATURES
+// STANDARD LIBRARY
+int stl();
+int string_handling();
+int stream_io();
+int containers_algorithms();
+int iterators();
+
+// OBJECT ORIENTED PROGRAMMING
 int oop();
 int constructors_destructors();
 int inheritance_polymorphism();
@@ -44,13 +51,6 @@ int smart_pointers();
 int raii();
 int move_semantics();
 int memory_model();
-
-// STANDARD LIBRARY
-int stl();
-int string_handling();
-int stream_io();
-int containers_algorithms();
-int iterators();
 
 // MODERN C++ FEATURES
 int auto_keyword();
@@ -155,6 +155,100 @@ int what_is_cpp() {
     std::cout << "Hello World!" << std::endl;
     // here we used the :: operator to specify that we want to use cout from the std namespace. this is a very light introduction to namespaces.
     // for now, do not worry if u are confused! we will dive into all of this in more depth in the following sections.
+
+    return 0;
+}
+
+
+int compiling_cpp() {
+
+
+    return 0;
+}
+
+int cmake() {
+
+
+    return 0;
+}
+
+
+int stdin_stdout() {
+
+
+    return 0;
+}
+
+int stl() {
+
+    // recall the C standard library.
+    // even though we have a header called <stdlib.h>, the entire C standard library consists of much more headers.
+    // here are some of the headers that make up the C standard library:
+        // stdlib.h
+        // stdio.h
+        // string.h
+        // math.h
+        // time.h
+        // ctype.h
+        // limits.h
+        // float.h
+        // stdarg.h
+        // assert.h
+        // stddef.h
+        // errno.h
+        // signal.h
+    // and so on.
+    
+    // <as a refresher, we will go over what <stdlib.h> in C contains.
+        // you don't need to read this.
+
+        // memory stuff:
+        // malloc() - allocate a block of memory
+        // calloc() - allocate and clear a block of memory
+        // realloc() - resize an allocated memory block
+        // free() - free an allocated block of memory
+        
+        // process control stuff:
+        // exit() - terminates the calling process
+        // abort() - causes asn abnormal program termination
+        // system() - executes a shell command
+
+        // conversion functions:
+        // atoi() - convert string to int
+        // atol - str to long
+        // atof -- string to float
+        // strtol() - str to long again. has more features
+        // strtoll() - str to long long
+
+        // more utilities
+        // rand() - generates a pseudo-random number
+        // srand() - seeds the pseudo-random number generator
+        // qsort() - sorts an array
+        // bsearch() - searches an array using binary search
+        // abs(), labs(), llabs() - absolute value for int, long, long long
+        // div(), ldiv(), lldiv() - quotient and remainder of int division for int, long, long long
+
+    // note that we are only including the headers at the top of our code.
+    // the actual implementation of these headers, of the C standard library, is provided by the compiler you use.
+    // the compiler, like gcc, is responsible for providing an implementation of the C standard library.
+
+    // gcc specifically provides the GNU C Library (glibc) implementation.
+
+    // the concept is exactly the same in C++.
+    // we include headers that are either .h or .hpp files like so:
+    // #include <vector>
+    // notice that we did not include a '.h'
+
+    
+
+
+    return 0;
+}
+
+
+int references() {
+
+
 
     return 0;
 }
