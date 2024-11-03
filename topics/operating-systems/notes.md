@@ -7,7 +7,7 @@
 
 # what is an operating system ?
 
-a very low layer of software that manages hardware resources and provides a set of services for application software. in other words, a very convennient abstract for hardware access.
+a very low layer of software that manages hardware resources and provides a set of services for application software. in other words, a very convenient abstraction for hardware access.
 
 they also provided restricted access to hardware resources like disks etc.
 
@@ -73,7 +73,7 @@ when an interrupt happens,
 - CPU disables interrupts (we can't have a new interrupt occur while we are handling an interrupt)
 
 interrupts can be invoked by the hardware or the software. they signal to the cpu that the device has an event that needs attention. 
-- interrupts signal errors or requests off OS intervention (a system call). often called an exception or a trap.
+- interrupts signal errors or requests that require OS intervention (a system call). often called an exception or a trap.
 
 interrupts cause cpu to jump to a predefined routine which is known as the interrupt handler.
 
@@ -85,12 +85,13 @@ we will now briefly review processes and how they work
 bootstrapping is the process of starting a computer from a powered-off state. 
 - the hardware stores a small program called the **bootstrap loader** in non volaltile memory. this program is executed when the computer is powered on.
 
+### volatile vs non-volatile memory
+- **volatile memory**: memory that loses its contents when the power is turned off. examples include RAM.
+- **non-volatile memory**: memory that retains its contents when the power is turned off. examples include ROM, flash memory, etc. ROM stands for read-only memory.
+
 
 ## what is a process?
-a process is a program in execution. it consists of the following:
-- program counter
-- stack
-- data section
+a process is a program in execu`tion. each process has its own memory space, its own registers, and its own program counter.
 
 ## representation of a process
 a process is represented by a **process control block (PCB)**: a data structure that contains information about the process. it includes:
