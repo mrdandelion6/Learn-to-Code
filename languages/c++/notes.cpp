@@ -228,17 +228,73 @@ int compiling_cpp() {
 
 int compilation_flags() {
     // now lets finally take a look at how compilation commands look like in C++
+    // compilation in C++ looks identical to C for the most part.
 
+    // recall in C we have:
+        // gcc -o notes notes.c 
+    // where -o is a flag for the output executable name (notes)
+
+    // in C++ we have
+        // g++ -o notes notes.c 
+    
+    // the only difference is that c++ has some specific flags:
+        // -fno-exceptions: disable exception handling
+        // -fno-rtti: disable runtime type info
+        // -fvisibility: control symbol visibility
+
+    // even debugging with gdb is the same. just add a -g
 
     return 0;
 }
 
 int cmake() {
+    // recall for C we have Makefiles for generating our builds.
+    // CMake takes things further one level.
 
+    // CMake stands for cross platform make. it's a tool that generates build files for us.
+    // you write a file called CMakeLists.txt that generates your build files (like makefiles) that end up building your program. 
+
+    // the main advantage is that the same CMakeLists.txt can generate:
+        // makefiles on linux
+        // visual studio project files on windows
+        // xcode project ffiles on macOS
+        // other build systems like Ninja
+        
+    // that's why cmake is called cross platform make!
+
+    // to learn how to properly write CMakeLists.txt files, see CMakeLists.txt inside ./example-project/
+    // to use the CMakeLists.txt that you have typed up, you will want to first create a folder named "build":
+        // mkdir build
+        // cd build
+        // cmake ..
+    // this is assuming the CMakeLists.txt file is outside the build file (in ..)
+
+    //then inside the build directory, (we already cd'd here), you would just run make:
+        // make
+
+    // the above example is if we use make.
+    // here is an example using Ninja:
+        // mkdir build
+        // cd build
+        // cmake -G "Ninja" .. 
+        // ninja 
+
+    // note that we specify that we are using Ninja to build our files with the -G "Ninja" 
+    // also note a generic way to execute build (whether its make or ninja), is to use:
+        // cmake --build .
+
+    // this is the common directory structure:
+    //     myproject/
+        // ├── CMakeLists.txt
+        // ├── src/
+        // │   └── main.cpp
+        // └── build/          # all generated files stay here
+        //     └── ...
+        
+    // note that you do not add the build folder to your version control.
 
     return 0;
 }
-
 
 int stdin_stdout() {
 
