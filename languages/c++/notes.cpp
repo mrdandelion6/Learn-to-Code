@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <limits>
 // remark .. C++ prefers camel case. i will be using snake case for many things though :p
 
 
@@ -303,20 +304,131 @@ int stdin_stdout() {
     // for stdout, c++ writes to the console by default.
 
     // using stdout
-    // in c++, stdout is handled using the cout stream:
-    std::cout << "Enter a number: ";
+    // in c++, stdout is handled using the cout stream (cout stands for character output / console output):
+    std::cout << "(1) Enter a number: ";
 
     // note that cout is part of the std namespace, so we use the scope resolution operator ::
     // we will learn more abouut the scope resolution operator in a later section.. but for now just know that we use it to specify where we want to use cout from.
     // its kind of like when you have a class and you access a method or attribute from that class using . in python, but it's a bit different.
 
     // using stdin
-    // in c++, stdin is handled using the cin stream:
+    // in c++, stdin is handled using the cin stream (cin stands for character input / console input):
     int number;
     std::cin >> number;
     // the above code reads an integer from the console and stores it in the variable number.
 
-    std::cout << "You entered: " << number << std::endl;
+    std::cout << "(1) You entered: " << number << std::endl;
+
+    // insertion and extraction operators:
+    // note that we have been using the << and >> operators.
+    // these are called the insertion and extraction operators respectively.
+
+    // the insertion operator << is used to insert data into the stream.
+    // the stream is the object that handles the input/output, which could be cout or cin, or even a file stream.
+
+    // the extraction operator >> is used to extract data from the stream.
+    // for example, when we do std::cin >> number, we are extracting data from the cin stream and storing it in the variable number.
+
+    // you might remember >> and << being bit shift operators in C.
+    // in C++, these operators are overloaded to work with streams.
+    // that means they can be used for both bit shifting and for streams depending on the context.
+    // for example, here is bit shifting:
+    int x = 1;
+    x = x << 1; // x is now 2
+    std::cout << "x is: " << x << std::endl; // prints 2
+
+    // endl
+    // note that we have been using std::endl.
+    // std::endl is a manipulator that inserts a newline character into the stream and flushes the output buffer.
+    // cout can be flushed manually using std::flush, but std::endl is more convenient as it also inserts a newline character.
+    // when the buffer is flushed, it means that the data in the buffer is written to the output device (console, file, etc.)
+    // notice that when we did "(1) Enter a number: ", this still got printed even though we did not use std::endl.
+    // this is because we still did flush the buffer by reading from cin.
+    // in other words, here are the following things that flushes cout:
+        // 1. using std::endl
+        // 2. using std::flush
+        // 3. reading from cin
+        // 4. newline character '\n'
+        // 5. program termination
+
+    // cin behaviour
+    // note that cin stops reading input when it encounters whitespace character (space, newline, tab)
+    // so if we did the following:
+    std::cout << "(2) Enter a word: ";
+    std::string sentence; // we make use of the string class from the C++ standard library. more on this later.
+    std::cin >> sentence;
+
+    // and we entered "hello world" into the console, sentence would only contain "hello"
+    // this is because cin stops reading input when it encounters a space character.
+    std::cout << "(2) You entered: " << sentence << std::endl;
+
+    // and to make things worse, if we entered "hello world" into the console, 
+    // the next time we use cin, it will read "world" and not wait for input.
+    // this is because cin leaves "world\n" in the input buffer,
+    // and the next time we use cin, it reads from the buffer and ends when it encounters the newline character.
+
+    // enter "hello world" to the above cin and see what happens when we try to read another string.
+    std::cout << "(3) Enter a word: ";
+    std::cin >> sentence;
+    std::cout << "(3) You entered: " << sentence << std::endl;
+
+    // you should see the following being printed:
+    // (2) Enter a word: hello world
+    // (2) You entered: hello
+    // (3) Enter a word: (3) You entered: world
+
+    // note that we did not even get a newline afer "Enter a word: " because cin left it in the buffer.
+    // you might have expected this instead:
+        // (2) Enter a word: hello world
+        // (2) You entered: hello
+        // (3) Enter a word: 
+        // (3) You entered: world
+    // but we did not get that because cin left the newline character in the buffer.
+    // this might be even more confusing but the reason for this is as follows:
+    // the third prompt (3) and its response are printing so quickly (because no actual user input is needed) that they appear on the same line.
+    // the program isn't actually waiting for input at the second prompt, so there's no time for you to see a cursor on a new line.
+    // this is because cin is reading from the buffer and not waiting for input.
+
+    // to get around this issue, we can "flush" the input buffer.
+    // we can do this by using the ignore() function from the cin stream.
+
+    // ignore() function:
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    // this is how we flush the buffer. we need the <limits> header for this.
+    // ill explain how this works:
+        // std::cin.ignore() takes two arguments
+        // 1.) how many characters to ignore. in this case we are ignoring the maximum number of characters that can be stored in a stream.
+        // 2.) the delimiter character. in this case, we are ignoring until we reach the newline character.
+        // this means we are ignoring everything in the buffer until we reach the newline character, which effectively flushes it.
+
+    // now we can read a sentence properly:
+    std::cout << "(4) Enter a word: ";
+    std::getline(std::cin, sentence);
+    std::cout << "(4) You entered: " << sentence << std::endl;
+
+    // this time, do the following:
+    // Enter a sentence: hello
+    // (2) You entered: hello
+    // Enter a sentence: hello world
+    // (3) You entered: hello
+    // Enter a sentence: supercalifragilisticexpialidocious
+    // (4) You entered: supercalifragilisticexpialidocious
+
+    // at prompt (3), we entered "hello world" and it only read "hello".
+    // then we flushed "world\n" from the buffer.
+    // at prompt (4), we entered "supercalifragilisticexpialidocious" and it read the whole thing.
+
+    // in order to take in a whole sentence, you would want to use std::getline
+    // std::getline reads an entire line of input, including whitespace characters.
+    // it reads this input from stdin and stores it in a string.
+    std::cout << "(5) Enter a sentence again: ";
+    std::getline(std::cin, sentence);
+    std::cout << "(5) You entered: " << sentence << std::endl;
+
+    // this should work as expected and not leave anything in the buffer:
+    std::cout << "(6) Enter a sentence for the last time: ";
+    std::cin >> sentence;
+    std::cout << "(6) You entered: " << sentence << std::endl;
 
     return 0;
 }
