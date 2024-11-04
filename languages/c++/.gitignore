@@ -1,0 +1,11 @@
+# general
+*
+!*.*
+*.o
+*.a
+*.so
+*.exe
+*.out
+
+# specific
+build/

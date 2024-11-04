@@ -67,7 +67,7 @@ int variadic_templates();
 
 int main() {
     // RUN
-    what_is_cpp();
+    stdin_stdout();
 }
 
 int what_is_cpp() {
@@ -297,7 +297,26 @@ int cmake() {
 }
 
 int stdin_stdout() {
+    // recall IO streams from C
+    // in C++ we have the same thing.
+    // for standard input (stdin), c++ takes from the console by default. i.e, waits for keyboard input into the console.
+    // for stdout, c++ writes to the console by default.
 
+    // using stdout
+    // in c++, stdout is handled using the cout stream:
+    std::cout << "Enter a number: ";
+
+    // note that cout is part of the std namespace, so we use the scope resolution operator ::
+    // we will learn more abouut the scope resolution operator in a later section.. but for now just know that we use it to specify where we want to use cout from.
+    // its kind of like when you have a class and you access a method or attribute from that class using . in python, but it's a bit different.
+
+    // using stdin
+    // in c++, stdin is handled using the cin stream:
+    int number;
+    std::cin >> number;
+    // the above code reads an integer from the console and stores it in the variable number.
+
+    std::cout << "You entered: " << number << std::endl;
 
     return 0;
 }
