@@ -1,0 +1,4 @@
+# ignore VMs directory for now
+# the kali zip file is 3.09 GB and git LFS only allows 2 GB
+# find a workaround for this (onedrive, google drive, etc.)
+VMs/

@@ -952,5 +952,24 @@ there are two main types of boot sectors:
 
 ## disk mounting
 
-now that we have a basic understanding of disk images, let's learn how to mount them and what that exactly means.
+now that we have a basic understanding of disk images, let's learn how to mount them and what that exactly means. mounting a disk image is when you take a disk image file from one operating system and make it accessible to another operating system. this allows you to read and write data to the disk image as if it were a physical disk.
+
+essentially, it allows you to examine a disk image in a controlled environment without running the original operating system that the disk image came from. this is useful for forensic analysis, data recovery, and other security-related tasks.
+
+here are some common approaches:
+1. **offline mounting**
+	- where you attach the virtual disk as a data disk (non-bootable) to a virtual machine
+2. **write-blocked mounting**
+	- where you mount the disk in read-only mode to prevent accidental writes
+3. **mount to VM**
+	- attaching a virtual disk from one VM to another VM for analysis
+
+these are often done using tools like:
+- vmware's mount utility
+- virtualbox' vboxmanage
+- ftk imager
+- encase
+- libvirt and qemu tools for kvm/qemu environments
+
+we will do the third approach in this section, *mount to VM*, using vmware's mount utility.
 
