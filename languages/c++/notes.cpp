@@ -572,10 +572,20 @@ int stl() {
     return 0;
 }
 
-int containers_algorithms() {
+int stl_containers() {
+    // in the following sections we will learn about the containers below:
+    
+    // SEQUENCE CONTAINERS
+        // vector: dynamic array, continuous memory
+        // array: fixed sized array, continuous memory
+        // deque: double ended queue, fast insertion/removal at both ends
+        // list: doubly linked list, fast insertion/removal anywhere
+        // fo
 
     return 0;
 }
+
+
 
 int references() {
 
