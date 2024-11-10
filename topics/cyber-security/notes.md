@@ -888,15 +888,34 @@ a disk image contains all the data on the disk, including:
 
 - empty/deleted space: the space on the disk that is not being used. this includes files that have been deleted but not overwritten. this space can contain sensitive information that can be recovered using forensic tools.
 
-you can have a **virtual disk image** or a **physical disk image**. they are in effect the same thing, one is just a disk image of an actual physical disk, and one is a disk image of a virtual disk.
+you can have a **virtual disk image** or a **physical disk image**. they are in effect the same thing, one is just a disk image of an actual physical disk, and one is a disk image of a virtual disk, a disk for a virtual machine.
 
 ## virtual disks
 
-a virtual disk is a disk image that is used by a virtual machine. as we know, virtual machines are software that allows you to run an operating system within another operating system. the virtual machine uses a virtual disk to store the operating system and data, and this disk is stored as a file on the host machine. 
+a virtual disk (aka virtual disk image) is a disk image that is used by a virtual machine. as we know, virtual machines are software that allows you to run an operating system within another operating system. the virtual machine uses a virtual disk to store the operating system and data, and this disk is stored as a file on the host machine. 
+
+### physical vs virtual disks
+so for distinction,
+- physical disk != physical disk image
+- virtual disk == virtual disk image
+
+a physical disk is the actual hardware disk, while a physical disk image is a file that contains a copy of the data on the disk. we need to make a disk image of a physical disk to work with it in a virtual machine.
+
+a virtual disk is a disk that is used by a virtual machine, it is already an image. just make a copy of it and work with it directly (so you don't mess up the original).
+
+### disk image formats
+disk images are often stored in the following formats:
+- **.raw**: a raw disk image (sometimes .dd or .img) is the *simplest form* of a disk image. it contains a bit-for-bit copy of the disk with no additional metadata, compression, or special formatting. think of it as a "pure data" version.
+- **.vmdk**: a vmdk disk image is used by vmware virtual machines. it contains a copy of the data on the disk, as well as information about the disk geometry and partition layout.
+- **.vdi**: a vdi disk image is used by virtualbox virtual machines. it contains a copy of the data on the disk, as well as information about the disk geometry and partition layout.
+- **.vhd**: a vhd disk image is used by microsoft virtual machines. it contains a copy of the data on the disk, as well as information about the disk geometry and partition layout.
+- **.qcow2**: a qcow2 disk image is used by qemu virtual machines. it contains a copy of the data on the disk, as well as information about the disk geometry and partition layout.
+
+formats like `.vmdk`, `.vdi`, `.vhd`, and `.qcow2` contain additional metadata that describes the disk image. this metadata includes information about the disk geometry, partition layout, and other disk properties. this metadata is used by the virtual machine to read and write data to the disk image.
 
 
 
-### boot sectors
+## boot sectors
 
 if you want to learn about boot sectors, here's a bit of info. this is a bit of an aside, so feel free to skip this section if you're not interested.
   - boot sectors located at the beginning of the disk
@@ -930,3 +949,8 @@ there are two main types of boot sectors:
 	- uses CRC32 checksums to validate data which makes it more reliable than MBR
 	- supports disks larger than 2TB
 	- provides up to 128 partitions
+
+## disk mounting
+
+now that we have a basic understanding of disk images, let's learn how to mount them and what that exactly means.
+
