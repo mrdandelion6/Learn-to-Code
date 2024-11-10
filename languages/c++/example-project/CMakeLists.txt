@@ -95,9 +95,12 @@ add_subdirectory(lib/math)
     #8         ${CMAKE_CURRENT_SOURCE_DIR}/include
     #9 )
 
+# after this, we need to link the math library to the main executable. that will be after the following notes about libraries and scopes.
+
 # LIBRARIES:
 # lets analyze the above code line by line.
 # 1: add_library() is a CMake command that creates a "library" target.
+# prototype: add_library(name source1 source2 ...)
     # a library is a collection of object files that can be linked to other targets.
     # in this case, we are creating a library object called mathlib. that's why we have the name mathlib as the first argument.
 # 2-3: the second argument is the source files that will be compiled to create the library.
@@ -108,6 +111,30 @@ add_subdirectory(lib/math)
         # 1. IDE support: sometimes cmake uses this list to tell IDEs about the files in the project.
         # 2. dependency tracking: if the header file changes, cmake will know to recompile the source file.
 # 6: target_include_directories() is a CMake command that specifies the "include directories" for a target.
+# prototype: target_include_directories(target scope include_dir1 include_dir2 ...)
     # an include directory is a directory that contains header files, as that is what we "include" in our source files.
     # we need include directories to tell the compiler where to look for header files.
-    # we 
+    # for example, if we had #include "math.h" in our math.cpp file, the compiler would look in the include directory for the math.h file.
+    # this is of course because we never specify the full path to the header file in the #include directive.
+    # by using target_include_directories(), we can specify the include directories for a target, and just putting #include "math.h" in our source file will work.
+# 7: PUBLIC is a keyword that specifies the "scope" of the include directory.
+    # PUBLIC means that the include directory will be available to any target that links to this target.
+    # more on this in the next section.
+# 8: the second argument is the include directory that we want to specify.
+    # ${CMAKE_CURRENT_SOURCE_DIR} is a variable that contains the path to the current source directory.
+    # as the CMakeLists.txt file is in the math directory (.../lib/math/), ${CMAKE_CURRENT_SOURCE_DIR} will be the path to the math directory (.../lib/math/).
+
+# SCOPES:
+# CMake has three scopes: PRIVATE, INTERFACE, and PUBLIC.
+
+# PUBLIC means that the property will be applied to the target and any target that links to it.
+# for example, if we have a target A that links to target B, and target B has a PUBLIC property, target A will inherit that property.
+# so for the above example, ${CMAKE_CURRENT_SOURCE_DIR}/include will be available to any target that links to mathlib.
+
+# INTERFACE means that the property will be applied to any target that links to the target, but not the target itself.
+# for example, if we have a target A that links to target B, and target B has an INTERFACE property, target A will inherit that property but target B will not.
+# this is useful for specifying properties that should only be applied to targets that link to the target, but not the target itself.
+
+# PRIVATE means that the property will only be applied to the target itself.
+# for example, if we have a target A that links to target B, and target B has a PRIVATE property, target A will not inherit that property.
+# so in our above example, ${CMAKE_CURRENT_SOURCE_DIR}/include will only be available to mathlib and not any target that links to mathlib.
