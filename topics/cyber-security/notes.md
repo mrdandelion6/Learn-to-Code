@@ -873,3 +873,60 @@ in this example, the `?` are placeholders for the data. the data is then bound t
 
 let's just take a second to understand the code as well, in case you are unfamiliar with SQL. the sqlite3 is a library that allows us to interact with an sqlite database. we first connect to the database, then create a **cursor** object. a cursor is used to execute SQL queries. it's just like a cursor in a text editor, it points to a specific location in the database.  
 
+# forensic disk mounting
+
+a very common task in cybersecurity is to mount a disk image and examine its contents. this is often done when investigating a security incident. in this section, we will learn how to understand disk images and how to mount them.
+
+## disk images
+
+first let us understand what exactly a disk image is. a disk image is like a snapshot of a disk. by disk, we mean a hard drive, a usb drive, or any other storage device. it may even be a virtual disk (more on this in a bit).
+
+a disk image contains all the data on the disk, including:
+- the file system:  this is the structure that the operating system uses to organize files on the disk. it includes information about the files, such as their names, sizes, and locations. for example, linux uses ext2, ext3, and ext4 file systems, while windows uses ntfs.
+- the files: the actual data that is stored on the disk. this includes documents, pictures, videos, and other files.
+- boot sectors: the information that the computer needs to boot from the disk. more info on this below
+
+- empty/deleted space: the space on the disk that is not being used. this includes files that have been deleted but not overwritten. this space can contain sensitive information that can be recovered using forensic tools.
+
+you can have a **virtual disk image** or a **physical disk image**. they are in effect the same thing, one is just a disk image of an actual physical disk, and one is a disk image of a virtual disk.
+
+## virtual disks
+
+a virtual disk is a disk image that is used by a virtual machine. as we know, virtual machines are software that allows you to run an operating system within another operating system. the virtual machine uses a virtual disk to store the operating system and data, and this disk is stored as a file on the host machine. 
+
+
+
+### boot sectors
+
+if you want to learn about boot sectors, here's a bit of info. this is a bit of an aside, so feel free to skip this section if you're not interested.
+  - boot sectors located at the beginning of the disk
+  - they specifically known as sector 0
+  - they tell the computer how to boot the operating system
+  - every disk has a sector 0 (boot sector), but not every boot sector contains bootable code
+  - for example, if you have your OS on a specific SSD (say C:), then the C: drive is a *bootable disk*
+  - your C: drive then has:
+	- a full boot sector with actual **bootstrap** code
+	- instructions on how to load the OS
+	- the BIOS/UEFI knows how to read the boot sector and load the OS
+  - non-bootable disks (like additional storage drives) have the following in sector 0:
+    - contain a volume boot record (VBR)
+    - the VBR contains information about the file system on the disk such as
+      - volume structure
+      - basic disk parameters
+    - lacks actual boot code
+    - more like a table of contents for the disk, rather than startup code
+  
+and this is why you can't just copy windows files to any disk and expect it to boot. the disk needs to have the correct boot sector. that is, you must make it bootable. 
+
+there are two main types of boot sectors:
+1. master boot record (MBR)
+	- located in first 512 bytes of disk
+	- first 446 bytes contain boot code
+	- next 64 bytes contain partition table
+	- last 2 bytes contain boot signature (0x55, 0xAA) which validates that it's a boot sector
+2. GUID partition table (GPT)
+	- newer than MBR
+	- stores data in the first and last sectors of disk for redundancy
+	- uses CRC32 checksums to validate data which makes it more reliable than MBR
+	- supports disks larger than 2TB
+	- provides up to 128 partitions
