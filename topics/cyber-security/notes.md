@@ -247,9 +247,9 @@ the reason we are looking into this is because we will be working work old machi
 
 ### red hat 7.2
 
-for my notes, i will be using a very old red hat 7.2 machine. specifically, we are using: rh72 2.4.7-10. we will be using this machine to learn about cybersecurity. you can find a zip for the vm in `cyber-security/VMs/RH72BufferOverruns
+for my notes, various different VMs. there is a pdf `VMs.pdf` that has the information of where to get the VMs and the login information. if you do not see this pdf, i might have removed it due to authorship reasons.
 
-for the VM we are using, the command to `ssh` into it can be found in `jots.md`, but i add it here as well:
+for example, for RH72BufferOveruns, the command to `ssh` into it can be found in `jots.md` and `VMs.pdf` but i add it here as well:
 ```
 ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -c 3des-cbc hacker@10.10.10.12
 ```
@@ -683,81 +683,6 @@ this may seem obvious or trivial, but we extend this idea to buffer overruns and
 
 buffer overruns are a common security vulnerability in C programs. they occur when a program writes more data to a buffer than it can hold. this can cause the program to crash, or worse, allow an attacker to execute arbitrary code on the system.
 
-see the c program in `code_examples/bufferoverruns/stack.c`
-
-```c
-#include<stdio.h>
-
-// global variables, available to the whole program
-char c;
-short s;
-int i;
-long l;
-float f;
-double d;
-
-int sumNums(int n, int m){
-	int i;
-	int sum=0;
-	char c[16];
-	i=n;
-	while(i<m){
-		sum=sum+i;
-		i=i+1;
-	}
-	
-	/*
-	 *  modify this so 
-	 * that the return address is overwritten with the address of hacked
-	c[0]=0xb0;
-	c[1]=0x25;
-	c[2]=0x33;
-	c[3]=0x55;
-	*/
-
-	return sum;
-}
-void f1(int a, int b, int c, int d){
-
-}
-void hacked(){
-	printf("I've been hacked\n");
-}
-int main(int argc, char ** argv){
-	sumNums(3,7);
-	f1(1,2,3,4);
-	f1(1,2,3,4);
-}
-
-```
-
-we will compile this with the `-g` flag:
-```bash
-gcc -g stack.
-```
-
-and run it with gdb:
-```bash
-gdb ./stack
-```
-
-we can then use `list` to list the sumNums and main function, then use `b` to set some breakpoints:
-```bash
-listSumnums 
-b 93 # nefore the "modify this" comment
-list main
-b 112 # on the call to sumNums
-```
-
-we can then examine the memory at the stack pointer with the following command:
-```bash
-x/32w $esp
-```
-
-this will show us the next 32 words of memory starting from the stack pointer. 
-
-if we tried doing just `x/32`, we might get a message like "Cannot access memory at address 0x0" since we are trying to access memory that we don't have permission to access. we include the `$esp` to tell gdb to start at the stack pointer.
-
 ## how buffer overruns work
 
 the idea is that we are able to write more data to a buffer than it can hold. for example, imagine suppose we are in a function. recall we will have some `$ebp` that points to the base of the stack frame. 
@@ -792,6 +717,85 @@ we dont have permission to dereference the return address as attempted below:
 but we can implicitly overwrite the return address by overwriting to the buffer. note that even though variables are added downwards in memory, the when we write to the buffer, we are writing upwards in memory. for example, when we do `arr[1] = whatever`, we write to the memory address `arr + 1 * sizeof(elem)`. so if our `whatever` value is large enough, it can bleed all the way into the return address.
 
 then when the function returns, it will return to the address that we wrote to the buffer and can execute arbitrary code.
+
+## attempting a buffer overrun
+
+see the c program in `code_examples/bufferoverruns/stack.c`
+
+```c
+#include<stdio.h>
+
+// global variables, available to the whole program
+char c;
+short s;
+int i;
+long l;
+float f;
+double d;
+
+int sumNums(int n, int m){
+	int i;
+	int sum=0;
+	char c[16];
+	i=n;
+	while(i<m){
+		sum += i;
+		i=i+1;
+	}
+	
+	/*
+	 * modify this so 
+	 * that the return address is overwritten with the address of hacked
+	c[0]=0xb0;
+	c[1]=0x25;
+	c[2]=0x33;
+	c[3]=0x55;
+	*/
+
+	return sum;
+}
+
+int mulNums(int n, int m){
+	printf("multiplying %d and %d\n", n, m);
+	return n*m;
+}
+
+void hacked(){
+	printf("I've been hacked\n");
+}
+
+int main(int argc, char ** argv){
+	sumNums(3,7);
+	mulNums(8,5);
+}
+```
+
+we will compile this with the `-g` flag:
+```bash
+gcc -g stack.c -o stack
+```
+
+and run it with gdb:
+```bash
+gdb ./stack
+```
+
+we can then use `list` to list the sumNums and main function, then use `b` to set some breakpoints:
+```bash
+list sumNums 
+b 93 # before the "modify this" comment
+list main
+b 112 # on the call to sumNums
+```
+
+we can then examine the memory at the frame pointer with the following command:
+```bash
+x/32w $ebp
+```
+
+this will show us the next 32 words of memory starting from the frame pointer. note that this will not work on modern systems and compilers. you will want to use the RH72BufferOverruns VM for this (see `VMs.pdf`).
+
+if we tried doing just `x/32`, we might get a message like "Cannot access memory at address 0x0" since we are trying to access memory that we don't have permission to access. we include the `$ebp` to tell gdb to start at the frame pointer.
 
 
 # SQL injections
