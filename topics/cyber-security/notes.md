@@ -758,6 +758,41 @@ this will show us the next 32 words of memory starting from the stack pointer.
 
 if we tried doing just `x/32`, we might get a message like "Cannot access memory at address 0x0" since we are trying to access memory that we don't have permission to access. we include the `$esp` to tell gdb to start at the stack pointer.
 
+## how buffer overruns work
+
+the idea is that we are able to write more data to a buffer than it can hold. for example, imagine suppose we are in a function. recall we will have some `$ebp` that points to the base of the stack frame. 
+
+what's special about `$ebp` is that usually the return address is stored right above it in memory. recall how a stack looks in memory (single stack frame):
+```
+High Memory
++------------------+
+| parameter 2      |  [ebp + 12]
+| parameter 1      |  [ebp + 8]
+| return address   |  [ebp + 4]  <--- This is where we'll return to
++------------------+
+| previous ebp val |  [ebp]      <--- ebp register points here
++------------------+
+| local var 1      |  [ebp - 4]
+| local var 2      |  [ebp - 8]
+| local var 3      |  [ebp - 12]
++------------------+  <--- esp points here
+Low Memory
+```
+if we can somehow change the value of what is in the return address, we can change where the program will return to. this is the basis of a buffer overrun.
+
+suppose we have the address of a local variable in the function. for example, if we have an array on the stack, we know the array points to values that are just a few bytes below the base pointer. 
+
+if we can calculate the offset between the local variable and the return address, we can overwrite the return address with the address of a function that we want to call. this is the basis of a buffer overrun. the only thing is; we would need permission to overwrite the return address.
+
+we dont have permission to dereference the return address as attempted below:
+```
+(ebp + 4)* = whatever
+```
+
+but we can implicitly overwrite the return address by overwriting to the buffer. note that even though variables are added downwards in memory, the when we write to the buffer, we are writing upwards in memory. for example, when we do `arr[1] = whatever`, we write to the memory address `arr + 1 * sizeof(elem)`. so if our `whatever` value is large enough, it can bleed all the way into the return address.
+
+then when the function returns, it will return to the address that we wrote to the buffer and can execute arbitrary code.
+
 
 # SQL injections
 
