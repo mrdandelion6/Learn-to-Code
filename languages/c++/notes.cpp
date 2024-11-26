@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <limits>
+#include <unistd.h> 
+#include <vector>
 // remark .. C++ prefers camel case. i will be using snake case for many things though :p
 
 
@@ -22,6 +24,8 @@ int compiling_cpp();
 int compilation_flags();
 int cmake();
 int stdin_stdout();
+int no_flush();
+int data_types();
 
 // STANDARD LIBRARY
 int stl();
@@ -68,7 +72,7 @@ int variadic_templates();
 
 int main() {
     // RUN
-    stdin_stdout();
+    no_flush();
 }
 
 int what_is_cpp() {
@@ -339,7 +343,7 @@ int stdin_stdout() {
 
     // endl
     // note that we have been using std::endl.
-    // std::endl is a manipulator that inserts a newline character into the stream and flushes the output buffer.
+    // std::endl is a manipulator that inserts a newline character into the stream and FLUSHES the output buffer.
     // cout can be flushed manually using std::flush, but std::endl is more convenient as it also inserts a newline character.
     // when the buffer is flushed, it means that the data in the buffer is written to the output device (console, file, etc.)
     // notice that when we did "(1) Enter a number: ", this still got printed even though we did not use std::endl.
@@ -377,7 +381,7 @@ int stdin_stdout() {
     // (2) You entered: hello
     // (3) Enter a word: (3) You entered: world
 
-    // note that we did not even get a newline afer "Enter a word: " because cin left it in the buffer.
+    // note that we did not even get a newline after "Enter a word: " because cin left it in the buffer.
     // you might have expected this instead:
         // (2) Enter a word: hello world
         // (2) You entered: hello
@@ -429,6 +433,32 @@ int stdin_stdout() {
     std::cout << "(6) Enter a sentence for the last time: ";
     std::cin >> sentence;
     std::cout << "(6) You entered: " << sentence << std::endl;
+
+    return 0;
+}
+
+int no_flush() {
+    // in this function you see how different things flush the buffer.
+
+    // newline flushes the buffer
+    std::cout << "Hello newline\n";
+    usleep(3000000);
+
+    // endl flushes the buffer
+    std::cout << "Hello endl" << std::endl;
+    usleep(3000000);
+
+    // cin flushes the buffer
+    std::cout << "cin time\n";
+    int number;
+    std::cout << "Hello cin";
+    std::cin >> number;
+    usleep(3000000);  
+
+    // there is nothing to flush the buffer. only flushes after program termination
+    std::cout << "Hello..";
+    usleep(3000000);
+    // after the sleep is done, program terminates and flushes the buffer.
 
     return 0;
 }
@@ -572,6 +602,64 @@ int stl() {
     return 0;
 }
 
+int data_types() {
+    // there are two kinds of data types in C: primitive and non-primitive
+
+    // PRIMITIVE DATA TYPES
+    // these are also known as fundamental datatypes
+    // primitive types are built into the language
+    // primitive types hold single values
+
+    // integer type
+    int;                // usually 4 bytes
+    short;              // usually 2 bytes
+    long;               // usually 4 or 8 bytes
+    long long;          // usually 8 bytes
+
+    // float types
+    float;              // usually 4 bytes
+    double;             // usually 8 bytes
+    long double;        // usually 8 or 16 bytes
+
+    // character types
+    char;               // 1 byte
+    
+    // boolean
+    bool;               // 1 byte
+
+    // void
+    void;               // no bytes
+    
+
+    // NON PRIMITIVE DATA TYPES
+    // non-primitive types can can hold multiple values and/or have methods associated
+    // non-primitive types are often based on primitive types
+
+    // arrays
+    int arr[5];
+    // same as in C
+
+    // pointers
+    int* x;
+    // 4 bytes on 32-bit systems
+    // 8 bytes on 64-bit systems
+
+    // strings
+    std::string s1 = "hello world";
+
+    // structures (same as C)
+    struct Student {
+        int roll;
+        char grade;
+        float marks;
+    };
+
+    // classes
+    // similar to structures but with data hiding
+
+    return 0;
+}
+
 int stl_containers() {
     // in the following sections we will learn about the containers below:
     
@@ -580,12 +668,73 @@ int stl_containers() {
         // array: fixed sized array, continuous memory
         // deque: double ended queue, fast insertion/removal at both ends
         // list: doubly linked list, fast insertion/removal anywhere
-        // fo
+        // forward list: 
 
+    // ASSOCIATIVE CONTAINERS
+    // ORDERED
+        // map: unique keys with values
+        // set: unique keys only
+        // multimap: duplicate keys with values
+        // multiset: duplicate keys
+    // UNORDERED
+        // unordered_map: unique keys with values
+        // unordered_set: unique keys only
+        // unordered_multimap: duplicate keys with values
+        // unordered_multiset: duplicate keys
+
+    // don't worry too much about each of the containers right now, we will investigate them each in greater depth.
     return 0;
 }
 
+int vectors() {
+    // make sure to include vector at the top
+    // #include <vector>
 
+    // CREATING VECTORS:
+
+    // empty vector
+    std::vector<int> vec;
+
+    // vector of 5 elements initialized to zero
+    std::vector<int> vec2(5);
+
+    // vector of 5 elements all initialized to 10
+    std::vector<int> vec3(5, 10);
+
+    // initialize vector with manual values
+    std::vector<int> vec4 = {1, 2, 3, 4};
+
+    // ADDING ELEMENTS
+    vec.push_back(1);
+    // add to the end of the vector
+    // this is an amortized O(1) operation
+    // O(n) when the vector needs to be resized
+
+    vec.emplace_back(2);
+    // construct element in place at the end
+    // specifically we are CONSTRUCTING the element, not copying it
+    // this is pointless for types like integers, but useful for things like strings
+
+    // for example,
+    std::vector<std::string> str_vec = {"hello"};
+    str_vec.emplace_back("world");
+
+    // the above is faster than the following:
+    str_vec.push_back("sup");
+    // this does two things:
+        // 1. creates a temporary string with "hello"
+        // 2. moves/copies that string into the vector
+
+    // whereas emplace_back() constructs it directly into the vector's memory, so one step
+
+    // for integers, it's still one step for emplace_back():
+    vec.push_back(69);
+    // this does not create a temporary variable
+    
+
+
+    return 0;
+}
 
 int references() {
 
