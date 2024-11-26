@@ -247,9 +247,9 @@ the reason we are looking into this is because we will be working work old machi
 
 ### red hat 7.2
 
-for my notes, i will be using a very old red hat 7.2 machine. specifically, we are using: rh72 2.4.7-10. we will be using this machine to learn about cybersecurity. you can find a zip for the vm in `cyber-security/VMs/RH72BufferOverruns
+for my notes, various different VMs. there is a pdf `VMs.pdf` that has the information of where to get the VMs and the login information. if you do not see this pdf, i might have removed it due to authorship reasons.
 
-for the VM we are using, the command to `ssh` into it can be found in `jots.md`, but i add it here as well:
+for example, for RH72BufferOveruns, the command to `ssh` into it can be found in `jots.md` and `VMs.pdf` but i add it here as well:
 ```
 ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -c 3des-cbc hacker@10.10.10.12
 ```
@@ -683,6 +683,43 @@ this may seem obvious or trivial, but we extend this idea to buffer overruns and
 
 buffer overruns are a common security vulnerability in C programs. they occur when a program writes more data to a buffer than it can hold. this can cause the program to crash, or worse, allow an attacker to execute arbitrary code on the system.
 
+## how buffer overruns work
+
+the idea is that we are able to write more data to a buffer than it can hold. for example, imagine suppose we are in a function. recall we will have some `$ebp` that points to the base of the stack frame. 
+
+what's special about `$ebp` is that usually the return address is stored right above it in memory. recall how a stack looks in memory (single stack frame):
+```
+High Memory
++------------------+
+| parameter 2      |  [ebp + 12]
+| parameter 1      |  [ebp + 8]
+| return address   |  [ebp + 4]  <--- This is where we'll return to
++------------------+
+| previous ebp val |  [ebp]      <--- ebp register points here
++------------------+
+| local var 1      |  [ebp - 4]
+| local var 2      |  [ebp - 8]
+| local var 3      |  [ebp - 12]
++------------------+  <--- esp points here
+Low Memory
+```
+if we can somehow change the value of what is in the return address, we can change where the program will return to. this is the basis of a buffer overrun.
+
+suppose we have the address of a local variable in the function. for example, if we have an array on the stack, we know the array points to values that are just a few bytes below the base pointer. 
+
+if we can calculate the offset between the local variable and the return address, we can overwrite the return address with the address of a function that we want to call. this is the basis of a buffer overrun. the only thing is; we would need permission to overwrite the return address.
+
+we dont have permission to dereference the return address as attempted below:
+```
+(ebp + 4)* = whatever
+```
+
+but we can implicitly overwrite the return address by overwriting to the buffer. note that even though variables are added downwards in memory, the when we write to the buffer, we are writing upwards in memory. for example, when we do `arr[1] = whatever`, we write to the memory address `arr + 1 * sizeof(elem)`. so if our `whatever` value is large enough, it can bleed all the way into the return address.
+
+then when the function returns, it will return to the address that we wrote to the buffer and can execute arbitrary code.
+
+## attempting a buffer overrun
+
 see the c program in `code_examples/bufferoverruns/stack.c`
 
 ```c
@@ -702,12 +739,12 @@ int sumNums(int n, int m){
 	char c[16];
 	i=n;
 	while(i<m){
-		sum=sum+i;
+		sum += i;
 		i=i+1;
 	}
 	
 	/*
-	 *  modify this so 
+	 * modify this so 
 	 * that the return address is overwritten with the address of hacked
 	c[0]=0xb0;
 	c[1]=0x25;
@@ -717,23 +754,25 @@ int sumNums(int n, int m){
 
 	return sum;
 }
-void f1(int a, int b, int c, int d){
 
+int mulNums(int n, int m){
+	printf("multiplying %d and %d\n", n, m);
+	return n*m;
 }
+
 void hacked(){
 	printf("I've been hacked\n");
 }
+
 int main(int argc, char ** argv){
 	sumNums(3,7);
-	f1(1,2,3,4);
-	f1(1,2,3,4);
+	mulNums(8,5);
 }
-
 ```
 
 we will compile this with the `-g` flag:
 ```bash
-gcc -g stack.
+gcc -g stack.c -o stack
 ```
 
 and run it with gdb:
@@ -743,20 +782,20 @@ gdb ./stack
 
 we can then use `list` to list the sumNums and main function, then use `b` to set some breakpoints:
 ```bash
-listSumnums 
-b 93 # nefore the "modify this" comment
+list sumNums 
+b 93 # before the "modify this" comment
 list main
 b 112 # on the call to sumNums
 ```
 
-we can then examine the memory at the stack pointer with the following command:
+we can then examine the memory at the frame pointer with the following command:
 ```bash
-x/32w $esp
+x/32w $ebp
 ```
 
-this will show us the next 32 words of memory starting from the stack pointer. 
+this will show us the next 32 words of memory starting from the frame pointer. note that this will not work on modern systems and compilers. you will want to use the RH72BufferOverruns VM for this (see `VMs.pdf`).
 
-if we tried doing just `x/32`, we might get a message like "Cannot access memory at address 0x0" since we are trying to access memory that we don't have permission to access. we include the `$esp` to tell gdb to start at the stack pointer.
+if we tried doing just `x/32`, we might get a message like "Cannot access memory at address 0x0" since we are trying to access memory that we don't have permission to access. we include the `$ebp` to tell gdb to start at the frame pointer.
 
 
 # SQL injections
