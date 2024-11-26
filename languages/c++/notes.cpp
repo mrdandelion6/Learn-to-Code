@@ -308,7 +308,7 @@ int stdin_stdout() {
     std::cout << "(1) Enter a number: ";
 
     // note that cout is part of the std namespace, so we use the scope resolution operator ::
-    // we will learn more abouut the scope resolution operator in a later section.. but for now just know that we use it to specify where we want to use cout from.
+    // we will learn more about the scope resolution operator in a later section.. but for now just know that we use it to specify where we want to use cout from.
     // its kind of like when you have a class and you access a method or attribute from that class using . in python, but it's a bit different.
 
     // using stdin
