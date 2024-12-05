@@ -72,7 +72,7 @@ int variadic_templates();
 
 int main() {
     // RUN
-    no_flush();
+    references();
 }
 
 int what_is_cpp() {
@@ -307,6 +307,10 @@ int stdin_stdout() {
     // for standard input (stdin), c++ takes from the console by default. i.e, waits for keyboard input into the console.
     // for stdout, c++ writes to the console by default.
 
+    // we can use printf() in C++ just like we did in C
+    printf("starting stdin_stdout section!\n");
+    // but we will focus on using << and working with cout and cin directly (keep reading)
+
     // using stdout
     // in c++, stdout is handled using the cout stream (cout stands for character output / console output):
     std::cout << "(1) Enter a number: ";
@@ -323,7 +327,7 @@ int stdin_stdout() {
 
     std::cout << "(1) You entered: " << number << std::endl;
 
-    // insertion and extraction operators:
+    // INSERTION and EXTRACTION OPERATORS:
     // note that we have been using the << and >> operators.
     // these are called the insertion and extraction operators respectively.
 
@@ -611,24 +615,24 @@ int data_types() {
     // primitive types hold single values
 
     // integer type
-    int;                // usually 4 bytes
-    short;              // usually 2 bytes
-    long;               // usually 4 or 8 bytes
-    long long;          // usually 8 bytes
+    int a;                // usually 4 bytes
+    short b;              // usually 2 bytes
+    long c;               // usually 4 or 8 bytes
+    long long d;          // usually 8 bytes
 
     // float types
-    float;              // usually 4 bytes
-    double;             // usually 8 bytes
-    long double;        // usually 8 or 16 bytes
+    float e;              // usually 4 bytes
+    double f;             // usually 8 bytes
+    long double g;        // usually 8 or 16 bytes
 
     // character types
-    char;               // 1 byte
+    char h;               // 1 byte
     
     // boolean
-    bool;               // 1 byte
+    bool i;               // 1 byte
 
     // void
-    void;               // no bytes
+    // void j;               // no bytes. note we cannot even declare this
     
 
     // NON PRIMITIVE DATA TYPES
@@ -640,7 +644,7 @@ int data_types() {
     // same as in C
 
     // pointers
-    int* x;
+    int* xp;
     // 4 bytes on 32-bit systems
     // 8 bytes on 64-bit systems
 
@@ -709,6 +713,7 @@ int vectors() {
     // add to the end of the vector
     // this is an amortized O(1) operation
     // O(n) when the vector needs to be resized
+    // note that the vector gets resized by a factor of 2 each time (doubles in length)
 
     vec.emplace_back(2);
     // construct element in place at the end
@@ -731,14 +736,61 @@ int vectors() {
     vec.push_back(69);
     // this does not create a temporary variable
     
+    // so you might wonder, when do we want to use push_back() instead then?
+    // if the object already exists, then push_back will be more efficient than emplace_back or at least equally as much.
+
+    std::string existing_string = "Yoskies";
+    str_vec.push_back(existing_string);
 
 
     return 0;
 }
 
 int references() {
+    // a reference in C++ is essentially an alias for an already existing variable
+    // if x was an existing variable, and we made y a reference of x, then y and x hold the value of the same data in memory.
+    // that is, having a reference variable does not take up more memory.
+    // so if y is a reference of x, &x == &y
+    // this idea is not to be confused with pointers. 
 
+    // POINTERS vs REFERENCES
+    // a pointer stores the value of the memory address of a variable...
+    // whereas a reference stores the same value of an already existing variable, and has the same address in memory.
 
+    // USAGE
+    // you might already be familiar with references in python
+    // when we do x = [1, 2, 3] and y = x, y becomes a reference of x.
+    // we see this in action when we do (x is y) or if we change y[0] = 69, then x[0] also becomes 69
+
+    // we can achieve this same affect in C++, except we must explicitly declare the type as a reference.
+    std::vector<int> x = {1, 2, 3};
+    std::vector<int>& y = x;
+
+    // now y is a reference to x
+    // lets also make 'z', without adding &
+    std::vector<int> z = x;
+
+    // now let's change value in x
+    x[0] = 69;
+
+    // check y
+    std::cout << "y[0] is " << y[0] << std::endl;
+    // prints 69
+
+    // check z
+    std::cout << "z[0] is " << z[0] << std::endl;
+    // prints 1
+
+    // by doing std::vector<int> z = x; , we made a full copy of x. we can see that these exist in different locations in memory.
+
+    std::cout << "address of x is: " << &x << std::endl;
+    std::cout << "address of y is: " << &y << std::endl;
+    std::cout << "address of z is: " << &z << std::endl; 
+
+    // we see that x and y share the same address whereas z shares a different one:
+    // address of x is: 0x7fff7bf00da0
+    // address of y is: 0x7fff7bf00da0
+    // address of z is: 0x7fff7bf00dc0
 
     return 0;
 }
