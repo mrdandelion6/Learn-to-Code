@@ -18,11 +18,15 @@
 // you can jump to the function definition for each prototype to see a specific topic
 // to run the code for a specific topic, just call it in the main() function by replacing the function under "// RUN"
 
-// BASIC CONCEPTS
+// INTRO
 int what_is_cpp();
+
+// COMPILING
 int compiling_cpp();
 int compilation_flags();
 int cmake();
+
+// BASIC PRINTING
 int stdin_stdout();
 int no_flush();
 int data_types();
@@ -30,9 +34,21 @@ int data_types();
 // STANDARD LIBRARY
 int stl();
 int string_handling();
-int stream_io();
-int containers_algorithms();
+int stl_containers();
+int vectors();
+int maps();
+int sets();
 int iterators();
+
+// LANGUAGE FEATURES
+int references();
+int range_based_for();
+int namespaces();
+int scope_resolution_operator();
+int function_overloading();
+int exception_handling();
+int default_arguments();
+int lambda_functions();
 
 // OBJECT ORIENTED PROGRAMMING
 int oop();
@@ -41,16 +57,6 @@ int inheritance_polymorphism();
 int virtual_functions();
 int templates();
 int operator_overloading();
-
-// LANGUAGE FEATURES
-int namespaces();
-int scope_resolution_operator();
-int references();
-int function_overloading();
-int exception_handling();
-int default_arguments();
-int lambda_functions();
-int range_based_for();
 
 // MEMORY AND RESOURCES
 int smart_pointers();
@@ -63,6 +69,13 @@ int auto_keyword();
 int nullptr_keyword();
 int uniform_initialization();
 int const_expr();
+
+// STREAM I/O
+int stream_io();
+int stream_classes();
+int stream_objects();
+int file_streams();
+int string_streams();
 
 // ADVANCED TOPICS
 int multithreading();
