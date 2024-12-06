@@ -20,6 +20,7 @@
 
 // INTRO
 int what_is_cpp();
+int data_types();
 
 // COMPILING
 int compiling_cpp();
@@ -29,7 +30,6 @@ int cmake();
 // BASIC PRINTING
 int stdin_stdout();
 int no_flush();
-int data_types();
 
 // STANDARD LIBRARY
 int stl();
@@ -178,6 +178,63 @@ int what_is_cpp() {
     return 0;
 }
 
+int data_types() {
+    // there are two kinds of data types in C: primitive and non-primitive
+
+    // PRIMITIVE DATA TYPES
+    // these are also known as fundamental datatypes
+    // primitive types are built into the language
+    // primitive types hold single values
+
+    // integer type
+    int a;                // usually 4 bytes
+    short b;              // usually 2 bytes
+    long c;               // usually 4 or 8 bytes
+    long long d;          // usually 8 bytes
+
+    // float types
+    float e;              // usually 4 bytes
+    double f;             // usually 8 bytes
+    long double g;        // usually 8 or 16 bytes
+
+    // character types
+    char h;               // 1 byte
+    
+    // boolean
+    bool i;               // 1 byte
+
+    // void
+    // void j;               // no bytes. note we cannot even declare this
+    
+
+    // NON PRIMITIVE DATA TYPES
+    // non-primitive types can can hold multiple values and/or have methods associated
+    // non-primitive types are often based on primitive types
+
+    // arrays
+    int arr[5];
+    // same as in C
+
+    // pointers
+    int* xp;
+    // 4 bytes on 32-bit systems
+    // 8 bytes on 64-bit systems
+
+    // strings
+    std::string s1 = "hello world";
+
+    // structures (same as C)
+    struct Student {
+        int roll;
+        char grade;
+        float marks;
+    };
+
+    // classes
+    // similar to structures but with data hiding
+
+    return 0;
+}
 
 int compiling_cpp() {
     // compiling C++ is very similar to compiling C. 
@@ -615,64 +672,6 @@ int stl() {
     // this is a big upgrade from C in terms of high-level usage.
     // remember in C, we do not even have dynamic arrays and must implement everything ourselves.
     // with C++ we don't have to dedicate extra files to reinvent the wheel. simply just use the already implemented DSA from STL.
-
-    return 0;
-}
-
-int data_types() {
-    // there are two kinds of data types in C: primitive and non-primitive
-
-    // PRIMITIVE DATA TYPES
-    // these are also known as fundamental datatypes
-    // primitive types are built into the language
-    // primitive types hold single values
-
-    // integer type
-    int a;                // usually 4 bytes
-    short b;              // usually 2 bytes
-    long c;               // usually 4 or 8 bytes
-    long long d;          // usually 8 bytes
-
-    // float types
-    float e;              // usually 4 bytes
-    double f;             // usually 8 bytes
-    long double g;        // usually 8 or 16 bytes
-
-    // character types
-    char h;               // 1 byte
-    
-    // boolean
-    bool i;               // 1 byte
-
-    // void
-    // void j;               // no bytes. note we cannot even declare this
-    
-
-    // NON PRIMITIVE DATA TYPES
-    // non-primitive types can can hold multiple values and/or have methods associated
-    // non-primitive types are often based on primitive types
-
-    // arrays
-    int arr[5];
-    // same as in C
-
-    // pointers
-    int* xp;
-    // 4 bytes on 32-bit systems
-    // 8 bytes on 64-bit systems
-
-    // strings
-    std::string s1 = "hello world";
-
-    // structures (same as C)
-    struct Student {
-        int roll;
-        char grade;
-        float marks;
-    };
-
-    // classes
-    // similar to structures but with data hiding
 
     return 0;
 }
