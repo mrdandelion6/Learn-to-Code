@@ -18,6 +18,7 @@
 
 // below, we have a bunch of function prototypes that each represent a topic
 // you can jump to the function definition for each prototype to see a specific topic
+// note that these topics are not always in exact order, e.g) things from oop section may precede topics in memory and resources
 // to run the code for a specific topic, just call it in the main() function by replacing the function under "// RUN"
 
 // INTRO
@@ -62,6 +63,8 @@ int memory_model();
 
 // OBJECT ORIENTED PROGRAMMING
 int oop();
+int classes();
+int structs();
 int constructors_destructors();
 int inheritance_polymorphism();
 int virtual_functions();
@@ -89,7 +92,7 @@ int variadic_templates();
 
 int main() {
     // RUN
-    oop();
+    structs();
 }
 
 int what_is_cpp() {
@@ -1156,17 +1159,63 @@ int structs() {
     // we can use access specifiers and create member functions:
 
     struct Point {
-        int x, y;
+        private:
+            int x, y;
         public:
+            // constructor
             Point(int x_val, int y_val) {
                 x = x_val;
                 y = y_val;
             }
 
-            double distance() {
+            // no destructor needed as we do not have any allocations to clean up
+
+            // member function
+            double l2_norm() {
                 return sqrt(x*x + y*y);
             }
     };
+
+    // note that we made a constructor inside the struct, the Point() function member.
+    Point* p = new Point(10, 18);
+    std::cout << "l2 norm is: " << p->l2_norm() << std::endl; 
+    delete p; // cleanup
+
+    // structs also support:
+        // 1. inheritance from classes or other structs
+        // 2. virtual functions for polymorphism
+    // and more stuff. we don't know about these yet so we will not demonstrate them currently. read inheritance and virtual functions section to see.
+
+    // CLASSES vs STRUCTS
+    // clearly structs seem to have nearly everything classes do. 
+    // so we ask: what is the difference between the two? why are classes needed?
+    // well.. they're actually not! there is not any technical benefit of using classes rather than structs.
+    // structs can do everything classes can. 
+    // the only differences are as follows:
+        // default access specifier for structs is public and for classes it's private
+        // default inheritance for structs is public and for classes it's private (more on this later)
+
+    // other than that, structs can mimic classes entirely the same.
+    // there is no technical advantage in C++ to also having classes.
+    // however, using classes has a semantic meaning to it.
+
+    // WHY USE CLASSES INSTEAD OF STRUCTS ?
+    // it comes down to philosophy and what programmers typically expect.
+    // for complex data types with many features, components, and interactions with other data: use classes
+    // for simpler data types where you just need a container to store some information: use structs
+
+    // you can think of it like this:
+        // use structs when you would want to use JS objects {}
+        // use structs when you want to just a container for some data
+
+    // so the point is, even though structs can be tailored to fully mimic classes, they can also be very simple like this:
+
+    struct point2 {
+        int x;
+        int y;
+    };
+
+    // structs can always mimic classes, but classes cannot always mimic structs.
 
     return 0;
 }
