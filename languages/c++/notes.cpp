@@ -1113,11 +1113,18 @@ int classes() {
         // no access specifier 
         int x;
         char y;
+
+        // access specifier
         private:
-
+            int z;
+        public:
+            // constructor for struct
+            cool_struct(int ex, char why, int zee) {x = ex; y = why; z = zee;}
     };
+    // you might not be familiar with using oop tools on structs like access specifiers and constructors, but dont worry for now! (we will cover this in the next section)
 
-    cool_struct structo = {4, 'a'};
+    // now we see that we can still access the field x even though we gave it no access specifier.
+    cool_struct structo = cool_struct(4, 'a', 1); // construct locally
     std::cout << "structo.x is " << structo.x << std::endl;
     // we are able to access structo.x by default
     
@@ -1125,7 +1132,7 @@ int classes() {
     class Dog {
         char* name; // default access
         public:
-            Dog(char* n) {
+            Dog(const char* n) {
                 name = new char[strlen(n) + 1];
                 strcpy(name, n);
             }
