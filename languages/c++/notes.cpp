@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include <string>
 #include <limits>
 #include <unistd.h> 
@@ -21,6 +22,7 @@
 // INTRO
 int what_is_cpp();
 int data_types();
+int objects();
 
 // COMPILING
 int compiling_cpp();
@@ -50,6 +52,13 @@ int exception_handling();
 int default_arguments();
 int lambda_functions();
 
+// MEMORY AND RESOURCES
+int new_delete_operator();
+int smart_pointers();
+int raii();
+int move_semantics();
+int memory_model();
+
 // OBJECT ORIENTED PROGRAMMING
 int oop();
 int constructors_destructors();
@@ -57,12 +66,6 @@ int inheritance_polymorphism();
 int virtual_functions();
 int templates();
 int operator_overloading();
-
-// MEMORY AND RESOURCES
-int smart_pointers();
-int raii();
-int move_semantics();
-int memory_model();
 
 // MODERN C++ FEATURES
 int auto_keyword();
@@ -85,7 +88,7 @@ int variadic_templates();
 
 int main() {
     // RUN
-    references();
+    oop();
 }
 
 int what_is_cpp() {
@@ -107,22 +110,23 @@ int what_is_cpp() {
     // classes and objects
     // C++ supports object-oriented programming (OOP) through classes and objects. for example:
     class Position {
-
-        private:
-            int x, y;
-            
-        public:
-            Position(int initial_x, int initial_y) : x(initial_x), y(initial_y) {} // constructor
-            void move(int dx, int dy) {
-                x += dx;
-                y += dy;
-            }
-            void print_position() {
-                std::cout << "Position: (" << x << ", " << y << ")" << std::endl; 
-                // dont worry if this doesn't make sense to you right now.
-                // its just print(f"Position: ({x}, {y})"). u will learn later.
-            }
+    private:
+        int x, y;
+        
+    public:
+        Position(int initial_x, int initial_y) : x(initial_x), y(initial_y) {} // constructor
+        void move(int dx, int dy) {
+            x += dx;
+            y += dy;
+        }
+        void print_position() {
+            std::cout << "Position: (" << x << ", " << y << ")" << std::endl; 
+            // dont worry if this doesn't make sense to you right now.
+            // its just print(f"Position: ({x}, {y})"). u will learn later.
+        }
     };
+
+    // note that we align the private, public, and protected keywords with the class keyword.
 
     Position pos(0, 0);
     pos.print_position();
@@ -232,6 +236,65 @@ int data_types() {
 
     // classes
     // similar to structures but with data hiding
+    class Person {
+    public:
+        static void shout() {std::cout << "AHHH" << std::endl;}
+    };
+
+    return 0;
+}
+
+int objects() {
+    // what are objects?
+    // in C++, objects can refer to two things
+        // 1.) objects
+        // 2.) class objects
+
+    // oftentimes when we refer to objects, we may be thinking of some instantiation of a class.
+    // however in C++, every data type isn't a class!
+    // primitive data types like ints, floats, chars are not a class.
+    // non-primitive data types like strings, pointers, and structs are also not classes.
+    // however these are also referred to as objects.
+
+    // if we are thinking of objects in the context of object-oriented-programming and classes, then it would be wrong to say that int x; is an object.
+
+    // CLASS OBJECTS
+    class Person {
+    private:
+        char* name;
+    public:
+        Person(const char* person_name) {
+            name = new char[strlen(person_name) + 1];
+            strcpy(name, person_name);
+        }
+        static void shout() {std::cout << "AHHH" << std::endl;}
+    };
+
+    Person* person = new Person("jeff");
+    // we say person is an object of the class Person
+
+    // GENERAL OBJECTS
+    // a more general definition of an object is as follows.
+    // an object is a region of space in memory that has:
+        // 1.) a type
+        // 2.) a size
+        // 3.) a lifetime 
+    
+    // so anything from structs, to ints, to classes, they are all considered objects.
+    int x = 4;
+    std::string str1 = "Hello";
+    int arr[30];
+    std::vector<int> vec = {1, 2, 3};
+    
+    // VARIABLE vs OBJECT
+    // to be even more clear, the variable 'person' itself is a variable.
+    // a variable is an "identifier" that refers to an object.
+    // the object itself is the actual data--the actual memory taken.
+    // for example, consider an array of Person*
+    Person* arr2[] = {new Person("jill"), new Person("jack")};
+
+    // in this case, arr contains two objects.
+    // however there exists no variables that identify these objects.
 
     return 0;
 }
@@ -699,6 +762,15 @@ int stl_containers() {
         // unordered_multiset: duplicate keys
 
     // don't worry too much about each of the containers right now, we will investigate them each in greater depth.
+
+    // CONTAINERS ARE CLASSES
+    // all these containers are actually classes.
+    // typically we uppercase (camelcase) classes in C++ (and most other languages) but of course this is not required. 
+    // for classes from the standard library like vector, string, etc, we do not have CamelCase and instead have snake_case
+
+    // standard library classes: snake case
+    // user defined classes: camel case
+
     return 0;
 }
 
@@ -754,7 +826,6 @@ int vectors() {
     std::string existing_string = "Yoskies";
     str_vec.push_back(existing_string);
 
-
     return 0;
 }
 
@@ -803,6 +874,282 @@ int references() {
     // address of x is: 0x7fff7bf00da0
     // address of y is: 0x7fff7bf00da0
     // address of z is: 0x7fff7bf00dc0
+
+    // REFERENCES CLARIFICATION
+    // so far we have bene saying y is a reference of x.
+    // but it is more accurate to say that x and y are variables that reference the same object.
+    // the object of course is the array itself which resides in memory.  
+
+    return 0;
+}
+
+int new_delete_operator() {
+    // recall in C we would use malloc and free
+    // in C++ we can also use the 'new' and 'delete' keyword for memory management.
+
+    // we can still use malloc and free of course:
+    int* ptr1 = (int*)malloc(sizeof(int));
+    free(ptr1);
+
+    // we can also use 'new' now:
+    int* ptr2 = new int;
+    delete ptr2;
+
+    // MALLOC vs NEW
+    // new does two things:
+        // 1. allocates memory onto heap (like malloc)
+        // 2. calls the constructor of the object (particuarly useful for classes)
+
+    // it's just like in Java when use 'new'
+    // it is particularly useful for when we have classes
+
+    class Dog {
+    private:
+        char* name;
+        int age;
+
+    public:
+        // this is a constructor
+        Dog(const char* dog_name, int dog_age) {
+            name = new char[strlen(dog_name) + 1];
+            strcpy(name, dog_name);
+            age = dog_age;
+        }
+
+        // this is a destructor
+        ~Dog() {
+            delete[] name;
+        } 
+
+        void getName() {
+            std::cout << "my name is " << name << std::endl;
+        }
+    };
+
+    // to see more about oop, jump to the oop function below in the notes
+    // now lets see how new and delete work with classes:
+
+    Dog* doggy = new Dog("saad", 20);
+    // this allocates all the memory for the Dog class
+    // the memory allocated is calculated by how many 'member variables' we have
+    // that is:
+        // char* name
+        // int age
+    // and then it also calls the constructor.
+
+    // if we didnt use new, it would just allocate the memory on the stack:
+    Dog doggy2 = Dog("saadu", 200);
+    // this object only lives on the stack frame and not the heap
+
+    // now we can call the destructor with delete:
+    delete doggy;
+    // this does the following:
+        // 1.) call the destructor
+        // 2.) frees memory like calling free()
+
+    // now doggy is a dangling pointer, so we should set it to nullptr:
+    doggy = nullptr;
+
+    // NEW WITHOUT NEW
+    // the other way to do it would be like this:
+    doggy = (Dog*)malloc(sizeof(Dog));
+    Dog temp = Dog("shazaza", 69);
+    memcpy(doggy, &temp, sizeof(Dog));
+    doggy->getName();
+    // prints shazaza
+
+    // DELETE WITHOUT DELETE
+    doggy->~Dog();
+    free(doggy);
+    doggy = nullptr;
+
+    // we also use delete[] instead of delete when working on arrays
+    int* ptr = new int(1);
+    delete ptr;
+
+    int* arr = new int[10];
+    delete[] arr;
+
+    // using delete when you should be using delete[] and vice versa can lead to undefined behavior.
+    // if we used delete on arr, it could only dealloc the first element
+    // if we used delete[] on ptr, it could dealloc more than it should
+
+    // WHEN TO USE MALLOC
+    // you might think that its pointless to use new for pointers to data with no constructors like this:
+    int* int_ptr = new int(5);
+    // and you would be half right.
+    // it has no practical difference between using a malloc call:
+    int* int_ptr2 = (int*)malloc(sizeof(int));
+
+    // integers have no constructors so they both do the same thing in effect.
+    // the main difference is that using new is a lot cleaner.
+    
+    // the main scenarios in which we need malloc() are when:
+        // 1.) interfacing with C code
+        // 2.) need to use realloc() calls 
+        // 3.) when implementing very custom memory allocators and doing low level memory management
+
+    // at application level C++, you will rarely use malloc().
+    // in fact, both new and malloc() are less preferred than something like smart pointers.
+
+    return 0;
+}
+
+int oop() {
+    // one of the main upgrades of C over C++ is the that it allows for object oriented programming.
+    // object oriented programming allows for classes, which will be the discussed in the next section
+
+    // with object oriented programming we have:
+    
+    // 1. BASIC CLASS/OBJECT FEATURES
+        // structs with oop capabilities
+        // member functions (methods)
+        // data members (fields)
+        // access specifiers 
+        // constructors
+        // destructors
+        // `this` pointer
+        // static members
+    
+    // 2. INHERITANCE FEATURES
+        // single inheritance
+        // multiple inheritance
+        // virtual functions
+        // pure virtual functions (abstract methods)
+        // abstract classes and interfaces
+        // virtual destructors
+        // override and final specifiers
+        // base class access specifiers
+
+    // 3. ENCAPSULATION FEATURES
+        // getters and setters
+        // friend functions and classes
+        // nested classes
+
+    // 4. POLYMORPHISM FEATURES
+        // runtime polymorphism
+        // compile time polymorphism
+        // operator overloading
+        // virtual function tables
+
+    // 5. TEMPLATES & GENERIC PROGRAMMING
+        // class templates
+        // function templates
+        // template specialization
+        // variadic templates
+
+    // 6. OTHER FEATURES
+        // const member functions
+        // object composition
+        // RAII (resource acquisition is initialization)
+        // member initializer lists
+        // default and delete functions
+        // rule of three/five
+
+
+        // in the coming sections we will delve into all of these topics
+    return 0;
+}
+
+int classes() {
+    // in this section we explore the fundamentals of classes
+        // what are classes
+        // class members
+        // member functions
+        // access specifiers
+
+    // WHAT ARE CLASSES ?
+    // classes are encapsulation of data.
+    // they encapsulate two things:
+        // member variables (infomartion)
+        // member functions (methods)
+
+    // these are member functions which we will delve into soon
+    // here is a basic example of a class
+
+    class Student {        
+    private:
+        char* name;
+        int age;
+
+    protected:
+        int money = 0;
+
+    public:
+        // constructor (more on these later)
+        Student(const char* student_name, int student_age) {
+            name = new char[strlen(student_name) + 1];   // this allocates memory
+        }
+        void moneyUp(int m) {
+            money += m;
+        }
+    };
+
+    // syntax remarks:
+    // note that that we need to add ; to the end of the class definition
+    // also note that prviate, protected, and public (access specifiers) are aligned with the class keyword. more on access specifiers soon.
+
+    // CLASS MEMBERS
+    // we refer to the components of a class--the variables it stores and functions it has--as class members.
+    // so variables are class members, often called: data members, member variables, or fields
+    // and class functions are also class members, often called: methods or member functions
+
+    // ACCESS SPECIFIERS
+    // access specifiers are keywords that determine the visibility of class members.
+    // there are 3 access specifiers: private, protected, and public:
+
+    // private:
+        // only accessible within the scope of the class itself
+    // protected:
+        // accessible within the scope of the class itself and also any derived (children) classes
+    // public:
+        // accessible from any scope the object is visible
+
+    // if we dont declare an access specifier, we use the "default access specifier".
+    // for classes the default access specifier is private
+    // for structs the default access specifier is public
+
+    struct cool_struct {
+        // no access specifier 
+        int x;
+        char y;
+        private:
+
+    };
+
+    cool_struct structo = {4, 'a'};
+    std::cout << "structo.x is " << structo.x << std::endl;
+    // we are able to access structo.x by default
+    
+    // now lets see the default access for a class
+    class Dog {
+        char* name; // default access
+        public:
+            Dog(char* n) {
+                name = new char[strlen(n) + 1];
+                strcpy(name, n);
+            }
+            void getName() { std::cout << name << std::endl; };
+            ~Dog() {
+                delete[] name;
+            }
+    };
+
+    Dog* saadu = new Dog("saadu");
+    saadu->getName(); // prints "saadu"
+    // saadu->name;
+    // if we uncomment the above it gives us an error as the member is not accessible. code wont compile
+
+    return 0;
+}
+
+int structs() {
+
+    return 0;
+}
+
+int constructors_destructors() {
+
 
     return 0;
 }
