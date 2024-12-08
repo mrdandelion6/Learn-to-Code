@@ -4,6 +4,7 @@
 #include <limits>
 #include <unistd.h> 
 #include <vector>
+#include <cmath>
 // remark .. C++ prefers camel case. i will be using snake case for many things though :p
 
 
@@ -1151,6 +1152,21 @@ int classes() {
 }
 
 int structs() {
+    // we have oop features in structs.
+    // we can use access specifiers and create member functions:
+
+    struct Point {
+        int x, y;
+        public:
+            Point(int x_val, int y_val) {
+                x = x_val;
+                y = y_val;
+            }
+
+            double distance() {
+                return sqrt(x*x + y*y);
+            }
+    };
 
     return 0;
 }
