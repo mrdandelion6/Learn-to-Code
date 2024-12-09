@@ -46,6 +46,7 @@ int iterators();
 
 // LANGUAGE FEATURES
 int references();
+int aggregates();
 int range_based_for();
 int namespaces();
 int scope_resolution_operator();
@@ -65,6 +66,7 @@ int memory_model();
 int oop();
 int classes();
 int structs();
+int initializer_list();
 int constructors_destructors();
 int inheritance_polymorphism();
 int virtual_functions();
@@ -92,7 +94,7 @@ int variadic_templates();
 
 int main() {
     // RUN
-    structs();
+    aggregates();
 }
 
 int what_is_cpp() {
@@ -887,6 +889,128 @@ int references() {
     return 0;
 }
 
+int aggregates() {
+    // in C++ an aggregate is a type that allows its members to be initialized directly with curly brace initialization.
+    // this is known as aggregate initialization.
+    // think of it as a simple type that is essentially just a collection of its members.
+
+    // a struct or class in C++ (more on classes later) is an aggregate if it has all of these properties:
+        // 1. no user-declared or inherited constructors
+        // 2. no private or protected non-static data members
+        // 3. no virtual functions of virtual base classes
+        // 4. no default member initializers
+
+    // don't worry if you don't know about virtual functions and deffault member initializers. we will cover these topics later.
+    // if you don't know about constructors or access specifiers (private, protected, public), then you can see the respective functions: constructors_destructors() and classes().
+
+    // STRUCTS
+    // here's an example of an aggregate struct:
+    struct Point {
+        int x;
+        int y;
+        void print_pair() { std::cout << '(' << x << ',' << y << ')' << std::endl;}
+    };
+    Point p = {1, 2}; // aggregate initialization works
+    p.print_pair();
+
+    // another
+    struct Point2 {
+    public:
+        int x;
+        int y;
+        void print_pair() { std::cout << '(' << x << ',' << y << ')' << std::endl;}
+    };
+    Point2 p2 = {1, 2}; // aggregate initialization works
+
+    // here's a non aggregate struct:
+    struct Point3 {
+    public:
+        int x;
+    private:
+        int y;
+    };
+
+    // Point3 p3 = {1, 2}; 
+    // uncommenting this gives an error.
+
+    // this doesn't work either:
+    // Point3 p3 = {1}; 
+
+    // can only do this:
+    Point3 p3;
+    p3.x = 1;
+    // or we could also just make a constructor inside Point3 and use that.
+
+    // CLASSES
+    // here is an example of an aggregate class:
+    class Player {
+        public:
+            int health;
+            int mana;
+            int stamina;
+
+            bool is_low_hp () { return health < 25; }
+    };
+    Player p1 = {100, 70, 200}; // aggregate initialization works!
+
+    // here is an example of a non-aggregate class:
+    class Wizard {
+        int health;
+        public:
+            int mana;
+    };
+    // uncommenting this throws an error since we have a private class member (health)
+    // Wizard wiz = {100}; 
+
+    // classes' default access specifier for members is private, and for structs it's public.
+    // more on this in the classes() section.
+
+    // here is another example of a non-aggregate class:
+    class Knight {
+        public:
+            int armor;
+            int health;
+            int strength;
+            Knight(int a, int h, int s) : armor(a), health(h), strength(s) {}
+    };
+
+    // this code works.. but it's not aggregate initialization!
+    Knight kit = {69, 69, 69};
+    // even though it is identical to aggregate initialization, 
+    // it's actually calling the constructor we defined with the brace-init-list being used as a list of args.
+    // this feature is part of C++'s uniform initialization syntax (aka brace initialization) 
+
+    // so you might ask, "if they look the same, what's the difference?"
+    // answer:
+        // 1. aggregates are simple data than the compiler can optimize more aggressively.
+        //    the compiler knows exactly how they are laid out in memory.
+        // 2. with aggregates, we automatically get member-wise operations for free without having to write any special code.
+        //    i.e, we don't write any constructors and the compiler can generate optimal copying, moving, and comparison operations.
+        // 3. when we add a constructor, we're telling C++ that "we want control over how my object is initialized".
+        //    this is inherently different from just saying, "this is just a bundle of data"--exactly what an aggregate is.
+
+    // here are some further examples:
+    class Aggregate {
+    public:
+        int x;
+        int y;
+    };
+    class NonAggregate {
+        public:
+            int x;
+            int y;
+            NonAggregate(int a, int b) : x(a), y(b) {}
+    };
+    // these behave differently:
+    Aggregate a1;           // x and y are default-initialized (could be garbage)
+    // NonAggregate n1;       // won't compile - no default constructor
+                        
+    Aggregate a2 = {1};    // sets x=1, y is zero-initialized
+    // NonAggregate n2 = {1}; // won't compile - constructor needs 2 args
+
+    return 0;
+}
+
 int new_delete_operator() {
     // recall in C we would use malloc and free
     // in C++ we can also use the 'new' and 'delete' keyword for memory management.
@@ -1119,11 +1243,11 @@ int classes() {
         char y;
 
         // access specifier
-        private:
-            int z;
-        public:
-            // constructor for struct
-            cool_struct(int ex, char why, int zee) {x = ex; y = why; z = zee;}
+    private:
+        int z;
+    public:
+        // constructor for struct
+        cool_struct(int ex, char why, int zee) {x = ex; y = why; z = zee;}
     };
     // you might not be familiar with using oop tools on structs like access specifiers and constructors, but dont worry for now! (we will cover this in the next section)
 
@@ -1135,15 +1259,15 @@ int classes() {
     // now lets see the default access for a class
     class Dog {
         char* name; // default access
-        public:
-            Dog(const char* n) {
-                name = new char[strlen(n) + 1];
-                strcpy(name, n);
-            }
-            void getName() { std::cout << name << std::endl; };
-            ~Dog() {
-                delete[] name;
-            }
+    public:
+        Dog(const char* n) {
+            name = new char[strlen(n) + 1];
+            strcpy(name, n);
+        }
+        void getName() { std::cout << name << std::endl; };
+        ~Dog() {
+            delete[] name;
+        }
     };
 
     Dog* saadu = new Dog("saadu");
@@ -1159,21 +1283,21 @@ int structs() {
     // we can use access specifiers and create member functions:
 
     struct Point {
-        private:
-            int x, y;
-        public:
-            // constructor
-            Point(int x_val, int y_val) {
-                x = x_val;
-                y = y_val;
-            }
+    private:
+        int x, y;
+    public:
+        // constructor
+        Point(int x_val, int y_val) {
+            x = x_val;
+            y = y_val;
+        }
 
-            // no destructor needed as we do not have any allocations to clean up
+        // no destructor needed as we do not have any allocations to clean up
 
-            // member function
-            double l2_norm() {
-                return sqrt(x*x + y*y);
-            }
+        // member function
+        double l2_norm() {
+            return sqrt(x*x + y*y);
+        }
     };
 
     // note that we made a constructor inside the struct, the Point() function member.
@@ -1220,8 +1344,133 @@ int structs() {
     return 0;
 }
 
-int constructors_destructors() {
+int initializer_list() {
+    // before we get into the different kinds of constructors and destructors, we will go over some unique C++ syntax for initializing class members.
 
+    // consider the following class
+    class Dog {
+    private:
+        char* name;
+        int age;
+    public:
+        Dog(const char* n, int a) {
+            name = new char[strlen(n) + 1];
+            strcpy(name, n);
+            age = a;
+        }
+        ~Dog() {
+            delete[] name;
+        }
+    };
+
+    // for initializing the name, we allocate some memory for it then copy over the name parameter (n).
+    // we can make this constructor much more simple and easier to read by using "initializer list" syntax:
+
+    class Cat {
+    private:
+        char* name;
+        int age;
+    public:
+        Cat(const char* n, int a) : name(new char[strlen(n) +1 ]), age(a) { 
+            strcpy(name, n); 
+        }
+        ~Cat() { delete[] name; }
+    };
+
+    // the syntax uses a colon : after the constructor params, followed by comma separated initializations,
+    // i.e age(a), name(...).
+
+    // each member is initialized in the format: member_name(initial_value)
+    // these initializations happen before the constructor body executes, which then calls strcpy(name, n)
+    
+    // to make things even better, we can do the following:
+    class Tiger {
+    private:
+        char* name;
+        int age;
+    public:
+        Tiger(const char* n, int a) : name(copy_name(n)), age(a) {}
+        ~Tiger() { delete[] name; }
+
+        char* copy_name(const char* n) {
+            char* copy = new char[strlen(n) + 1];
+            strcpy(copy, n);
+            return copy;
+        }
+    };
+    //  this way our copy logic is separated from constructor and it is more readable
+    // we could also just use the std::string class instead
+
+    class Bear {
+    private:
+        std::string name;
+        int age;
+    public:
+        Bear(std::string n, int a) : name(n), age(a) {}
+    };
+    // std::string constructor automatically handles copying the string so we don't need to do it ourselves.
+    // and we have no need for a destructor because string handles its own cleanup automatically.
+    // for notes on how std::string works, see the string_handling() function.
+
+    // UNDER THE HOOD
+    // what exactly does member_name(initial_value) do?
+    // it invokes initialization rules that vary based on the type!
+
+    // INITIALIZATION FOR FUNDAMENTAL PRIMITIVES
+    // for something like age(a), it simply does age = a
+    // the value is written directly into the memory location for that member
+
+    // INITIALIZATION OF POINTERS
+    // for something like name(n) where n is of type char* it is similar to the initialization for fundamental types.
+    // we just have name = n. if we have name(new char[10]), then of course we allocate that memory first and give the address to name directly
+
+    // INITIALIZATION FOR CLASS TYPES
+    // for something like name(n) where n is type std::string it is more complex.
+    // name(n) calls the appropriate constructor for the class, in this case for std::string.
+    // the string's constructor is used to initialize the member directly.
+
+    // the most important part to pay attention to is for classes. 
+    // always remember that member(value) will invoke the constructor of the value class if value is a class type.
+
+    // INITIALIZATION ORDER
+    class Example {
+        int a;
+        int b;
+    public:
+        // Even though b is listed first, a will be initialized first
+        // because that's the declaration order in the class
+        Example() : b(42), a(b) { }  // DANGEROUS! 'a' gets undefined value
+    };
+
+    return 0;
+}
+
+int constructors_destructors() {
+    // we have already seen constructors and destructors being used a few times now.
+    // we will delve a bit deeper into them now.
+
+    // DIFFERENT TYPES OF CONSTRUCTORS
+    // suppose you want to create an "empty" object of a class with no parameters passed in.
+    // or suppose you want to create an object with parameters.
+    // or suppose you want to copy the data from one object into another, that is; have them reference the same data
+    // for this we need different kinds of constructs:
+        // 1.) default constructor: no parameters
+        // 2.) parameterized constructor: takes params
+        // 3.) copy constructor: creates a copy from an existing object
+        // 4.) move constructor: transfers "ownership" (only in c++)
+
+    // example class
+    class Dog {
+    private:
+        char* name;
+        int age;
+        char* breed;
+        int weight;
+    public:
+        Dog() {
+
+        }
+    };
 
     return 0;
 }
