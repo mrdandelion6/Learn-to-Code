@@ -288,9 +288,9 @@ int objects() {
     
     // so anything from structs, to ints, to classes, they are all considered objects.
     int x = 4;
-    std::string str1 = "Hello";
+    std::string str1 = "Hello"; // string class
     int arr[30];
-    std::vector<int> vec = {1, 2, 3};
+    std::vector<int> vec = {1, 2, 3}; // vector class
     
     // VARIABLE vs OBJECT
     // to be even more clear, the variable 'person' itself is a variable.
