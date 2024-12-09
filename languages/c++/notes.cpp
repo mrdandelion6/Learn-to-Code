@@ -252,7 +252,7 @@ int data_types() {
 
 int objects() {
     // what are objects?
-    // in C++, objects can refer to two things
+    // in C++, objects can typically refer to two things
         // 1.) objects
         // 2.) class objects
 
