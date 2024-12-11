@@ -12,7 +12,7 @@ INTRO and SETUP:
     - setup_mysql()
     - how_to_use_these_notes()
         > functions & procedures intro
-    - delimiter_keyword()
+    - delimiter()
     - functions_procedures_syntax()
 
 USING SQL:
@@ -25,6 +25,8 @@ USING SQL:
 
 CREATE DATABASE IF NOT EXISTS sql_notes;
 USE sql_notes;
+SOURCE ./helpers.sql
+SOURCE ./initialize_mock_data.sql
 
 DROP PROCEDURE IF EXISTS what_is_sql;
 DELIMITER //
@@ -202,6 +204,21 @@ BEGIN
         1. run: mysql < notes.sql
         2. run: mysql sql_notes
         3. run: CALL procedure_name;
+    */
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delimiter;
+DELIMITER //
+CREATE PROCEDURE delimiter()
+BEGIN
+    /*  
+    in SQL, a delimiter is the character that marks the end or separation of an SQL statement.
+    it is like a period at the ned of a sentence.
+    the standard delimiter in SQL is the semicolon ;
+
+    delimiters are important because:
+        1. when you run multiple SQL statements together, the delimiter tells the database system where each statement ends.
     */
 END //
 DELIMITER ;
