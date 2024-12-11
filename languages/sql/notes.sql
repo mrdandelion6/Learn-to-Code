@@ -18,8 +18,89 @@ INTRO and SETUP:
 USING SQL:
     - how_is_sql_used()
     - database_servers()
-    - databases_and_relations()
-    - commands_and_statements()
+
+SQL BASICS:
+    - tables_and_relations()
+        > primary and foreign keys
+    - operations_intro()
+    - data_types()
+    - constraints()
+    - indexes()
+
+CREATING & MANAGING DATABASES & TABLES:
+    creating_and_dropping_db()
+        > create database
+        > drop database
+        > use database
+    creating_and_dropping_tables()
+        > create table
+        > drop table
+        > use table
+    
+CORE SQL OPERATIONS:
+    - select_statements()
+        > basic queries
+        > column selection
+        > aliasing
+    - where_filter()
+    - order_by()
+    - distinct_keyword()
+    - basic_operators()
+
+DATA MANIPULATION:
+    - insert_statements()
+    - update_records()
+    - delete_operations()
+    - truncate_vs_delete()
+    - transactions_and_acid()
+
+JOINS AND RELATIONSHIPS:
+    - inner_join()
+    - left_right_join()
+    - full_outer_join()
+    - cross_join()
+    - self_joins()
+    - multiple_table_joins()
+
+AGGREGATE FUNCTIONS:
+    - count_sum_avg()
+    - min_max()
+    - group_by()
+    - having_clause()
+    - window_functions()
+
+ADVANCED QUERIES:
+    - subqueries()
+    - prepared_statements()
+    - common_table_expressions()
+    - union_and_union_all()
+    - views()
+    - temporary_tables()
+
+FUNCTIONS AND PROCEDURES:
+    - built_in_functions()
+        > string functions
+        > date/time functions
+        > numeric functions
+    - user_defined_functions()
+    - stored_procedures()
+    - triggers()
+    - events()
+
+SECURITY AND BEST PRACTICES:
+    - sql_injections()
+    - prepared_statements_vs_direct_queries()
+    - user_management()
+    - permissions_and_privileges()
+        > GRANT
+        > REVOKE
+    - connection_security()
+
+DATABASE DESIGN
+    - normalization()
+    - entity_relationship_diagrams()
+    - schema_design_principles()
+    - performance_considerations()
 */
 -- --------------------------------------------------------------------------------------------------------------------
 
