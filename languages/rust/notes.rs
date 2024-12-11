@@ -14,10 +14,10 @@ fn main() {
 }
 
 fn topics() {
-
     // INTRODUCTION
     what_is_rust();
     compiling_rust();
+    using_cargo();
 
     // BASIC SYNTAX
     variables();
@@ -140,10 +140,78 @@ fn compiling_rust() {
     // ./notes
 
     // try it out yourself and this should be printed after you put compiling_rust() in main()
-    println!("you compiled and ran notes.rs !")
+    println!("you compiled and ran notes.rs !");
     // rust is just like C and C++ in that it needs a main() function as an entry point into the program.
     // for these notes, whenever you want to run the output for a specific topic, just replace the function being called (under // RUN) in main() with the one u want
+
+    // for using cargo, see the next section.
 }
+
+fn using_cargo() {
+    // cargo is rusts official package manager and build system.
+    // think of npm for js or pip for python, but it does more.
+
+    // here's what cargo does :
+        // 1. package management
+        //      - manages project dependencies
+        //      - downloads and compiles the dependencies automatically
+        //      - ensures you get the right versions of everything
+        // 2. build system
+        //      - compiles your project and all its deps
+        //      - handles different build configs (build vs release)
+        //      - makes sure everything is built in the proper order
+        // 3. project organization
+        //      - creates a standard project structure
+        //      - manages multiple source files 
+        //      - handles configuration through Cargo.toml
+        //      - makes it easy to share your code
+    
+    // cargo's main advantage is that it solves the "it works on my machine" problem.
+    // when you share a rust project, cargo ensures that everyone who builds it gets the same result because it:
+        // locks dependency versions
+        //  uses the same build settings
+        // manages everything in a consistent way
+    
+    // USING CARGO
+    // to begin with, we must make a new project with cargo. run the following command:
+        // cargo new my_app
+    // the above is for a binary (executable) project
+    
+    // if you would like to just make a library project that gets linked to other things, you can run:
+        // cargo new my_library --lib
+    // for now we will be making a binary project.
+
+    // we get the following project structure:
+    /* 
+    my_app/
+    ├── Cargo.toml
+    └── src
+        └── main.rs
+    */
+
+    // where main.rs just has:
+    fn main() {
+        println!("Hello, world!");
+    }
+
+    // and Cargo.toml will have something like:
+    /* 
+    [package]
+    name = "my_app"
+    version = "0.1.0"
+    edition = "2021"
+
+    [dependencies]
+    */
+
+    // note that [package] is the heading for project itself.
+    // your project is considered a package. name specifies the name of your package.
+    // version indicates the current version of your package, starting with "0.1.0".
+    // edition specifies which edition of rust your project uses (2021).
+    // and [dependencies] is the heading for the dependencies that your package uses. starts empty.
+
+    
+} 
 
 fn variables() {
     todo!("Will implement variables section");
