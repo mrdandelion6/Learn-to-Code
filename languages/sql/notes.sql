@@ -1,30 +1,34 @@
 -- welcome to my SQL notes
 -- in these notes we will start from the basics of SQL and work our way up
--- below is a list of topics we will cover
+-- below is a list of topics we will cover stored in procedures (learn about these in the notes)
+-- to jump to a topic, simply word search it with your text editor.
 
 -- --------------------------------------------------------------------------------------------------------------------
 /*
 TOPICS:
 
 INTRO and SETUP:
-    - what is SQL ?
-    - set up MySQL
-    - how to use these notes
-        - functions & procedures
-    - delimiter keyword
+    - what_is_sql()
+    - setup_mysql()
+    - how_to_use_these_notes()
+        > functions & procedures intro
+    - delimiter_keyword()
+    - functions_procedures_syntax()
 
 USING SQL:
-    - running SQL servers
-    - databases & relational databases
-    - how is SQL used ?
+    - how_is_sql_used()
+    - database_servers()
+    - databases_and_relations()
+    - commands_and_statements()
 */
 -- --------------------------------------------------------------------------------------------------------------------
 
--- RUN:
-CALL DatabasesAndRelations();
+CREATE DATABASE IF NOT EXISTS sql_notes;
+USE sql_notes;
 
+DROP PROCEDURE IF EXISTS what_is_sql;
 DELIMITER //
-CREATE PROCEDURE WhatIsSql()
+CREATE PROCEDURE what_is_sql()
 BEGIN
     /*
     SQL stands for structured query language. it is a language used to communicate with databases. 
@@ -43,8 +47,9 @@ BEGIN
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS setup_mysql;
 DELIMITER //
-CREATE PROCEDURE SetUpMySQL()
+CREATE PROCEDURE setup_mysql()
 BEGIN
     /* 
     SETUP
@@ -114,8 +119,9 @@ BEGIN
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS how_to_use_these_notes;
 DELIMITER //
-CREATE PROCEDURE HowToUseTheseNotes()
+CREATE PROCEDURE how_to_use_these_notes()
 BEGIN
     /* 
     RUNNING CODE FROM NOTES
@@ -145,11 +151,64 @@ BEGIN
         - can only contain SELECT statements
         - are typically used for calculations or data retrieval
     */
+
+    /* 
+    RUNNING NOTES
+    this file, notes.sql, "creates" many procedures. if we run this source file in mysql, all the created procedures will persist.
+    i.e, they will be stored in our MySQL server until we explicitly "drop" them. 
+    you will learn more these create, drop operations soon in the notes.
+    the key takeaway is that we only need to run the source code once, and all of our procedures get stored as metadata.
+
+    to run the source code, we can simply do: mysql < notes.sql
+    this creates a new database "sql_notes" where all of our data will be stored
+    now we start mysql for this database by doing: mysql sql_notes
+    or you could do:
+        my sql
+        USE sql_notes
+    and then we can see all procedures defined in our notes by running: SHOW PROCEDURE STATUS WHERE Db = 'sql_notes';
+    as the procedures are all stored in the system's metadata tables, they will persist until you drop them.
+    you can drop a procedure by doing: DROP PROCEDURE procedure_name;
+
+    to run a specific procedure we created, we do: CALL procedure_name();
+    for example, run the source code (mysql < notes.sql) and do call this procedure:
+        CALL how_to_use_these_notes();
+    */
+    SELECT 'hello world!' AS output;
+    /* 
+    because of the command above, calling this procedure will print the following:
+
+        mysql> CALL how_to_use_these_notes();
+        +--------------+
+        | output       |
+        +--------------+
+        | hello world! |
+        +--------------+
+        1 row in set (0.00 sec)
+
+        Query OK, 0 rows affected (0.00 sec)
+    */
+
+    /*  
+    DUPLICATE PROCEDURES
+    whenever we modify or add some procedures, we will need to drop them and readd them.
+    we cannot create a procedure with name X if one with name X already exists.
+    that is why we have the command: DROP PROCEDURE IF EXISTS procedure_name; above every procedure creation. 
+    */
+
+    /* 
+    well now you know how to get started with these notes. here is a quick summary of all the steps again:
+
+        1. run: mysql < notes.sql
+        2. run: mysql sql_notes
+        3. run: CALL procedure_name;
+
+    */
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS databases_and_relations;
 DELIMITER //
-CREATE PROCEDURE DatabasesAndRelations()
+CREATE PROCEDURE databases_and_relations()
 BEGIN
         /*
         relational databases are databases that store data in tables. each table is made up of rows and columns.
@@ -207,28 +266,34 @@ BEGIN
 END //
 DELIMITER ;
 
--- so SQL is not ony used to create, read, update, and delete data (CRUD), but it also gives data a structure.
+DROP PROCEDURE IF EXISTS commands_and_statements;
+DELIMITER //
+CREATE PROCEDURE commands_and_statements()
+BEGIN
+    -- so SQL is not ony used to create, read, update, and delete data (CRUD), but it also gives data a structure.
 
--- SQL COMMANDS & STATEMENTS
--- now we go over some basic SQL syntax
--- SQL commands are used to communicate with a database. some common commands are SELECT, INSERT, UPDATE, DELETE, CREATE, and DROP.
--- recall we used CREATE to create tables above. here are some other commands:
+    -- SQL COMMANDS & STATEMENTS
+    -- now we go over some basic SQL syntax
+    -- SQL commands are used to communicate with a database. some common commands are SELECT, INSERT, UPDATE, DELETE, CREATE, and DROP.
+    -- recall we used CREATE to create tables above. here are some other commands:
 
--- SELECT
--- SELECT is used to retrieve data from a database. it is the most commonly used SQL command. the data is returned in a table format, and referred to as a result set. here's an example:
-SELECT * FROM users WHERE age > 18; -- this will return all the rows from the "users" table where the age is greater than 18
--- we say the entire line above is a "statement"
--- the column is sage, and the table name is users, these are known as 'identifiers' in the statement
--- in this case, we are selecting all rows by using the asterisk (*), with the filter that the age is greater than 18
+    -- SELECT
+    -- SELECT is used to retrieve data from a database. it is the most commonly used SQL command. the data is returned in a table format, and referred to as a result set. here's an example:
+    SELECT * FROM users WHERE age > 18; -- this will return all the rows from the "users" table where the age is greater than 18
+    -- we say the entire line above is a "statement"
+    -- the column is sage, and the table name is users, these are known as 'identifiers' in the statement
+    -- in this case, we are selecting all rows by using the asterisk (*), with the filter that the age is greater than 18
 
--- INSERT
--- INSERT is used to add new data to a database. here's an example:
-INSERT INTO users (name, age) VALUES ('john', 25); -- this will add a new user with the name "john" and age "25"
+    -- INSERT
+    -- INSERT is used to add new data to a database. here's an example:
+    INSERT INTO users (name, age) VALUES ('john', 25); -- this will add a new user with the name "john" and age "25"
 
--- note that SQL commands are not case-sensitive, so you can write them in uppercase or lowercase.
-insert into users (name, age) values ('bob', 19); -- this is the same as the previous command. also note the use of semicolons at the end of each command. this is used to separate commands.
+    -- note that SQL commands are not case-sensitive, so you can write them in uppercase or lowercase.
+    insert into users (name, age) values ('bob', 19); -- this is the same as the previous command. also note the use of semicolons at the end of each command. this is used to separate commands.
 
--- UPDATE
--- UPDATE is used to modify existing data in a database. here's an example:
-UPDATE users SET age = 30 WHERE name = 'john'; -- this will update the age of the user with the name "john" to 30
--- the python equivalent of this would be something like: users.loc[users['name'] == 'john', 'age'] = 30
+    -- UPDATE
+    -- UPDATE is used to modify existing data in a database. here's an example:
+    UPDATE users SET age = 30 WHERE name = 'john'; -- this will update the age of the user with the name "john" to 30
+    -- the python equivalent of this would be something like: users.loc[users['name'] == 'john', 'age'] = 30
+END //
+DELIMITER ;
