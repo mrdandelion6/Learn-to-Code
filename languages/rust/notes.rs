@@ -18,6 +18,7 @@ fn topics() {
     what_is_rust();
     compiling_rust();
     using_cargo();
+    project_structure();
 
     // BASIC SYNTAX
     variables();
@@ -167,6 +168,7 @@ fn using_cargo() {
         //      - makes it easy to share your code
     
     // cargo's main advantage is that it solves the "it works on my machine" problem.
+    // moreover, cargo is VERY SIMPLE to use. you don't have to worry about making things like CMakeLists.txt or Makefile.
     // when you share a rust project, cargo ensures that everyone who builds it gets the same result because it:
         // locks dependency versions
         //  uses the same build settings
@@ -210,8 +212,99 @@ fn using_cargo() {
     // edition specifies which edition of rust your project uses (2021).
     // and [dependencies] is the heading for the dependencies that your package uses. starts empty.
 
+    // CARGO BUILD
+    // now we can build our code with the command:
+        // cargo build
+    // we must use this command while inside my_app/ directory
+
+    // here is what cargo build does:
+        // 1. reads Cargo.toml to understand the project structure
+        // 2. resolves and downloads any deps
+        // 3. compile your code and deps in the correct order
+        // 4. handles all linking of deps automatically
+        // 5. places output in target/debug/ or target/release/
+            // it places in target/release/ only if specify --release flag (more on this shortly)
+        
+    // HOW IS LINKING HANDLED?
+    // you may be wondering, especially if you're a C or C++ dev, how linking files is handled in rust.
+    // we will explore this in more depth in the modules() section.
+    // for now, understand that cargo relies on you to have files and folders in the expected structure in order to link things properly.
+
+    // note that `cargo build` creates an unoptimized build with debug info.
+    // use `cargo build --release` to make an optimized build.
+
+    // CARGO RUN
+    // we can run our project (after building it) with the following command:
+        // cargo run
+    // very straight forward.
+
+    // if we want to check if our code compiles without having to build everything, we can use:
+        // cargo check
+    // cargo check will see if your code compiles and is much faster than cargo build. 
+
+    // USEFUL CARGO COMMANDS
+    // cargo new project_name
+        // makes new project with name project_name
+    // cargo build
+        // builds your project
+    // cargo run
+        // runs your project
+    // cargo check
+        // checks if your code compiles
+    // cargo test
+        // runs the tests in your project
+    // cargo doc
+        // generates documentation for your code
+    // cargo update
+        // updates dependencies
+    // cargo clean
+        // removes build artifacts
+    // cargo fmt
+        // formats your code, requires rustfmt 
+    // cargo clippy
+        // provides code linting (provides warnings, detects common bugs, suggest idiomatic rust formatting)
+        // requirers you to install clippy: rustup component add clippy
+}
+
+fn project_structure() {
+    todo!("soon");
+}
+
+fn modules() {
+    // consider this typical project structure:
+        /* 
+        my_project/
+        ├── Cargo.toml
+        ├── src/
+        │   ├── main.rs
+        │   ├── lib.rs
+        │   └── modules/
+        │       ├── mod.rs
+        │       └── helper.rs
+        */
+
+    // to import a module in main.rs, we would have something like:
+        /* 
+        mod modules;  
+        use crate::modules::helper;
+
+        fn main() {
+            helper::some_function();
+        }
+        */
+    // the mod keyword tells rust that there's a module named 'modules' in the project.
+    // then in the SAME directory as main.rs (typically src), rust will either look for:
+        // 1. a file named modules.rs 
+        // 2. a dir named modules with mod.rs file inside it
     
+    // in our example we have modules/mod.rs
+    // 
+    
+
 } 
+
+
+}
 
 fn variables() {
     todo!("Will implement variables section");
