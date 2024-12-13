@@ -18,7 +18,6 @@ fn topics() {
     what_is_rust();
     compiling_rust();
     using_cargo();
-    project_structure();
 
     // BASIC SYNTAX
     variables();
@@ -27,10 +26,12 @@ fn topics() {
     control_flows();
 
     // MODULES AND PROJECT STRUCTURE
+    project_structure();
     module_system();
     visibility_rules();
     packages_and_crates();
     external_dependencies();
+    models();
 
     // OWNERSHIP AND BORROWING
     ownership_rules();
@@ -227,7 +228,7 @@ fn using_cargo() {
         
     // HOW IS LINKING HANDLED?
     // you may be wondering, especially if you're a C or C++ dev, how linking files is handled in rust.
-    // we will explore this in more depth in the modules() section.
+    // we will explore this in more depth in the module_system() section.
     // for now, understand that cargo relies on you to have files and folders in the expected structure in order to link things properly.
 
     // note that `cargo build` creates an unoptimized build with debug info.
@@ -266,11 +267,76 @@ fn using_cargo() {
         // requirers you to install clippy: rustup component add clippy
 }
 
-fn project_structure() {
-    todo!("soon");
+fn variables() {
+    todo!("Will implement variables section");
 }
 
-fn modules() {
+fn types() {
+    todo!("Will implement types section");
+}
+
+fn functions() {
+    todo!("Will implement functions section");
+}
+
+fn control_flows() {
+    todo!("Will implement control flows section");
+}
+
+fn project_structure() {
+    // rust code follows a standard project structure. cargo especially needs this.
+
+    // simple binary project:
+    // ├── Cargo.toml
+    // ├── src/
+    // │   └── main.rs
+    // └── target/
+
+    // simple library project:
+    // my_lib/
+    // ├── Cargo.toml
+    // ├── src/
+    // │   └── lib.rs
+    // └── target/
+
+    // note that library codes in lib.rs and binary code goes in main.rs.
+    
+    // binary + modules project
+    // my_complex_project/
+    // ├── Cargo.toml
+    // ├── src/
+    // │   ├── main.rs
+    // │   ├── lib.rs
+    // │   └── models/
+    // │       ├── mod.rs
+    // │       ├── user.rs
+    // │       └── product.rs
+    // ├── tests/
+    // │   ├── integration_test.rs
+    // │   └── common/
+    // │       └── mod.rs
+    // ├── examples/
+    // │   └── simple_example.rs
+    // └── benches/
+    //     └── benchmarks.rs
+
+    // lets go through this one by one.
+
+    // Cargo.toml - contains dependencies and general project info.
+    // src - contains your actual code to be built and used.
+    // main.rs - code for your actual binary executable.
+    // lib.rs - code for public API for library items. declares and makes makes modules public.
+    // models/ 
+        // - contains core data structures that capture the business logic of your app. 
+        // - used for data representation. 
+        // - each model gets its own file (user.rs, product.rs)
+        // - related models can be grouped together in their own subdirectory: models/orders/order.rs 
+    // models/mod.rs - used to organize and expose the models
+    // tests/ - contains integration tests. cargo looks for this directory. more on this later in testing().
+
+}
+
+fn module_system() {
     // consider this typical project structure:
         /* 
         my_project/
@@ -283,6 +349,34 @@ fn modules() {
         │       └── helper.rs
         */
 
+    // not to be confused with models!
+    // MODELS vs MODULES
+    // modules (mod) are rusts' way of organizing and namespacing code, similar to how python and java have packages.
+    // models refer to data structures that represent business logic or database entities in the application.
+
+    // WHAT ARE MODULES
+    // the module system in rust allows how to organize code into logical units with clear VISIBILITY RULES.
+    // we declare a module with the mod keyword:
+
+    mod math {
+        pub fn add(a: i32, b: i32) -> i32 {
+            a + b
+        }
+    }
+    // above is an inline module declaration. we defined the module inside this file.
+    // we could alternatively 'import' modules using the mod keyword
+    // for example : mod math;
+    // the above declares the module, but the content is in math.rs. 
+    // more on importing modules in a second.
+    
+    // for example, suppose we had a file foo.rs in which we have mod math; declares. rust will either:
+        // look for math.rs in the same location as foo.rs
+        // look for foo/math/mod.rs (if foo/math/ exists)
+        // look for foo/math.rs (if folder foo/ exists)
+        
+    // if multiple of those exist, rust will choose the one in precedence of the order listed. (looks for math.rs first).
+    
+    // IMPORTING MODULE
     // to import a module in main.rs, we would have something like:
         /* 
         mod modules;  
@@ -303,29 +397,6 @@ fn modules() {
 
 } 
 
-
-}
-
-fn variables() {
-    todo!("Will implement variables section");
-}
-
-fn types() {
-    todo!("Will implement types section");
-}
-
-fn functions() {
-    todo!("Will implement functions section");
-}
-
-fn control_flows() {
-    todo!("Will implement control flows section");
-}
-
-fn module_system() {
-    todo!("Will implement module system section");
-}
-
 fn visibility_rules() {
     todo!("Will implement visibility rules section");
 }
@@ -336,6 +407,10 @@ fn packages_and_crates() {
 
 fn external_dependencies() {
     todo!("Will implement external dependencies section");
+}
+
+fn models() {
+    todo!("soon");
 }
 
 fn ownership_rules() {
