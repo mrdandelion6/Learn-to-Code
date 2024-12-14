@@ -10,7 +10,7 @@
 
 fn main() {
     // RUN
-    compiling_rust();
+    module_system();
 }
 
 fn topics() {
@@ -336,6 +336,10 @@ fn project_structure() {
 
 }
 
+mod math2 {
+    pub fn add2(a: i32, b: i32) -> i32 { a + b }
+}
+
 fn module_system() {
     // consider this typical project structure:
         /* 
@@ -358,24 +362,41 @@ fn module_system() {
     // the module system in rust allows how to organize code into logical units with clear VISIBILITY RULES.
     // we declare a module with the mod keyword:
 
-    mod math {
-        pub fn add(a: i32, b: i32) -> i32 {
+    mod math1 {
+        pub fn add1(a: i32, b: i32) -> i32 {
             a + b
         }
     }
+    
     // above is an inline module declaration. we defined the module inside this file.
     // we could alternatively 'import' modules using the mod keyword
     // for example : mod math;
     // the above declares the module, but the content is in math.rs. 
     // more on importing modules in a second.
+
+    // this is how we can use the module:
+    let mut x = math1::add1(3, 5);
+    println!("result: {}", x);
+
+    // note that above this function module_system(), we defined a module add2
+    x = math2::add2(10, 4);
+    println!("result: {}", x);
+    // we did not have to "import" the module cause it's in the same file.
+
+    // can also do this to use add directly
+    use math2::add2;
+    x = add2(12, 13);
+    println!("result: {}", x);
+
+    // but we wouldn't be able to do this with math1 since we defined it inside this function.
+    // use math1::add1;
+    // x = add1(43, 1);
+    // the above generates an error. it is not usual to define modules inside functions.
+    // defining modules inside functions will also limit their scope to only inside the function.
+        // you can test this by checking the separate_function() function below and uncommenting some code. 
+    // usually we define and declare models at the file level.
     
-    // for example, suppose we had a file foo.rs in which we have mod math; declares. rust will either:
-        // look for math.rs in the same location as foo.rs
-        // look for foo/math/mod.rs (if foo/math/ exists)
-        // look for foo/math.rs (if folder foo/ exists)
-        
-    // if multiple of those exist, rust will choose the one in precedence of the order listed. (looks for math.rs first).
-    
+
     // IMPORTING MODULE
     // to import a module in main.rs, we would have something like:
         /* 
@@ -386,16 +407,29 @@ fn module_system() {
             helper::some_function();
         }
         */
+
     // the mod keyword tells rust that there's a module named 'modules' in the project.
     // then in the SAME directory as main.rs (typically src), rust will either look for:
         // 1. a file named modules.rs 
         // 2. a dir named modules with mod.rs file inside it
-    
-    // in our example we have modules/mod.rs
-    // 
+
+    // furthermore, suppose we had a file foo.rs in which we have mod math; declared. rust will either:
+        // look for math.rs in the same location as foo.rs
+        // look for foo/math/mod.rs (if foo/math/ exists)
+        // look for foo/math.rs (if folder foo/ exists)
+    // if multiple of those exist, rust will choose the one in precedence of the order listed. (looks for math.rs first).
     
 
 } 
+
+fn separate_function() {
+    let x = math2::add2(3, 3); 
+    println!("result: {}", x);
+
+    // compile the code with the following uncommented and you will get an error:
+    // let y = math1::add1(1, 1);
+    // println!("result: {}", y);
+}
 
 fn visibility_rules() {
     todo!("Will implement visibility rules section");
