@@ -52,8 +52,8 @@ int main(int argc, char* argv[]) {
     int pointer_arithmetic();
     int pointers_to_pointers();
     int why_use_pointer_to_pointers();
-    int cDeclarationSyntax();
-    int cFunctionTypes();
+    int declaration_syntax();
+    int function_types();
     int memory_model();
     int dynamic_memory();
     int allocating_memory_on_heap();
@@ -737,7 +737,7 @@ int why_use_pointer_to_pointers() {
 // basic rule: declarations mimics use
 // form declaration statement by mimicking syntax we will later use when using the variable
 
-int cDeclarationSyntax() {
+int declaration_syntax() {
     // say we have a variable f
     // f;
     // f[10]; and we subscript it with *
@@ -775,7 +775,7 @@ int cDeclarationSyntax() {
     return 0;
 }
 
-int cFunctionTypes() {
+int function_types() {
     // function types describe the signature of a prototype of a function.
     // you can declare function types using the following syntax:
     // return_type (*function_pointer)(parameter_types);
