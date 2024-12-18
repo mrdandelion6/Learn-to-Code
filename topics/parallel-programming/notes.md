@@ -1,4 +1,4 @@
-# Parallel Programming
+# PARALLEL PROGRAMMING
 
 ## why learn parallel programming?
 
@@ -83,7 +83,7 @@ we have to end up waiting to branch back to the loop DEPENDING ON the value of R
 
 if we just wait, we end up losing on a lot of opportunities for parallelism. if we predict the branch, we can continue executing instructions after the branch, and if we are wrong, we would need to **flush** the pipeline and start over. this is called **branch prediction**.
 
-so you might ask, why risk taking that hit? why not just go with option 1. well the answer is because brances are very common in code, and if we just wait, we will end up losing a lot of opportunities for parallelism. moreover, branch predictions are usually very accurate.
+so you might ask, why risk taking that hit? why not just go with option 1. well the answer is because branches are very common in code, and if we just wait, we will end up losing a lot of opportunities for parallelism. moreover, branch predictions are usually very accurate.
 
 ## superscalar execution
 
@@ -131,11 +131,37 @@ store R1, @bff0
 ```
 
 ### branch dependencies
+- this is when scheduling instructions across branches may lead to errors
+- i.e, we scheduled incorrect instructions and now need to flush results
 
+branch dependencies are handled by speculative execution and branch prediction.
 
-### underutilization of superscalar processor
+### resource dependencies
+- when two or more instructions compete for a single processor resource.
+
+### under-utilization of superscalar processor
 
 the performance of a superscalar processor is ultimately just determined by how many instructions we can execute at the same "level" of time. remember this is "instruction level parallelism" (ILP).
+
+**vertical waste**: when no instructions are executed on a cycle
+
+**horizontal waste** when only part of the execution units are used during a cycle
+
+## very large instruction word
+- VLIW is a hardware logic for ILP
+- an alternative to superscalar execution
+- we allow software to specify the instructions to execute in parallel!
+- compile time scheduling where the compiler explicitly specifies multiple operations to run in parallel.
+- a VLIW instruction encodes multiple operations to be executed in parallel
+
+**advantages**:
+- simpler hardware logic for instruction issue
+compiler not limited by a small look-ahead window, have more time to optimize code better.
+
+**disadvantages**:
+- compilers do'nt have dynamic program state to make dynamic scheduling decisions (branch predictions, predict stalls, cache misses, etc.)
+- performance is highly dependent on compiler's ability to detect dependencies and maximize parallelism.
+
 
 # MEMORY SYSTEM PERFORMANCE
 
@@ -143,7 +169,7 @@ performance depends on both cpu speed and memory system parameters.
 
 **latency** is just the time taken to serve a memory request (for example 100ns)
 
-**bandwith** is the rate at which data can be served from memory (for example 10GB/s)
+**bandwidth** is the rate at which data can be served from memory (for example 10GB/s)
 
 **pizza truck analogy**:
 1. latency = how long it takes the pizza truck to deliver pizza. independent of how many pizzas it's carrying.
@@ -168,7 +194,7 @@ so to avoid the loss of performance from DRAM, we can use caches. caches are sma
 
 a common technique to hide memory latency is to use **pre-fetching**. this is where we predict what data we will need in the future and load it into the cache before we need it.
 
-load data from emory in advance (eeither in hardware or software), so that when we need it, it's already in the cache.
+load data from emory in advance (either in hardware or software), so that when we need it, it's already in the cache.
 
 **an issue**: the data could be updated between load and use,
 - would need to reload it once again
@@ -196,14 +222,14 @@ for  (int i = 0); i < N; i++) {
 we prefetch like so:
 ```c
 for (int i = 0; i < N; i++) {
-    preftech(a[i + s]);
+    prefetch(a[i + s]);
     a[i] = 2 * a[i];
 }
 ```
 
 let's make some assumptions to demonstrate this idea of prefetching:
 
-- assume that each elemente is on its own cac he line
+- assume that each element is on its own cac he line
 - prefetch the "stride" s elements ahead of time
 
 for example, if each iteration takes 7 cycles and a cache miss is 49 cycles, then we can hide the latency of the cache miss by prefetching the data 7 elements ahead of time.
@@ -232,9 +258,9 @@ here is an example of how to create a thread in C using pthreads:
 #include <stdio.h>
 #define NUM_THREADS     5
 
-void *PrintHello(void *threadid) {
+void *PrintHello(void *thread_id) {
    long tid;
-   tid = (long)threadid;
+   tid = (long)thread_id;
    printf("Hello World! It's me, thread #%ld!\n", tid);
    pthread_exit(NULL);
 }
@@ -287,7 +313,7 @@ learn more about pthreads here: https://hpc-tutorials.llnl.gov/posix/
 
 this is actually something you need to be careful about. firstly, note that all arguments need to be "passed by reference" (i.e, pointers) and should be cast to `void *`. 
 
-now we ask the question, "given that created threads have a non-deterministic startup, how can we safeyl pass data to them?".
+now we ask the question, "given that created threads have a non-deterministic startup, how can we safely pass data to them?".
 
 the answer is: **MAKE SURE ALL DATA PASSED CANNOT BE CHANGED BY OTHER THREADS**. any data that you pass in should be not changeable by other threads.
 
@@ -306,7 +332,7 @@ for(t=0; t<NUM_THREADS; t++) {
 }
 ```
 
-this is bad because it passes the address of variable `t`, which is in a shared memory space and visible to all threads. as the loop iterates, the value of this memory locatiob changes, possibly before the created threads have a chance to read it. if we had instead declared `t` inside the loop, it would be safe.
+this is bad because it passes the address of variable `t`, which is in a shared memory space and visible to all threads. as the loop iterates, the value of this memory location changes, possibly before the created threads have a chance to read it. if we had instead declared `t` inside the loop, it would be safe.
 
 ### joining and detaching threads
 
@@ -318,15 +344,15 @@ we can obtain the thread's termination status if we specify in the target thread
 
 there are also other synchronization mechanisms, such as `mutexes` and `condition variables`. we will go over these later.
 
-when a thread is created, one if its attributes defines weather it is "joinable", or "detatched". if a thread is joinable, then another thread can call `pthread_join` on it. if a thread is detatched, then it cannot be joined.
+when a thread is created, one if its attributes defines weather it is "joinable", or "detached". if a thread is joinable, then another thread can call `pthread_join` on it. if a thread is detached, then it cannot be joined.
 
 we can also detach an originally joined thread using `pthread_detach()`. this will allow the thread to run independently of the calling thread.
 
 #### why join or detach?
 
-joining a thread is useful because it allows us to obtain the thread's termination status. furthermore, it allows for resource clean up. if a thread is not joined and it is not detached, its resources remain allocated until the process termiantes, which can lead to resource leaks. we want our threads to be cleaned up after they are done. if a thread is detached, then its resources are cleaned up automatically.
+joining a thread is useful because it allows us to obtain the thread's termination status. furthermore, it allows for resource clean up. if a thread is not joined and it is not detached, its resources remain allocated until the process terminates, which can lead to resource leaks. we want our threads to be cleaned up after they are done. if a thread is detached, then its resources are cleaned up automatically.
 
-joining threads can also be used as a "synchornization" mechanism. it ensures that certain tasks are all completed before we proceed. this can help in coordinating the execution flow of a multithreaded program.
+joining threads can also be used as a "synchronization" mechanism. it ensures that certain tasks are all completed before we proceed. this can help in coordinating the execution flow of a multithreaded program.
 
 here is an example of making a thread joinable:
 
@@ -359,7 +385,7 @@ each thread has its own stack. the stack is used to store local variables and fu
 
 the POSIX standard does not dictate the size of a thread's stack. this is implementation dependent and varies. exceeding the stack size is very easy to do and results in either program termination or undefined behavior/corrupted data.
 
-safe and portable programs do not depend upon the default stack limit, but instead, explicitly set the stack size using `pthread_attr_setstacksize` routine. again, when we say "routine", we mean a body of instructions such as a function.
+safe and portable programs do not depend upon the default stack limit, but instead, explicitly set the stack size using `pthread_attr_set_stack_size` routine. again, when we say "routine", we mean a body of instructions such as a function.
 
 furthermore, the pthread_attr_getstackaddr and pthread_attr_setstackaddr routines can be used by applications in an environment where the stack for a thread must be placed in some particular region of memory.
 
@@ -375,15 +401,15 @@ the following example demonstrates how to set the stack size for a thread:
 
 pthread_attr_t attr;
 
-void* dowork(void *threadid) {
+void* do_work(void *thread_id) {
    double A[N][N];
    int i, j;
    long tid;
-   size_t mystacksize;
+   size_t my_stack_size;
 
-   tid = (long)threadid;
-   pthread_attr_getstacksize(&attr, &mystacksize);
-   printf("Thread %ld: stack size = %li bytes \n", tid, mystacksize);
+   tid = (long)thread_id;
+   pthread_attr_get_stack_size(&attr, &my_stack_size);
+   printf("Thread %ld: stack size = %li bytes \n", tid, my_stack_size);
    for (i = 0; i < N; i++) {
       for (j = 0; j < N; j++) {
          A[i][j] = ((i * j) / 3.452) + (N - i);
@@ -394,21 +420,21 @@ void* dowork(void *threadid) {
 
 int main(int argc, char *argv[]) {
    pthread_t threads[NTHREADS];
-   size_t stacksize;
+   size_t stack_size;
    int rc;
    long t;
 
    pthread_attr_init(&attr);
-   pthread_attr_getstacksize(&attr, &stacksize);
-   printf("Default stack size = %li\n", stacksize);
+   pthread_attr_get_stack_size(&attr, &stack_size);
+   printf("Default stack size = %li\n", stack_size);
 
-   stacksize = sizeof(double)*N*N+MEGEXTRA;
-   printf("Amount of stack needed per thread = %li\n", stacksize);
-   pthread_attr_setstacksize (&attr, stacksize);
+   stack_size = sizeof(double)*N*N+MEGEXTRA;
+   printf("Amount of stack needed per thread = %li\n", stack_size);
+   pthread_attr_set_stack_size (&attr, stack_size);
 
-   printf("Creating threads with stack size = %li bytes\n", stacksize);
+   printf("Creating threads with stack size = %li bytes\n", stack_size);
    for(t=0; t<NTHREADS; t++){
-      rc = pthread_create(&threads[t], &attr, dowork, (void *)t);
+      rc = pthread_create(&threads[t], &attr, do_work, (void *)t);
       if (rc){
          printf("ERROR; return code from pthread_create() is %d\n", rc);s
          exit(-1);
@@ -419,7 +445,7 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-we see that we are setting the stack size using `pthread_attr_setstacksize`.
+we see that we are setting the stack size using `pthread_attr_set_stack_size`.
 
 ### more pthread routines
 - `pthread_self()`: returns the thread ID of the calling thread
@@ -484,7 +510,7 @@ we would need to consider the tradeoff between computation and communication.
 
 ## degree of concurrency
 
-we calculate two kinds of degrees of concurrencies:
+we calculate two kinds of degrees of concurrency:
 
 1. the maximum degree of concurrency
 
@@ -562,7 +588,7 @@ dynamic task generation is when the number of tasks we will generate can vary fo
 
 for example **quicksort**, we could have different kinds of generations depending on the pivot we choose.
 
-### task sizes and data associated with eeac task
+### task sizes and data associated with each task
 
 task sizes are obviously proportional to how much time it will take to finish the task. 
 
