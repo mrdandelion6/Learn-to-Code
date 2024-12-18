@@ -1,6 +1,9 @@
 #define _GNU_SOURCE
 
-// C Notes
+// c notes
+// welcome to my C notes lil bro
+// these notes are mostly just comments explaining code and concepts.
+// we will start baby mode then get a little harder as time goes on.
 
 // std stands for standard library, io for the input/output, and .h to signify header code
 #include <stdio.h> // for scanf and printf
@@ -8,7 +11,6 @@
 #include <stdbool.h> // for using bool types. though in C, we just use (1) for true and (0) for false
 #include <string.h>
 #include <time.h>
-#define DAYS 365 
 #include "sorting.h"
 #include <sys/types.h> 
 
@@ -20,10 +22,11 @@
 
 #include <sys/socket.h> // this is specific to unix OS. run ur IDE/text-editor through WSL if ur on windows
 #include <netinet/in.h>
-
 #include <sys/select.h>
 
-// use define to define a constant global value! these are stored in global data
+#define DAYS 365 
+// use hash define to define a constant global value! these are stored in global data. these are called macros.
+// more on macros later.
 
 // note at the top we have #include statements. this is needed for C for using several (common) methods, types, etc.
 int main(int argc, char* argv[]) {
