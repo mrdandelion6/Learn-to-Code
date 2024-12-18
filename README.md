@@ -9,7 +9,7 @@ My notes are split into 2 categories: **languages** and **topics**.
 ## Languages
 Here are notes I've made on various programming languages. Most of them are ongoing and I have yet to complete them. There are also a few I want to start making notes for later on as well.
 ### Doing (🚧) / Done (🏁)
-- 🏁 `C` and systems programming, pipes, processes, and sockets. made for CSC209H5.
+- 🏁 `C` and systems programming, pipes, processes, and sockets. made for **CSC209H5 Winter 2024/2025**.
 - 🏁 `JavaScript` and DOM
 - 🏁 `Bash` (not in depth)
 - 🚧 `C++` 
@@ -37,10 +37,10 @@ Here are notes I've made on various programming languages. Most of them are ongo
 I have made quite a few notes on important computer science topics as well.
 ### Doing (🚧) / Done (🏁)
 - 🏁 `Data Science`
-- 🚧 `Data Structures` (made for CSC236)
-- 🚧 `Cyber Security ` (made for CSC347)
-- 🚧 `Operating Systems` (made for CSC369)
-- 🚧 `Parallel Programming` (made for CSC367)
+- 🚧 `Data Structures` (made for **CSCB63 Summer 2024**)
+- 🚧 `Cyber Security ` (made for **CSC347H5 Fall 2024**)
+- 🚧 `Operating Systems` (made for **CSC369H5 Fall 2024**)
+- 🚧 `Parallel Programming` (made for **CSC367H5 Fall 2024**)
 - 🚧 `HTTP`
 - 🚧 `Machine Learning`
 - 🚧 `Leetcoding` (will always be ongoing)
@@ -48,7 +48,7 @@ I have made quite a few notes on important computer science topics as well.
 - 🚧 `Git`
   
 ### To Start
-- Databases (for CSC343)
+- Databases (for CSC343H5 Winter 2025)
 - Using Vim
 - Quantum Computing (architecture, underlying physics, but mostly focused on programming with Qiskit)
 
