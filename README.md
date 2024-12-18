@@ -14,7 +14,7 @@ Here are notes I've made on various programming languages. Most of them are ongo
 - 🏁 `Bash` (not in depth)
 - 🚧 `C++` 
 - 🚧 `Rust` 
-- 🚧 `Python`, `Django`, and `Jupyter` (all in **python/** folder. has no beginner friendly notes for python language itself). 
+- 🚧 `Python`, `Django`, and `Jupyter` (all in **python/** folder. has no beginner friendly notes for python language). 
 - 🚧 `SQL`
 - 🚧 `Scala`
 - 🚧 `x86`
