@@ -1,7 +1,6 @@
 #define _GNU_SOURCE
 
 // C Notes
-// i apologize for using camel case everywhere.. i have been coding in javascript for a week nonstop
 
 // std stands for standard library, io for the input/output, and .h to signify header code
 #include <stdio.h> // for scanf and printf
@@ -30,93 +29,92 @@
 int main(int argc, char* argv[]) {
     printf("started main\n");
 
-    // in C, even for functions, we must declare the function signatures ahead of time
-    // note we cannot have nested functions in C
+    // in C we must declare the function signatures ahead of time if their definitions come later on.
+    // note we cannot have nested functions in C.
 
     // jump to a function to see the section of notes
-    int theMainMethod(int count, char* vectors[]);
+    int the_main_method(int count, char* vectors[]);
     int types();
     int type_sizes();
-    int IOstuff();
-    int compilingWithUnix();
-    int takeInput();
-    int arrays_in_C();
-    int iteratingThroughArrays();
-    int loopIterationQuestion();
-    int welcomeToPointers();
-    int assigningToDeferencedPointers();
-    int usefulnessOfPointers();
-    int passingArrays();
-    int pointerArithmetic();
-    int pointersToPointers();
-    int whyUsePointerToPointers();
+    int io_stuff();
+    int compiling_with_unix();
+    int take_input();
+    int arrays_in_c();
+    int iterating_through_arrays();
+    int loop_iteration_questions();
+    int intro_to_pointers();
+    int assigning_to_deferenced_pointers();
+    int usefulness_of_pointers();
+    int passing_arrays();
+    int pointer_arithmetic();
+    int pointers_to_pointers();
+    int why_use_pointer_to_pointers();
     int cDeclarationSyntax();
     int cFunctionTypes();
-    int memoryModel();
-    int dynamicMemory();
-    int allocatingMemoryOnHeap();
-    int freeingMemory();
-    int returningAddressWithPointer();
-    int nestedDataStructures();
-    int typeConversions(); // some recursion here as well
-    int commandLineArguments(int count, char* vectors[]);
+    int memory_model();
+    int dynamic_memory();
+    int allocating_memory_on_heap();
+    int freeing_memory();
+    int returning_address_with_pointer();
+    int nested_data_structures();
+    int type_conversions(); // some recursion here as well
+    int command_line_arguments(int count, char* vectors[]);
     int structs();
-    int IOmoreStuff();
-    int compilerToolChain();
+    int compiler_tool_chain();
     int defining_types();
-    int headerFiles();
-    int headerFileVariables();
-    int staticKeywordInsideFunctions();
-    int makeFiles();
-    int IOStreams();
-    int usingFiles();
-    int readingFromFiles();
-    int fscanfFunction();
-    int writingToFiles();
-    int usingFilesEnd();
-    int welcomeToStructs();
-    int pointersToStructs();
-    int lowLevelIO();
-    int writingBinaryFiles();
-    int readingBinaryFiles();
-    int wavFiles(int argc, char* argv[]);
-    int readWriteStructs();
-    int movingAroundInFiles();
-    int stringsInC();
-    int linkedStructures();
-    int typedefInC();
-    int macrosInC();
-    int thePreprocessor();
-    int functionLikeMacros();
-    int functionPointers();
-    int systemCalls();
-    int errorsAndErrno();
-    int processModels();
-    int creatingProcesses();
-    int relationshipOfProcesses();
-    int relationBetweenShellAndProcesses();
-    int usingMacrosForStat_loc();
-    int zombieAndOrphanProcesses();
-    int runningDifferentPrograms();
-    int signalsInC();
+    int header_files();
+    int header_file_variables();
+    int static_keyword_inside_functions();
+    int makefile();
+    int io_streams();
+    int using_files();
+    int reading_from_files();
+    int fscanf_function();
+    int writing_to_files();
+    int using_files_end();
+    int intro_to_structs();
+    int pointers_to_structs();
+    int low_level_io();
+    int writing_binary_files();
+    int reading_binary_files();
+    int wav_files(int argc, char* argv[]);
+    int read_write_structs();
+    int moving_around_in_files();
+    int strings_in_c();
+    int linked_structures();
+    int typedef_in_c();
+    int macros();
+    int the_preprocessor();
+    int function_like_macros();
+    int function_pointers();
+    int system_calls();
+    int errors_and_errno();
+    int process_models();
+    int creating_processes();
+    int how_processes_relate_to_each_other();
+    int relation_between_shell_and_processes();
+    int using_macros_for_statloc();
+    int zombie_and_orphan_processes();
+    int running_different_programs();
+    int signals_in_c();
     int more_signals();
-    int handlingSignals();
-    int bitwiseOperations();
-    int bitShiftLogic();
+    int handling_signals();
+    int bitwise_operations();
+    int bit_shift();
     int bit_shifting_signed_ints();
-    int bitFlags();
-    int bitArrays();
-    int unbufferedIO();
-    int pipesInC();
-    int concurrencyAndPipes();
-    int redirectingInputAndOutputDup2();
-    int implementingShellPipeOperator();
-    int introToSockets();
-    int socketConfiguration();
-    int socketCommunication();
-    int socketCommunication2();
-    int issueWithBlockingRead();
-    int usingSelectForReading();
+    int bit_flags();
+    int bit_arrays();
+    int unbuffered_io();
+    int pipes_in_c();
+    int concurrency_and_pipes();
+    int dup2_redirection();
+    int implementing_shell_pipe_operator();
+    int intro_to_sockets();
+    int socket_configuration();
+    int socket_communication();
+    int socket_communication_2();
+    int issue_with_blocking_read();
+    int using_select_for_reading();
     int unknown_array_iteration();
     int string_play();
     int parsing_command_line_args();
@@ -131,7 +129,7 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-int theMainMethod(int argc, char* argv[]) {
+int the_main_method(int argc, char* argv[]) {
     
     // MAIN METHOD
     // C source code has an entry point just like Java, which is the main() method.
@@ -214,7 +212,7 @@ int type_sizes() {
     return 0;
 }
 
-int IOstuff() {
+int io_stuff() {
     printf("yo\n"); // #include <stdio.h> tells C where to find printf function. standard input/output
     printf("here is an integer: %d\n", 10); // #include <stdio.h> tells C where to find printf function. standard input/output
     // format specifiers
@@ -252,7 +250,7 @@ int IOstuff() {
 
     }
 
-int compilingWithUnix() {
+int compiling_with_unix() {
     // gcc main.c 
     // unless we provide additional arguments to the unix command above, the exe file that is produced will be a.out
     // run the executable by ./a.out
@@ -263,14 +261,14 @@ int compilingWithUnix() {
     return 0;
 }
 
-int takeInput() {
+int take_input() {
     double num1, num2;
     printf("Type two numbers separated by a space: ");
     scanf("%lf %lf", &num1, &num2); // provided by standard io
     // we can use f for doubles in printf, but for doubles in scanf, we must use lf: long float
     // we need & on num1 and & on num2 to provide the addresses for num1 and num2 so that their values can be changed to what the user types in on the keyboard.
     // to read about pointers and memory address manipulation go here:
-    int welcomeToPointers();
+    int intro_to_pointers();
 
     printf("You typed %f and %f\n", num1, num2);
     return 0;
@@ -287,14 +285,14 @@ bool bool_test() {
 #ifndef FUNCTIONS_H // starting place
 #define FUNCTIONS_H
 
-int takeInput(); // functions to make accessible between files
-int arrays_in_C();
+int take_input(); // functions to make accessible between files
+int arrays_in_c();
 
 #endif // closing place
 
 
 // === ARRAYS ===
-int arrays_in_C() {
+int arrays_in_c() {
     float daytime_high_1 = 16.0;
     float daytime_high_2 = 12.8;
     float daytime_high_3 = 14.6;
@@ -398,7 +396,7 @@ int arrayQuestions1() {
     total_cost = cost[group_size];
 }
 
-int iteratingThroughArrays() { 
+int iterating_through_arrays() { 
     // array iteration
     /// === FOR LOOPS ===
     float daytime_high[4] = {16.0, 12.8, 14.6, 19.1};
@@ -415,7 +413,7 @@ int iteratingThroughArrays() {
     return 0;
 }
 
-int loopIterationQuestion() {
+int loop_iteration_questions() {
     // write a code fragment to loop over an array <ages> of <count> integers and 
     // print the age of the second oldest. uou may assume that count is at least 2.
     int length = 10;
@@ -442,7 +440,7 @@ int loopIterationQuestion() {
 }
 
 // === POINTERS ===
-int welcomeToPointers() {
+int intro_to_pointers() {
     // pointers are variables with store the addresses of other variables/values 
     // ie, address holding variable is called a pointer
     // the concept that we can manipulate memory addresses as values is a powerful idea which defines C
@@ -476,7 +474,7 @@ int welcomeToPointers() {
     return 0;
 }
 
-int assigningToDeferencedPointers() {
+int assigning_to_deferenced_pointers() {
     int i = 7;
     int* pt = &i; // pt points to the address of the variable i
 
@@ -512,7 +510,7 @@ int assigningToDeferencedPointers() {
     return 0;
 }
 
-int usefulnessOfPointers() {
+int usefulness_of_pointers() {
     char grade_bob1 = 'B';
     printf("bob1 got: %c\n", grade_bob1);
     // late penalty applied, now bob1 has a mark of C
@@ -552,7 +550,7 @@ void change(int *A) {
     A[0] = 50;
 }
 
-int passingArrays() {
+int passing_arrays() {
     // generally want to pass pointers rather than passing arrays
 
     int scores[4] = {4, 5, -1, 12};
@@ -627,7 +625,7 @@ int unknown_array_iteration() {
     return 0;
 }
 
-int pointerArithmetic() {
+int pointer_arithmetic() {
     // x / y gives integer divsion if theyre both integer but floating if either are floating
     // but what if int *x; int y ?
 
@@ -668,7 +666,7 @@ int pointerArithmetic() {
     return 0;
 }
 
-int pointersToPointers() {
+int pointers_to_pointers() {
     // storing the address of a pointer in another pointer
     int i = 81;
     int *pt = &i; // we want to store the address of the pointer pt in another pointer q
@@ -712,7 +710,7 @@ void find_largest2(int **A, int A_size, int *largest_pt) {
 
 }
 
-int whyUsePointerToPointers() {
+int why_use_pointer_to_pointers() {
     
     int i = 81;
     int j = -4;
@@ -795,7 +793,7 @@ int add(int a, int b) {
 }
 
 
-int memoryModel() {
+int memory_model() {
     // imagine memory as a single vast array
     // [buffer, code, global data, heap, -- , stack, os] top to bottom from left to right
 
@@ -836,7 +834,7 @@ int* proper_set_i() {
     return pt; // need to return the pointer
 }
 
-int dynamicMemory() {
+int dynamic_memory() {
     int i; 
     // int* pt = set_i(); // this line of code generates a seg fault
     int* pt = proper_set_i();
@@ -853,7 +851,7 @@ int* squares(int largest) {
     return result;
 }
 
-int allocatingMemoryOnHeap() {
+int allocating_memory_on_heap() {
     int* squares_to_10 = squares(10);
 
     for (int i=0; i < 10; i++) {
@@ -880,9 +878,9 @@ int play_with_memory() {
 } // remark: free does not "reset" or change the value of pt, it just makes it "writeable" again. so the address in pt is still legal and we can use it, but it might be overriden
 // dangling pointer: a pointer that points to memory that has already been freed is known as a dangling pointer
 
-int freeingMemory() {
+int freeing_memory() {
     // heap memory isnt automatically deallocated, must free it.
-    play_with_memory(); // memory leak from this function but it doesnt matter in this case since we terminate the freeingMemory() and then terminate main() right after.
+    play_with_memory(); // memory leak from this function but it doesnt matter in this case since we terminate the freeing_memory() and then terminate main() right after.
     return 0; // but memory leaks are very destructive for long running programs! for example, calling play_with_memory() in an infinite loop for a web browser.
 } // memory will run out.. memory keeps leaking away. we eventually get an out-of-memory-error: ENOMEM
 
@@ -903,7 +901,7 @@ int paramHelper(int** pt) {
     return 0;
 }
 
-int returningAddressWithPointer() {
+int returning_address_with_pointer() {
     // this section focuses on strategies to retrieve an address for a malloc from some other scope
 
     // strat 1: simply have it return the address
@@ -919,7 +917,7 @@ int returningAddressWithPointer() {
     return 0;
 }
 
-int nestedDataStructures() {
+int nested_data_structures() {
     // nested array: an array with elements as pointers. each element may point to another array. [[], [], []].
     // we often dont know the length of an array we might want. so we need a dynamically changing array
     // need to use dynamic memory as opposed to statically defined arrays
@@ -981,7 +979,7 @@ int recursiveParseString(char* s) {
     return x + recursiveParseString(s);
 }
 
-int typeConversions() {
+int type_conversions() {
     // convert from string to integer
 
     // strtol!! string to long. strtol() is a special function that returns long.
@@ -1043,7 +1041,7 @@ double avgX(char** arr, int size) {
     return (double) x / c;
 }
 
-int commandLineArguments(int argc, char* argv[]) {
+int command_line_arguments(int argc, char* argv[]) {
     // pass in arguments from the command line into main
     printf("you passed in %d arguments\n", argc - 1);
 
@@ -1124,14 +1122,9 @@ int structs() {
     return 0;
 }
 
-int IOmoreStuff() {
-    // fprintf()
-    return 0;
-}
-
-int compilerToolChain() {
+int compiler_tool_chain() {
     // COMPILER TOOLCHAIN:
-    // the compilertoolchain is a set of applications that transform source code into a running program
+    // the compiler_tool_chain is a set of applications that transform source code into a running program
 
     // generally speaking, a compiler is any program that translates code in one language to a different language
     // typically, compilers accept input in some high level language (like C) and produce output in low level (like assembly)
@@ -1229,7 +1222,7 @@ void print_array(int* arr, int size) {
     }
 }
 
-int headerFiles() {
+int header_files() {
     // compiling a program with multiple source files
     // need header files!!
 
@@ -1276,7 +1269,7 @@ int headerFiles() {
     return 0;
 }
 
-int headerFileVariables() {
+int header_file_variables() {
     // we have factored out the typedef struct sort_info
     // and the const int NUM_SORTS = 3
     // and the sort_info SORTS[] array
@@ -1340,7 +1333,7 @@ int headerFileVariables() {
 // we can use the static keyword. this will prevent other files from knowing about those variables
 static int x = 0;
 // note we have another x variable defined in sorting.c
-// also note we are doing this outside of the headerFileVariables() function because if we did it inside
+// also note we are doing this outside of the header_file_variables() function because if we did it inside
 // the variable x's scope would be limited to the stack and not globally defined
 
 void staticVarsFunctionExample() {
@@ -1349,7 +1342,7 @@ void staticVarsFunctionExample() {
     x++;
 }
 
-int staticKeywordInsideFunctions() {
+int static_keyword_inside_functions() {
     // STATIC takes on a different meaning if used within the local scope of a function!!
     // in a local function, the behaviour of the static keyword is similiar to that of static in java
     // that is, variables defined in functions with the static keyword will retain their value across function calls
@@ -1369,10 +1362,10 @@ int staticKeywordInsideFunctions() {
     return 0;
 }
 
-int makeFiles() {
-    // Makefiles are extremely useful and vital for c programs
+int makefile() {
+    // makefile are extremely useful and vital for c programs
 
-    // recall in headerFileVariables(), we talk about how both source files need to be recompiled
+    // recall in header_file_variables(), we talk about how both source files need to be recompiled
     // if a header file they're dependent on is changed. tracking these dependencies is tricky.
 
     // we use a tool called make for this.
@@ -1384,7 +1377,7 @@ int makeFiles() {
     // we will create a Makefile to build the parts of the project that need it
     // a Makefile is a just literally a file named Makefile (no extension, capital M is important)
 
-    // Makefiles consist of a sequence of rules.
+    // makefile consist of a sequence of rules.
     // each rule has:
         // - target (the excecutable file to be constructed)
         // - recipe (the list of commands to create the target)
@@ -1456,7 +1449,7 @@ int makeFiles() {
         // here we create an object file from $< which symbolizes the first name in the list of dependencies, ie; $.c
         // and $@ just means the target's name, so we give it the name of the target
 
-    // one last thing is that Makefiles can include variables.
+    // one last thing is that makefile can include variables.
     // this can help a lot against having to rewrite a whole chain of files over and over again
     // at the top we define variables like:
         // OBJFILES = notes.o sorting.o
@@ -1467,7 +1460,7 @@ int makeFiles() {
     return 0;
 }
 
-int IOStreams() {
+int io_streams() {
     // we always use printf and scanf, but there is more.
     // writing and reading from files etc.
 
@@ -1504,7 +1497,7 @@ int IOStreams() {
     printf("the num is %d\n", number);
 
     // want to instead read the input from a text file, not keyboard.
-    // we can do this by compiling the program with ./notes < iostuff.txt
+    // we can do this by compiling the program with ./notes < io_stuff.txt
 
     // for example:
     // sort < names.cat > students.txt
@@ -1513,7 +1506,7 @@ int IOStreams() {
     return 0;
 }
 
-int usingFiles() {
+int using_files() {
     // want a way to store values across executions; DATA PERSISTENCE
     // we can do this via local files
 
@@ -1523,7 +1516,7 @@ int usingFiles() {
     // modes are "r": reading, "w": writing, "a": appending
 
     // FILE is a typedef struct from stdio.h library
-    FILE* score_files = fopen("io-stuff/iostuff.txt", "r"); // this makes the file available as a STREAM
+    FILE* score_files = fopen("io-stuff/io_stuff.txt", "r"); // this makes the file available as a STREAM
     
     // fopen can fail for several reasons:
         // file doesnt exist
@@ -1551,7 +1544,7 @@ int usingFiles() {
 
 #define LINE_LENGTH 80
 
-int readingFromFiles() {
+int reading_from_files() {
     // there are a variety of functions in C standard library that can be used to read data from streams
     // the one to use depends on the kind of data u are reading
 
@@ -1563,7 +1556,7 @@ int readingFromFiles() {
             // this argument specifies where the input should be stored after reading it
         // second arg: n is the maximum number of characters fgets is allowed to put in s, including the \0 null character at end of string
 
-    FILE* opm_scores = fopen("io-stuff/iostuff.txt", "r");
+    FILE* opm_scores = fopen("io-stuff/io_stuff.txt", "r");
 
     // define string location for fgets
     char line[LINE_LENGTH + 1]; // char array of size LINE_LENGTH + 1 (add 1 to account for null terminator)
@@ -1606,7 +1599,7 @@ int readingFromFiles() {
     return 0;
 }
 
-int fscanfFunction() {
+int fscanf_function() {
     // very same to scanf, but fscanf can choose to read from any input stream whereas scanf is forced to read from stdin
 
     // prototype:
@@ -1614,10 +1607,10 @@ int fscanfFunction() {
         // like scanf, fscanf returns the number of items successfully read
         // number of items will be equal to number of format specifiers, unless something goes wrong when reading.
 
-    // we can use fscanf to read from iostuff.txt instead of fgets like last time
+    // we can use fscanf to read from io_stuff.txt instead of fgets like last time
     // this is useful if we wanna parse based on spaces
 
-    FILE* scores_file = fopen("io-stuff/iostuff.txt", "r");
+    FILE* scores_file = fopen("io-stuff/io_stuff.txt", "r");
     char name[81];
     int total;
 
@@ -1632,9 +1625,9 @@ int fscanfFunction() {
             // %80s is a string of 80 characters 
             // %d is a number as you should know by now
         // we pass in ADDRESSES so we can actually change the values, eg &total
-        // for a recap on this go to takeInput():
+        // for a recap on this go to take_input():
         if (0 == 1) {
-            takeInput();
+            take_input();
         }
         
         printf("Name: %s, Score: %d.\n", name, total);
@@ -1648,7 +1641,7 @@ int fscanfFunction() {
     return 0;
 }
 
-int writingToFiles() {
+int writing_to_files() {
     FILE* output_file = fopen("io-stuff/write_here.txt", "w");
     int some_int = 69;
     float some_float = 0.69;
@@ -1709,27 +1702,27 @@ int checkFileClose(FILE* file, char* name) {
     return 0;
 } 
 
-int usingFilesEnd() {
-    // say we want to read the iostuff.txt file and write to write_here.txt and list all the names from iostuff but not the scores:
+int using_files_end() {
+    // say we want to read the io_stuff.txt file and write to write_here.txt and list all the names from io_stuff but not the scores:
 
-    FILE* iostuff = fopen("io-stuff/iostuff.txt", "r");
+    FILE* io_stuff = fopen("io-stuff/io_stuff.txt", "r");
     FILE* writehere = fopen("io-stuff/write_here.txt", "w");
     char name[81];
     int score;
 
-    if (checkFileOpen(iostuff, "io-stuff/iostuff.txt") == 1) {
+    if (checkFileOpen(io_stuff, "io-stuff/io_stuff.txt") == 1) {
         return 1;
     }
     if (checkFileOpen(writehere, "io-stuff/write_here.txt") == 1) {
         return 1;
     }
 
-    while(fscanf(iostuff, "%80s %d", name, &score) == 2) {
+    while(fscanf(io_stuff, "%80s %d", name, &score) == 2) {
         printf(name);
         fprintf(writehere, "%s\n", name);
     }
 
-    if (checkFileClose(iostuff, "io-stuff/iostuff.txt") == 1) {
+    if (checkFileClose(io_stuff, "io-stuff/io_stuff.txt") == 1) {
         return 1;
     }
     if (checkFileClose(writehere, "io-stuff/write_here.txt") == 1) {
@@ -1747,7 +1740,7 @@ struct student {
     float GPA;
 };
 
-int welcomeToStructs() {
+int intro_to_structs() {
     // recall the usefulness of arrays where the data has to be of all the same type.
     // structs used to aggregate data where the values may be of different type.
 
@@ -1825,7 +1818,7 @@ void goodChangeStruct(struct student* s) {
     (*s).GPA = 4.0;
 }
 
-int pointersToStructs() {
+int pointers_to_structs() {
     // basically the same concepts as pointers to ints
 
     struct student s;
@@ -1854,7 +1847,7 @@ int pointersToStructs() {
 }
 
 
-int lowLevelIO() {
+int low_level_io() {
     // not all files contain text but all files contain binary data.
     // the binary bytes can be translated to human readable text for .txt files etc.
     // we will explore using files where the bytes dont translate to human text.
@@ -1877,7 +1870,7 @@ int lowLevelIO() {
     return 0;
 }
 
-int writingBinaryFiles() {
+int writing_binary_files() {
     // for writing binary data into a file we use the fwrite() function.
     // the prototype is:
         // size_t fwrite(const void* ptr, size_t size, size_t nmemb, FILE* stream)
@@ -1949,7 +1942,7 @@ int writingBinaryFiles() {
     return 0;
 }
 
-int readingBinaryFiles() {
+int reading_binary_files() {
     // we use fread()
     // the prototype is similar to that of fwrite
     // size_t fread(void* ptr, size_t size, size_t nmemb, FILE* stream)
@@ -1964,7 +1957,7 @@ int readingBinaryFiles() {
 
     binary_file = fopen("binary_data", "rb");
     if (binary_file == NULL) {
-        fprintf(stderr, "erro: could not open binary file! if it doesn't exist then first run writingBinaryFiles() to create it. \n");
+        fprintf(stderr, "erro: could not open binary file! if it doesn't exist then first run writing_binary_files() to create it. \n");
         return 1;
     }
 
@@ -2002,7 +1995,7 @@ int readingBinaryFiles() {
 
 #define HEADER_SIZE 44
 
-int wavFiles(int argc, char* argv[]) {
+int wav_files(int argc, char* argv[]) {
     // we will utilize our knowledge of binary files and apply it to .wav files.
     // task: take a .wave file and make its volume louder.
 
@@ -2090,7 +2083,7 @@ int wavFiles(int argc, char* argv[]) {
     return 0;
 }
 
-int readWriteStructs() {
+int read_write_structs() {
     // a good application of previous knowledge
 
     struct assassin {
@@ -2164,7 +2157,7 @@ void printAssassin(struct assassin* a) {
     printf("hire: $%f\n\n", a->cost);
 }
 
-int movingAroundInFiles() {
+int moving_around_in_files() {
     // move around in files!!
     // note that each read and write call moves the fill position. we want to control this position.
     // a useful function for this is fseek():
@@ -2353,7 +2346,7 @@ int everyIO() {
     return 0;
 }
 
-int stringsInC() {
+int strings_in_c() {
     char text[6]; // can create a string with char array
     text[0] = 'h';
     text[1] = 'e';
@@ -2558,7 +2551,7 @@ Node* create_node(int num, Node* next) { // this is kind of reverse, instead ret
     return new_node;
 }
 
-int linkedStructures() {
+int linked_structures() {
     // linked lists etc
     // linked structure facts:
         // user-defined
@@ -2643,7 +2636,7 @@ void printLinky(Node* node) {
     printf("NULL\n");
 }
 
-int typedefInC() {
+int typedef_in_c() {
     // aliases for types.
     // two ways. 1.) typedef and 2.) macros
 
@@ -2699,7 +2692,7 @@ int typedefInC() {
     return 0;
 }
 
-int macrosInC() {
+int macros() {
     // we can alias things other than types with macros
     // macros are very powerful in C, but we'll only go over replacing constant values and evaluating simple expressions.
 
@@ -2735,7 +2728,7 @@ int macrosInC() {
     return 0;
 }
 
-int thePreprocessor() {
+int the_preprocessor() {
     // PREPROCESSOR DIRECTIVES
     // any line that begins with a # symbol is a preprocessor directive
     // these are used to modify C source code before it is compiled.
@@ -2844,7 +2837,7 @@ int thePreprocessor() {
     return 0;
 }
 
-int functionLikeMacros(){
+int function_like_macros(){
     // many of the features in this section are SYSTEM SPECIFIC
     // also remark: using function like macros is rarely a good idea. recommended to avoid using.
 
@@ -2983,7 +2976,7 @@ int functionLikeMacros(){
     return 0;
 }
 
-int functionPointers(){
+int function_pointers(){
     // we do not need to differentiate between data and functions
     // we can capture functions in variables! we do this with function pointers.
     // i comment a lot of stuff out here cus i use imported functions which needs a combined compile with sorting.c
@@ -3056,7 +3049,7 @@ void (*func_x(int argc, int argv[]))(int*, int) {}
 typedef (*sort_func_y)(int*, int); 
 sort_func_y func_y(int argc, int argv[]) {}
 
-int systemCalls() {
+int system_calls() {
     // a system call is a a function that requests a service from the OS
     // for example exit(). requests OS to terminate program
 
@@ -3083,7 +3076,7 @@ int systemCalls() {
     return 0;
 }
 
-int errorsAndErrno() {
+int errors_and_errno() {
     // when system calls dont work correctly
     
     // system calls or library functions that use system calls return certain values if error occurs
@@ -3126,7 +3119,7 @@ int errorsAndErrno() {
 }
 
 
-int processModels() {
+int process_models() {
     // what does it mean to run a program?
     // in this section we define a program, processes, and understand how an OS works with them.
 
@@ -3177,7 +3170,7 @@ int processModels() {
     return 0;
 }
 
-int creatingProcesses() {
+int creating_processes() {
     // use fork system call (on Windows is CreateProcess())
     // creating a process requires a system call because the OS needs to set up process data structures such as the control block.
 
@@ -3225,7 +3218,7 @@ int creatingProcesses() {
     return 0;
 }
 
-int relationshipOfProcesses() {
+int how_processes_relate_to_each_other() {
 
     // cant be bothered to explain all this, just run it from main() and see cool stuff
 
@@ -3293,7 +3286,7 @@ int relationshipOfProcesses() {
     return 0;
 }
 
-int relationBetweenShellAndProcesses() {
+int relation_between_shell_and_processes() {
     // relation between the shell and the processes it spawns
     // can use the wait() system call to force the parent process to wait until its children have been terminated. prototype is:
     // pid_t wait(int* stat_loc)
@@ -3377,7 +3370,7 @@ int relationBetweenShellAndProcesses() {
     return 0;
 }
 
-int usingMacrosForStat_loc() {
+int using_macros_for_statloc() {
     int result;
     int i, j;
 
@@ -3436,7 +3429,7 @@ int usingMacrosForStat_loc() {
     return 0;
 }
 
-int zombieAndOrphanProcesses() {
+int zombie_and_orphan_processes() {
     // recall processes can only wait for its direct children
     
     // what happens if a child process terminates before a parent calls wait?
@@ -3479,7 +3472,7 @@ int zombieAndOrphanProcesses() {
     return 0;
 }
 
-int runningDifferentPrograms() {
+int running_different_programs() {
     // so far we have been duplicating the same program as a child process with wait() calls
     // but we can run a different program entirely using exec()
     // exec() replaces the currently running process with a different executable.
@@ -3535,7 +3528,7 @@ int runningDifferentPrograms() {
     // pretty cool. so it basically duplicates itself, then the clone (child) morphs itself (using exec) into a different program; our c executable.
 }
 
-int signalsInC() {
+int signals_in_c() {
     // some examples of signals: 
         // CTRL + C: ends program
         // CTRL + Z: pauses program (type fg to wake it up)
@@ -3577,7 +3570,7 @@ void handler(int code) { // our handler function for signals
     fprintf(stderr, "Signal %d caught\n", code);
 }
 
-int handlingSignals() {
+int handling_signals() {
     // change default behaviour of signal, eg:  
         // print a msg
         // save some state
@@ -3694,7 +3687,7 @@ int  more_signals() {
     return 0;
 }
 
-int bitwiseOperations() {
+int bitwise_operations() {
     // the power of C is that since it is a low level language, we can just directly manipulate the bit values of stuff, ignoring whatever type it is.
     // i wont go into much detail about the definitions, but make sure u understand OR, AND, XOR, and NOT operators.
 
@@ -3733,7 +3726,7 @@ int bitwiseOperations() {
 }
 
 
-int bitShiftLogic() {
+int bit_shift() {
 
     // lets have a refresher on converting hex to binary first.
     // from 0 - 9, conversion is just same as decimal to binary
@@ -3848,7 +3841,7 @@ int bit_shifting_signed_ints() {
 }
 
 
-int bitFlags() {
+int bit_flags() {
     // flag bits are commonly used by system calls when a single argument is used to transmit data about multiple options
     // that argument variable is treated as an array of bits, where each bit represents an option/flag that can be turned on and off
     // {0, 1, 0, 0, 1} kind of like json object but values are bits.
@@ -3954,7 +3947,7 @@ int bitFlags() {
     return 0;
 }
 
-int bitArrays() {
+int bit_arrays() {
     // we explore the use of flag bits to implement a set, or array
     // simple idea: each bit denotes presence or absence of particular element in a set.
 
@@ -4054,7 +4047,7 @@ int ifset(unsigned int value, Bitarray* b) {
 } 
 
 
-int unbufferedIO() {
+int unbuffered_io() {
     // OVERVIEW:
     
     // buffered IO:
@@ -4168,7 +4161,7 @@ int unbufferedIO() {
     return 0;
 }
 
-int pipesInC() {
+int pipes_in_c() {
     // now we start investigating how to actually utilize multiple processes! very cool stuff.
 
     // since we can use fork() to make multiple processes, which can then work on the task simultaneously, then we will be able to solve problems faster.
@@ -4281,7 +4274,7 @@ int fgets_stdin() {
     return 0;
 }
 
-int concurrencyAndPipes() {
+int concurrency_and_pipes() {
     // some important details of how pipes really work
     // recall pipes are used to communicate between two separate processes, but it is up to the OS to decide when these processes run
     // so it is likely that the processes wont run in lock step with each other
@@ -4313,8 +4306,8 @@ int concurrencyAndPipes() {
     return 0;
 }
 
-int redirectingInputAndOutputDup2() {
-    // in this section we learn how to redirect input/output from one file descriptor to another with dup2() system call
+int dup2_redirection() {
+    // in this section we learn how to redirect input/output from one file descriptor to another with dup2_redirection() system call
 
     // motivation:
     // we take a look at the shell's redirection operators.
@@ -4322,7 +4315,7 @@ int redirectingInputAndOutputDup2() {
     // for example:
         // grep Saitama io-stuff -r
         // searches for lines containing "Saitama" in recursively in io-stuff. outputs this:
-        // io-stuff/iostuff.txt:Saitama 999999
+        // io-stuff/io_stuff.txt:Saitama 999999
 
     // this would only print to shell but we can redirect output to save it to a file with redirection operator:
         // grep Saitama io-stuff -r > temp.txt
@@ -4336,10 +4329,10 @@ int redirectingInputAndOutputDup2() {
     // where <producer> is what produces the input which goes into <consumer> which may produce an output 
 
     // now supposed we just want to change stdout for the shell process so it writes to a file by default instead of the screen
-    // we use dup2 to do this.
+    // we use dup2_redirection to do this.
 
-    // DUP2()
-    // dup2 makes a copy of an open file descriptor. 
+    // DUP2_redirection()
+    // dup2_redirection makes a copy of an open file descriptor. 
     // we will use it to reset the stdout file descriptor, so writes to stdout go to a file instead of screen.
 
     // a file descriptor is really an index into a table, the "fd table", which is part of the PCB.
@@ -4352,7 +4345,7 @@ int redirectingInputAndOutputDup2() {
     // even though the file descriptor tables are separate, the pointers in them may point to the same object!
     // changes to the object (eg a console) will be observed by both processes.
 
-    // the way to use dup2 is as follows:
+    // the way to use dup2_redirection is as follows:
 
     // 1.) open file to set stdin to read from or stdout to write to (in our case we are gonna change stdout)
     FILE* stream;
@@ -4368,12 +4361,12 @@ int redirectingInputAndOutputDup2() {
     // recall that 0, 1, and 2 are taken by stdin, stdout, and stderr, so we begin assigning new file numbers to new streams starting from 3. 
     printf("%d\n", fileno(stream)); // as expected, we get three.
 
-    if (dup2(fileno(stream), fileno(stdout)) == -1) { // set file number of stream to be filenumber of stdout
-        perror("dup2");
+    if (dup2_redirection(fileno(stream), fileno(stdout)) == -1) { // set file number of stream to be filenumber of stdout
+        perror("dup2_redirection");
         exit(1);
     }
 
-    // dup2(fileno(stream), fileno(stdout)); is the call we made in case it is hard to see it surrounding the error check.
+    // dup2_redirection(fileno(stream), fileno(stdout)); is the call we made in case it is hard to see it surrounding the error check.
 
     printf("whats up!\n"); // prints to stdout which is now write_here.txt
 
@@ -4392,14 +4385,14 @@ int redirectingInputAndOutputDup2() {
     return 0;
 }
 
-int implementingShellPipeOperator() {
-    // we will walk through an example that uses pipe and dup2 to implement the shell's pipe operator.
+int implementing_shell_pipe_operator() {
+    // we will walk through an example that uses pipe and dup2_redirection to implement the shell's pipe operator.
     // the shell pipe operator | allows us to connect 2 processes such that the stdin for one process becomes the stdout for another process    
 
     // lets play around on sort and uniq programs.
     // sort can take a filepath as an argument and print all the lines in the file in a sorted manner.
     // eg)
-        //$ sort "io-stuff/iostuff.txt"
+        //$ sort "io-stuff/io_stuff.txt"
         // Blast 140000
         // Garou 200000
         // Genos 9000  
@@ -4418,8 +4411,8 @@ int implementingShellPipeOperator() {
         // yo
         // hi
     // wont get filtered because hi and hi are not adjacent. so we can sort then do a pipe to uniq.
-    // like this sort: "io-stuff/iostuff.txt" | uniq
-    // we will implement in this in C with dup2
+    // like this sort: "io-stuff/io_stuff.txt" | uniq
+    // we will implement in this in C with dup2_redirection
 
     int fd[2], r; // r is going to be the fork() return value
 
@@ -4430,16 +4423,16 @@ int implementingShellPipeOperator() {
     }
     
     if ( (r = fork()) > 0 ) { // in parent
-        int file = open("io-stuff/iostuff.txt", O_RDONLY); // O_RDONLY imported from fcntl.h
+        int file = open("io-stuff/io_stuff.txt", O_RDONLY); // O_RDONLY imported from fcntl.h
         // haven't went over using open() system call yet, learn it urself kid. doesnt return a pointer to FILE but rather the file descriptor.
 
-        if (dup2(file, fileno(stdin)) == -1) { // set parent's stdin to be the file
-            perror("dup2");
+        if (dup2_redirection(file, fileno(stdin)) == -1) { // set parent's stdin to be the file
+            perror("dup2_redirection");
             exit(1);
         }
 
-        if (dup2(fd[1], fileno(stdout)) == -1) { // set parent's stdout to be the pipe's write descriptor
-            perror("dup2");
+        if (dup2_redirection(fd[1], fileno(stdout)) == -1) { // set parent's stdout to be the pipe's write descriptor
+            perror("dup2_redirection");
             exit(1);
         }
 
@@ -4450,7 +4443,7 @@ int implementingShellPipeOperator() {
         }
         if (close(fd[1]) == -1) { // the writes go to stdout, which will automatically write to pipe.
             perror("close");    // recall that we traditionally used write() and read() system calls to communicate over pipe
-            exit(1);            // we wont be doing that anymore since we are just setting the file descriptors as stdin and stdout with dup2 now, so we close the write descriptor as well.
+            exit(1);            // we wont be doing that anymore since we are just setting the file descriptors as stdin and stdout with dup2_redirection now, so we close the write descriptor as well.
         }
         if (close(file) == -1) { // we arent gonna be using the input file directly so close it.
             perror("close");
@@ -4465,8 +4458,8 @@ int implementingShellPipeOperator() {
     
     else if (r == 0) { // in child
 
-        if (dup2(fd[0], fileno(stdin)) == -1) { // set child's stdin to the pipe's read fd
-            perror("dup2");
+        if (dup2_redirection(fd[0], fileno(stdin)) == -1) { // set child's stdin to the pipe's read fd
+            perror("dup2_redirection");
             exit(1);
         }
 
@@ -4512,7 +4505,7 @@ int implementingShellPipeOperator() {
     return 0;
 }
 
-int introToSockets() {
+int intro_to_sockets() {
     // so far: 
     // pipes to communicate between child and parent processes
     // signals to communicate between unrelated processes
@@ -4598,7 +4591,7 @@ int introToSockets() {
     return 0;
 }
 
-int socketConfiguration() {
+int socket_configuration() {
     // once we create our endpoints using socket system call (with stream sockets), we can now configure that socket to wait for connections at a specific address.
 
     int listen_soc = socket(AF_INET, SOCK_STREAM, 0); // note that u need #include <sys/socket.h> for this which is linux specific. im running vscode through WSL for this.
@@ -4799,7 +4792,7 @@ int socketConfiguration() {
     return 0;
 }
 
-int socketCommunication() {
+int socket_communication() {
     // we already learned how to set up a connection, now we learn how to use the connection.
 
     // review:
@@ -4826,7 +4819,7 @@ int socketCommunication() {
     // once we have the stream socket set up between the client and server, we use this socket descriptor just like we use a file descriptor.
     // so we can use read() and write() system calls.
 
-    // the following is going to be communication using dup2(), but we will explore communication without dup2 as well in next function.
+    // the following is going to be communication using dup2_redirection(), but we will explore communication without dup2_redirection as well in next function.
 
     int serv_soc = socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in server_addr; 
@@ -4856,7 +4849,7 @@ int socketCommunication() {
     }
 
     // redirect input
-    dup2(client_soc, fileno(stdin));
+    dup2_redirection(client_soc, fileno(stdin));
     
     char s[50];
     while (1 != 0) {
@@ -4867,7 +4860,7 @@ int socketCommunication() {
     return 0;
 }
 
-int socketCommunication2() { // this version uses write() and read() system call for communication
+int socket_communication_2() { // this version uses write() and read() system call for communication
 
     int serv_soc = socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in server_addr; 
@@ -4940,7 +4933,7 @@ int socketCommunication2() { // this version uses write() and read() system call
 }
 
 // multiplexing
-int issueWithBlockingRead() {
+int issue_with_blocking_read() {
     // we introduce a problem with using a blocking read() calls to read from multiple sources.
     // then we introduce a new system call that solves this problem by telling us which sources are ready for processing.
 
@@ -5073,7 +5066,7 @@ int issueWithBlockingRead() {
     return 0;
 }
 
-int usingSelectForReading() {
+int using_select_for_reading() {
     char line[MAXSIZE]; // this will hold the rea~d values
     int pipe_child1[2], pipe_child2[2];
 
