@@ -36,6 +36,7 @@ int main(int argc, char* argv[]) {
     // jump to a function to see the section of notes
     int theMainMethod(int count, char* vectors[]);
     int types();
+    int type_sizes();
     int IOstuff();
     int compilingWithUnix();
     int takeInput();
@@ -49,7 +50,7 @@ int main(int argc, char* argv[]) {
     int pointerArithmetic();
     int pointersToPointers();
     int whyUsePointerToPointers();
-    int cDeclarationSynax();
+    int cDeclarationSyntax();
     int cFunctionTypes();
     int memoryModel();
     int dynamicMemory();
@@ -70,7 +71,7 @@ int main(int argc, char* argv[]) {
     int IOStreams();
     int usingFiles();
     int readingFromFiles();
-    int scanFFunction();
+    int fscanfFunction();
     int writingToFiles();
     int usingFilesEnd();
     int welcomeToStructs();
@@ -125,7 +126,7 @@ int main(int argc, char* argv[]) {
     int feature_test_macros(); // recommended for ubuntu users especially
 
     // call
-    when_is_a_file_descriptor_ready();
+    type_sizes();
 
     return 0;
 }
@@ -174,6 +175,45 @@ int types() {
     return 0;
 }
 
+int type_sizes() {
+    // 32-bit vs 64-bit systems
+    // you can tell a system is 32 or 64 bits usually from the pointer size.
+
+    // pointer size
+    printf("size of int pointer is %d bytes or %d bits\n", sizeof(int*), 8*sizeof(int*));
+    // this printed 8 bytes or 64 bits on my ubuntu machine. hence it is a 64-bit machine.
+
+    // integer size
+    // typically a word, i.e, 4 bytes
+    printf("size of int is %d bytes\n", sizeof(int)); // prints 4 on my machine as expected.
+    // range is -2^31 to 2^31 - 1 for 4 bytes. (we use 2's compliment for signed ints. ints are signed by default unless using unsigned type)
+    // -2^31 = 10000000 00000000 00000000 00000000
+    // 2^31 - 1 = 01111111 11111111 11111111 11111111
+
+    // long size
+    printf("size of long is %d bytes\n", sizeof(long)); // prints 8 on my machine
+    // range is -2^63 to 2^63 - 1
+
+    // unsigned int size
+    printf("size of unsigned int is %d bytes\n", sizeof(unsigned int)); // prints 4 on my machine as expected.
+    // range is 0 to 2^32 - 1
+
+    // unsigned long size
+    printf("size of unsigned long is %d bytes\n", sizeof(unsigned long)); // prints 8 on my machine
+    // range is 0 to 2^64 - 1
+
+    // float size
+    printf("size of float is %d bytes\n", sizeof(float)); // prints 4 on my machine
+    // range is 1.2 * 10^-38 to 3.4 * 10^38
+
+    // double size
+    printf("size of double is %d bytes\n", sizeof(double)); // prints 8 on my machine
+    // range is 2.3 * 10^-308 to 1.7 * 10^308
+
+
+    return 0;
+}
+
 int IOstuff() {
     printf("yo\n"); // #include <stdio.h> tells C where to find printf function. standard input/output
     printf("here is an integer: %d\n", 10); // #include <stdio.h> tells C where to find printf function. standard input/output
@@ -218,7 +258,7 @@ int compilingWithUnix() {
     // run the executable by ./a.out
 
     // gcc -Wall: prints out additional warning messages, recommended to compile with -Wall
-    // gcc -Wall -o main main.c: -o specifies the exectuable file to be created as main
+    // gcc -Wall -o main main.c: -o specifies the executable file to be created as main
 
     return 0;
 }
@@ -696,7 +736,7 @@ int whyUsePointerToPointers() {
 // basic rule: declarations mimics use
 // form declaration statement by mimicking syntax we will later use when using the variable
 
-int cDeclarationSynax() {
+int cDeclarationSyntax() {
     // say we have a variable f
     // f;
     // f[10]; and we subscript it with *
@@ -1566,7 +1606,7 @@ int readingFromFiles() {
     return 0;
 }
 
-int scanFFunction() {
+int fscanfFunction() {
     // very same to scanf, but fscanf can choose to read from any input stream whereas scanf is forced to read from stdin
 
     // prototype:
@@ -1720,13 +1760,13 @@ int welcomeToStructs() {
     };
 
     // whenever we declare a variable fo a structure type, we must include struct keyword
-    // MANUAL INITALIZATION (compare this with DESIGNATED version below)
+    // MANUAL INITIALIZATION (compare this with DESIGNATED version below)
     struct student1 faisal;
-    // now explicitly initalize the members
+    // now explicitly initialize the members
     strcpy(faisal.first_name, "Faisal"); // for strings, dont do X = Y, do strcpy(X, Y)
     strcpy(faisal.last_name, "Shaik");
     // remark: we are able to use the unsafe strcpy function as opposed to the unsafe strncopy function (more on this later),
-    // because we harded coded the strings to have a size of exactly 20 chars
+    // because we hard coded the strings to have a size of exactly 20 chars
 
     faisal.year = 2;
     faisal.GPA = 3.96;
@@ -1749,7 +1789,7 @@ int welcomeToStructs() {
     // global struct student, not student1
 
     // we can also declare and init structs like this
-    // DESIGNATED INITALIZATER
+    // DESIGNATED INITIALIZER
     struct student bob = {
         .first_name = "John",
         .last_name = "Doe",
@@ -1768,7 +1808,7 @@ int welcomeToStructs() {
 
     printf("arrays also remains same: %s\n", bob.first_name);
 
-    // solution: to operate on the original struct just send a pointer to the struct instread of the struct itself.
+    // solution: to operate on the original struct just send a pointer to the struct instead of the struct itself.
     void goodChangeStruct(struct student* s);
     goodChangeStruct(&bob);
     printf("gpa now changes: %.1f\n", bob.GPA);
@@ -1798,7 +1838,7 @@ int pointersToStructs() {
         .year = 3
     };
 
-    // when using dot notation on structs by deferencing pointers, we need to put () around the dereference
+    // when using dot notation on structs by dereferencing pointers, we need to put () around the dereference
     (*p_s).GPA = 2.3;
     printf("GPA changed to %.1f\n", s.GPA);
     // this is because . has higher precedence than *, so *p_s.GPA is same as *(p_s.GPA), which results in an error
@@ -1911,7 +1951,7 @@ int writingBinaryFiles() {
 
 int readingBinaryFiles() {
     // we use fread()
-    // the prototype is simliar to that of fwrite
+    // the prototype is similar to that of fwrite
     // size_t fread(void* ptr, size_t size, size_t nmemb, FILE* stream)
         // only difference is that ptr for fread does not have constant keyword
 
@@ -2072,7 +2112,7 @@ int readWriteStructs() {
     };
 
     if (contracts == NULL) {
-        fprintf(stderr, "coild not open contract_data file\n");
+        fprintf(stderr, "could not open contract_data file\n");
         return 1;
     }
 
@@ -2092,7 +2132,7 @@ int readWriteStructs() {
     // remark: very important that we enter sizeof(struct assassin) instead of trying to manually compute it ourselves.
     // this is because it basically impossible to for sure know the size of the struct even if we know the size of all its members.
     // this is because C is allowed to insert space between the members of a struct!!
-        // for eithering speeding up memory accesses or just required by machine.
+        // for either speeding up memory accesses or just required by machine.
     
     // now we will read the data into another struct!
     struct assassin b;
@@ -2884,7 +2924,7 @@ int functionLikeMacros(){
     // preprocessor takes it in like this:
     // ((x) > (++y) ? (x) : (++y))
     // and this makes the ++y happen twice.
-    // this is why its risky to use macros. a function wouldnt do this.
+    // this is why its risky to use macros. a function wouldn't do this.
     // we cant expect the macro the act like a function
 
     // now we show issues with nesting macros
@@ -2976,8 +3016,8 @@ int functionPointers(){
     // this adds an insane amount of flexibility.
     // we can now freely pass functions as parameters
     // just need proper type, for example
-        // void funcx(void (*sort_func)(int*, int)) {}
-    // just pass in a function as the arg into funcx.
+        // void func_x(void (*sort_func)(int*, int)) {}
+    // just pass in a function as the arg into func_x.
 
     // just like an array variable is treated as a pointer to its first element,
     // a function pointer is treated like a pointer to that function
@@ -2994,7 +3034,7 @@ int functionPointers(){
 
     // to do this it gets rlly messy. 
     // must make it like this:
-    // void (*funcx(int argc, int argv[]))(int*, int) {}
+    // void (*func_x(int argc, int argv[]))(int*, int) {}
         // see the example below after this section
 
     // basically it is just void (*f_ptr)(int*, int), but we add (int argc, int argv[]) after f_ptr, 
@@ -3005,16 +3045,16 @@ int functionPointers(){
     typedef (*sort_func)(int*, int); 
     // now sort_func is a type for stuff like f_ptr
     // we can just do what we are familiar with now:
-    // sort_funcy funcy(int argc, int argv[]) {}
+    // sort_func_y func_y(int argc, int argv[]) {}
     // a lot cleaner now.
 
     return 0;
 }
 
-void (*funcx(int argc, int argv[]))(int*, int) {}
+void (*func_x(int argc, int argv[]))(int*, int) {}
 
-typedef (*sort_funcy)(int*, int); 
-sort_funcy funcy(int argc, int argv[]) {}
+typedef (*sort_func_y)(int*, int); 
+sort_func_y func_y(int argc, int argv[]) {}
 
 int systemCalls() {
     // a system call is a a function that requests a service from the OS
@@ -3050,14 +3090,14 @@ int errorsAndErrno() {
     // ones that return int type will return -1 to indicate error
     // ones that return pointer type will return NULL to indicate error
 
-    // we would also like to know what kind of error occured
+    // we would also like to know what kind of error occurred
     // the return value does not suffice for this; it just tells us if an error occurs, not what kind
     // we get around this using errno
 
     // errno
-    // we use a global variable known as ERRNO, which stores the kind of error that occured
+    // we use a global variable known as ERRNO, which stores the kind of error that occurred
     // it has a type of int.
-    // the integer value of ERRNO correponds with different errors as specified by errno.h header file
+    // the integer value of ERRNO corresponds with different errors as specified by errno.h header file
     errno;
     #include <errno.h>
     // we can ctrl click errno.h to see all these errors.
@@ -3073,7 +3113,7 @@ int errorsAndErrno() {
     // note that we dont need to pass ERRNO into perror
     
     // for example
-    FILE* x = fopen("BARSS", "r");
+    FILE* x = fopen("BARSSS", "r");
     if (x == NULL) {
         perror("error opening file");
     }
@@ -3120,7 +3160,7 @@ int processModels() {
     // the process control block stores the current value of important registers.
     // enter top in bash to see all the processes running
 
-    // number of active proccesses is much larger than the number of processes executing instructions at an instance of time
+    // number of active processes is much larger than the number of processes executing instructions at an instance of time
         // an active process is in the RUNNING, READY, or BLOCKED state
         // all processes have owners.
     // the number of processors, aka CPUs determines how many processes can execute an instruction at the same time.
@@ -3175,7 +3215,7 @@ int creatingProcesses() {
         i = i - 2;
     }
 
-    else { // else there was an error and child process wasnt created
+    else { // else there was an error and child process wasn't created
         perror("fork");
     }
 
@@ -3200,7 +3240,7 @@ int relationshipOfProcesses() {
         if (result == -1) {
             perror("fork:");
             exit(1); // whats the diff between this and return - 1 ?? ANS: exit() will terminate the entire program, whereas return -1 just ends the current function and returns a value!
-        } // furthermore exit() pcarries out addition tasks such as closing files and freeing memoryu allocated by program.
+        } // furthermore exit() carries out addition tasks such as closing files and freeing memory allocated by program.
 
         else if (result == 0) { // child process
             for (j = 0; j < 5; j++) {
@@ -3261,7 +3301,7 @@ int relationBetweenShellAndProcesses() {
 
     // STAT_LOC ARGUMENT
         // information about how the child terminated; ie terminates with error or terminates cleanly, is stored in the integer value of the stat_loc argument.
-        // after a child process terminates, the exit status is stored in the stat_loc arguement (value returned on termination) 
+        // after a child process terminates, the exit status is stored in the stat_loc argument (value returned on termination) 
         // this value is NOT necessarily equivalent to to the return value on termination
         // various bits in the stat_loc argument are used for different purposes! it is complex.
         // for example, lowest 8 bits tell us whether the process terminated normally or whether it terminated because it received a signal.
@@ -3331,7 +3371,7 @@ int relationBetweenShellAndProcesses() {
         // macros are stuff like #define PI 3.14159. these are not stored in global data / heap / stack, they are stored in code area of memory model.
         // when we use a macro in our source code, the preprocessor replaces instances of the macro with its definition before the compiler begins compiling assembly code and object code.
 
-    // so we dont rlly need to know how to bits themselvess are arranged, just used the macros to correctly extract data.
+    // so we dont rlly need to know how to bits themselves are arranged, just used the macros to correctly extract data.
     // will show how to use macros in next function
 
     return 0;
@@ -3382,7 +3422,7 @@ int usingMacrosForStat_loc() {
     }
     printf("[%d] Parent about to terminate\n", getpid());
 
-    // note that when we are waiting for child processes, we are just calling wait() 5 times abritrarily. if we want to specify the child to wait for we can use:
+    // note that when we are waiting for child processes, we are just calling wait() 5 times arbitrarily. if we want to specify the child to wait for we can use:
         // pid_t waitpid(pid_t pid, int* stat_loc, int options)
 
     // note that our wait() and waitpid() functions block the calling process until wait() returns the value, ie) until the child process terminates.
@@ -3447,7 +3487,7 @@ int runningDifferentPrograms() {
 
     // execl() is one version of the exec
     // int execl(const char* path, const char* arg0, ...  NULL);
-    // note last arg must be NULL which indicates teh end of the arugment list
+    // note last arg must be NULL which indicates teh end of the argument list
     // the ... consists of the remaining arguments to the command line executable 
     // arg0 should specify the name of the program itself, ie the first argument passed into argv[].
 
@@ -3501,12 +3541,12 @@ int signalsInC() {
         // CTRL + Z: pauses program (type fg to wake it up)
         // Segmentation Fault: a signal sent by the OS to the process, terminates the process
 
-    // in general: signals are a mechanism that allow a process or the OS to interrupt a currently running process and notify it that an event has occured.
+    // in general: signals are a mechanism that allow a process or the OS to interrupt a currently running process and notify it that an event has occurred.
 
     // how signals work?
     // each signal is identified by a number between 1 and 31.
     // type man 7 signal to see list of signals 
-    // eg: SIGINT has a integer value of 2 and it is the signal sent when we type ctrl + c in temrinal, which interrupts program.
+    // eg: SIGINT has a integer value of 2 and it is the signal sent when we type ctrl + c in terminal, which interrupts program.
     // ctrl + z sends SIGSTOP: has value of 17
 
     // how do we send arbitrary signals to the process?
@@ -3677,7 +3717,7 @@ int bitwiseOperations() {
     printf("not 2: %d\n", ~x); // not 10 gives 1111 1111 1111 1101. in 2's compliment this is just (-1) - 2 = -3. 
     // that is because, 1111 1111 1111 1111 is negative 1, and then we turn the second rightmost bit to 0, so -2.
 
-    // 2's compliment referesher!
+    // 2's compliment refresher!
     // recall 2's compliment, the highest (leftmost) is equal to whatever it's regular value would be, times -1.
     // so 1000 0000 0000 0000 is the most negative value we can get with 16 bits, which is -2^15 = -32768
     // for an integer, it can be 16 bits or 32 bits depending on ur OS.
@@ -3753,7 +3793,7 @@ int bitShiftLogic() {
     
     // we can make these problems more general using slli << (shift left logic immediate)
     // consider the problem:
-    // given a variablke b, set the k'th bit to 1, not changing the other bits
+    // given a variable b, set the k'th bit to 1, not changing the other bits
 
     // remark srli is >>
 
@@ -3908,7 +3948,7 @@ int bitFlags() {
     // similiar could check modes like this:
     mode_t check = mode & (OWNER_READ | GROUP_READ | OTHER_READ);
 
-    // bit flags are nice because they save space abnd operations on them are very fast.
+    // bit flags are nice because they save space and operations on them are very fast.
     // also note that bit flags used in system calls are defined in library files.
 
     return 0;
@@ -3936,7 +3976,7 @@ int bitArrays() {
     #define gold 11
     // can make a bijective map to the set {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} with bit flags
 
-    unsigned short bit_array; // recal short is 2 bytes, so 0000 0000 0000 0000, 16 bits
+    unsigned short bit_array; // recall short is 2 bytes, so 0000 0000 0000 0000, 16 bits
     // say we our set only has {7, 5, 3, 2}, mapps to array 0000 0000 1010 1100
     bit_array = 0b000000010101100;
 
@@ -3978,7 +4018,7 @@ int bitArrays() {
 
     bit_array2[index] |= (1 << bit_place);
 
-    // now lets make a bunch of abitrary bit masking stuff below this function.
+    // now lets make a bunch of bit masking stuff below this function.
     return 0;
 }
 
@@ -3989,9 +4029,9 @@ typedef struct {
     unsigned int field[N];
 } Bitarray;
 
-// having our bitarry inside a struct is useful because it hides the implementation of our set and allows us to use a simple assignment statement to make a copy of the set
+// having our bit array inside a struct is useful because it hides the implementation of our set and allows us to use a simple assignment statement to make a copy of the set
 
-// we will now implement functions such as setting the bitarry to be all zero, turning a particular bit on, turning a particular bit off, and checking if particular bit is on or off
+// we will now implement functions such as setting the bit array to be all zero, turning a particular bit on, turning a particular bit off, and checking if particular bit is on or off
 
 int setzero(Bitarray* b) {
     return memset(b, 0, sizeof(Bitarray)) == NULL;
@@ -4021,7 +4061,7 @@ int unbufferedIO() {
         //data is stored in a buffer before it is sent to the file or read from the file. reduces number of system calls. read large block of data at once.
         // eg) fprintf, fscanf, fgets, fputs, fread, fwrite, etc.
 
-    // unbffered IO:
+    // unbuffered IO:
         // data is sent to the file or read from the file immediately. no buffering. read or write one byte at a time.
         // eg) read, write, open, close, lseek, etc.
  
@@ -4035,7 +4075,7 @@ int unbufferedIO() {
     // we say that buffered IO calls buffer data. ie) the system calls may read or write larger chunks of data than the user has specified.
     // so our unbuffered IO operations collect data in larger chunks.
 
-    // collecting data in larger chunks helps ammortize the cost of data transfer by reducing the number of system calls we might need to make.
+    // collecting data in larger chunks helps amortize the cost of data transfer by reducing the number of system calls we might need to make.
     // analogy: instead of sailing on a rowboat to trade a few cargos back and forth between islands, just load several cargos on a frigate.
 
     // this allows the programmer to ignore the details of data transfer (most of the time).
@@ -4132,7 +4172,7 @@ int pipesInC() {
     // now we start investigating how to actually utilize multiple processes! very cool stuff.
 
     // since we can use fork() to make multiple processes, which can then work on the task simultaneously, then we will be able to solve problems faster.
-    // remark: if we have a single processor only, then having more processes does nothing. however, multiple processesors = simultaneous execution of different processes.
+    // remark: if we have a single processor only, then having more processes does nothing. however, multiple processors = simultaneous execution of different processes.
 
     // but now we realize, for these processes to work together, they need communication.
     // pipes are one form of this communication. 
@@ -4233,7 +4273,7 @@ int pipesInC() {
     return 0;
 }
 
-// fgets demsontration from stdin:
+// fgets demonstration from stdin:
 int fgets_stdin() {
     char s[10];
     fgets(s, 5, stdin); // program waits for users to type something on keyboard.
@@ -4254,20 +4294,20 @@ int concurrencyAndPipes() {
 
     // we can think of this as the consumer being the process that reads stuff from the process that writes stuff
     // if the consumer doesnt consume fast enough than the data can pile up
-    // we can think of the pipe as a queue, where data is "queued" by producer and dequeed by consumer when it is read
+    // we can think of the pipe as a queue, where data is "queued" by producer and dequeued by consumer when it is read
 
     // supposed the queue has a limited size, then this can be a problem.
     // we dont want the producer to put data into a full queue
     // similarly, we want to make sure that the consumer doesnt try to remove data from an empty queue (in the case that the producer produces slower than the consumer consumes)
 
-    // so overall, we are concerned with 3 scnearios
+    // so overall, we are concerned with 3 scenarios
     // 1.) producer adding to a full queue
     // 2.) consumer removing from an empty queue
     // 3.) producer and consumer acting at the exact same time
 
     // note that the pipe is a queue data structure in the OS.
     // we dont have to worry about 3 because the OS manages the pipe structure and ensures that the producer and consumer dont act simultaneously
-    // similariy we dont have to worry about reading from and empty pipe as the OS manages this case as well. the read() call will block if the pipe is empty.
+    // similarly we dont have to worry about reading from and empty pipe as the OS manages this case as well. the read() call will block if the pipe is empty.
     // and lastly, the OS also takes care of 1.) as it causes write() call to be blocked when pipe is full.
 
     return 0;
@@ -4391,7 +4431,7 @@ int implementingShellPipeOperator() {
     
     if ( (r = fork()) > 0 ) { // in parent
         int file = open("io-stuff/iostuff.txt", O_RDONLY); // O_RDONLY imported from fcntl.h
-        // havent went over using open() system call yet, learn it urself kid. doesnt return a pointer to FILE but rather the file descriptor.
+        // haven't went over using open() system call yet, learn it urself kid. doesnt return a pointer to FILE but rather the file descriptor.
 
         if (dup2(file, fileno(stdin)) == -1) { // set parent's stdin to be the file
             perror("dup2");
@@ -4496,7 +4536,7 @@ int introToSockets() {
     // think of these as packages; contain both the address and a payload-the contents of the package.
     // however the packet does not specify the route it travels to get to the destination. the route is determined as the packet moves (dynamically).
 
-    // when packet leaves machine, it is received by another device called a router. a router facillitates the transfer of packets between networks.
+    // when packet leaves machine, it is received by another device called a router. a router facilitates the transfer of packets between networks.
     // routers are connected to multiple networks and know which network the packet should be sent to in order to get it closer to its final destination.
 
     // Client and Server:
@@ -4511,7 +4551,7 @@ int introToSockets() {
     // CLIENT:
     // users run a client program when they want to start interacting with a server.
     // the client program sends the initial message. in some cases the client sends only a single message. in other cases, the client begins a connection.
-    // a connection is a conversation betweewn the two machines that involves multiple messages.
+    // a connection is a conversation between the two machines that involves multiple messages.
     // once the programs have established a communications channel, then either machines can send data to each other.
 
     // now the question boils down to, "how can we establish a communications channel" ?
@@ -4527,8 +4567,8 @@ int introToSockets() {
 
     // we will just focus on one kind: stream sockets.
     // stream sockets are built on the TCP protocol. TCP sockets:
-        // are connectetion oriented sockets
-        // guarntee there will be no message loss in transit
+        // are connection oriented sockets
+        // guarantee there will be no message loss in transit
         // messages will be delivered in the order they are sent.
 
     // the first system call we need is socket()
@@ -4600,7 +4640,7 @@ int socketConfiguration() {
         // ports 1024-49151 are known as registered ports. if you use these ports for a service u want to make public, you can REGISTER with IANA: the internet assigned numbers authority. 
             // IANA also looks after assigning domain names at highest level.
         // ports 49152-65535 are known as dynamic ports. for a server to run on your own machine, these ports will be fine. 
-            // but for a server running on a shared machine, dont use same port number as someone else. ie) dont setup a socket with a port that a differnet program is already using. 
+            // but for a server running on a shared machine, dont use same port number as someone else. ie) dont setup a socket with a port that a different program is already using. 
 
     // suppose we use port 54321 for a project:
     addr.sin_port = htons(54321);
@@ -4635,7 +4675,7 @@ int socketConfiguration() {
     // this is just used to make the sockaddr_in struct the same length as the generic sockaddr struct. pretty simple, we just add 8 bits.
     // recall that when we malloc sockaddr_in, the stuff that was in the memory space previously wont automatically be reset unless we set it to something.
     // we already set all the other 3 members, so they wont contain any old data. so we also want to set the padding to something, we just do memset and set everything to 0.
-    // the reason we want our old data to be wiped is bc it could contain vulernable information that malicious third parties could intercept and use to do bad things 
+    // the reason we want our old data to be wiped is bc it could contain vulnerable information that malicious third parties could intercept and use to do bad things 
     memset(&addr.sin_zero, 0, 8);
 
     // now we have set up our stuct sockaddr_in and we are ready to pass it as an argument to bind().
@@ -4698,7 +4738,7 @@ int socketConfiguration() {
     // now we make the call:
     int client_socket = accept(listen_soc, (struct sockaddr*) &client_addr, &client_len);
     // when we make this call, the program blocks and waits for a connection to be made from client side. we will now write a program, client.c, that sends a connection.
-    // remeber, the return value of accept will be the file descriptor for client socket stream, and -1 if it fails.
+    // remember, the return value of accept will be the file descriptor for client socket stream, and -1 if it fails.
     if (client_socket == -1) {
         perror("accept");
         exit(1);
@@ -4875,12 +4915,12 @@ int socketCommunication2() { // this version uses write() and read() system call
     // important remark: we are assuming that one read / write call is sufficient to relay the information
     // but this is not true in general and just works for this specific case.
     // remember, we are talking about communication over the internet. data is wrapped up in IP packets, sent from machine to machine, and reassembled on the other end.
-    // the stream socket protocol guarantees lossless transmition in same order. 
-    // however, it does not guarantee that a "bunch" of data written with a single write statement will all arive at the same time.
+    // the stream socket protocol guarantees lossless transmission in same order. 
+    // however, it does not guarantee that a "bunch" of data written with a single write statement will all arrive at the same time.
     // in other words, there's no guarantee that it will all be available for the same read statement.
     // it might come in two different pieces for example, so we would need 2 read statements.
 
-    // in real programs, we need to make use of the fact that the return value from read reports how many bytes were succesfully read.
+    // in real programs, we need to make use of the fact that the return value from read reports how many bytes were successfully read.
     // we check this return value and call read again if we were expecting more bytes.
 
     //  it's especially important to check the return value of read because if the write end of the socket is closed, read will return 0.
@@ -4910,12 +4950,12 @@ int issueWithBlockingRead() {
 
     // now consider a parent with two children, child1 and child2. suppose the parent has two pipes set up, pipe1, and pipe2, and is reading from both children.
     // so we need 2 different calls to read(), one for each pipe. 
-    // infact we probably want to have multiple read calls to each child since they usually will have more information.
+    // in fact we probably want to have multiple read calls to each child since they usually will have more information.
 
     // suppose we read them in the order: read child 1 pipe, then read child 2 pipe. and we read them like this in a loop.
     // this works fine if child 1 writes. but what if child 1 doesnt write at all but child 2 writes a bunch.
     // we wont be able to get to child 2 pipe read call because the read call for child 1's pipe will be blocking the program.
-    // this is rlly bad because we are keeping one child's writes waiting, and they can accumlate a lot to the point the pipe even gets full.    
+    // this is rlly bad because we are keeping one child's writes waiting, and they can accumulate a lot to the point the pipe even gets full.    
 
     // similarly even if we read for child 2 first, after we read once we get to the read call for child 1 and our program just blocks as child 1 has nothing to say.
     // so essentially we are required for both of them to read and write sequentially in order, which is a big restraint. so order reading calls cant fix this.
@@ -5245,10 +5285,10 @@ int when_is_a_file_descriptor_ready() {
     // when is an FD ready?
 
     // 1.) level triggered: when we can read/write from it without blocking
-    // 2.) edge trigerred: when there is a new action on the fd since we last "asked"
+    // 2.) edge triggered: when there is a new action on the fd since we last "asked"
 
     // select() is level triggered. it tells us when we can read/write from an fd without blocking.
-    // for example, there is data to be read on an fd but we havent read it yet, select() tells us its ready.
+    // for example, there is data to be read on an fd but we haven't read it yet, select() tells us its ready.
 
     // but what if we want to know when there is new data on an fd? this is edge triggered.
     // things are considered "edge-triggered" when the state changes since the last time we checked
@@ -5285,7 +5325,7 @@ int writing_to_broken_pipes() {
         perror("signal");
         exit(1);
     }
-    // essentially alll this does is set SIGPIPE signal to SIG_IGN and SIG_IGN is a macro that tells the system to ignore the signal.
+    // essentially all this does is set SIGPIPE signal to SIG_IGN and SIG_IGN is a macro that tells the system to ignore the signal.
     // then each time after calling write() and read() we check if ERRNO is EPIPE. if it is, we know the pipe is broken.
 
     return 0;
@@ -5293,10 +5333,10 @@ int writing_to_broken_pipes() {
 
 
 int threads() {
-    // benefits of using multiple proceesses:
+    // benefits of using multiple processes:
 
         // 1. ) isolation: each process is protected from the other 
-        // 2. ) paralleism: can run multiple processes at the same time on a multicore machine
+        // 2. ) parallelism: can run multiple processes at the same time on a multicore machine
 
     // drawbacks:
         // 1. ) fork is heavyweight 
