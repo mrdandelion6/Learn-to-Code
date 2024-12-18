@@ -20,11 +20,12 @@ Here are notes I've made on various programming languages. Most of them are ongo
 - 🚧 `x86`
 - 🚧 `R` (probably not gonna finish this)
 - 🚧 `PHP`
-- 🚧 `Go` (not doing this any time soon)
+- 🚧 `Go` (not continuing this any time soon)
 
 ### To Start
 - CUDA (know it already)
 - HIP (to learn)
+- Docker (know it already)
 - MATLAB (know it already)
 - TypeScript (know it already)
 - React (know it already)
@@ -45,6 +46,10 @@ I have made quite a few notes on important computer science topics as well.
 - 🚧 `Leetcoding` (will always be ongoing)
 - 🏁 `Using VS Code`
 - 🚧 `Git`
-
+  
+### To Start
+- Databases (for CSC343)
+- Using Vim
+- Quantum Computing (architecture, underlying physics, but mostly focused on programming with Qiskit)
 
 #### Happy coding.
