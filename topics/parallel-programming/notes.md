@@ -10,6 +10,9 @@ we have some big questions to consider:
 - how to effectively use a higher transistor count
 - how to mitigate the memory speed gap (hierarchy of memories)
 
+# INSTRUCTION LEVEL PARALLELISM (ILP)
+in this section we will focus on parallelism at the instruction level. i.e., how instructions themselves can be parallelized in the CPU. 
+
 ## multiple instruction execution
 we will be considering 4 ideas for executing multiple instructions
 1. pipelining
@@ -82,7 +85,7 @@ if we just wait, we end up losing on a lot of opportunities for parallelism. if 
 
 so you might ask, why risk taking that hit? why not just go with option 1. well the answer is because brances are very common in code, and if we just wait, we will end up losing a lot of opportunities for parallelism. moreover, branch predictions are usually very accurate.
 
-### superscalar executions
+## superscalar execution
 
 we can also have multiple pipelines, which is called **superscalar execution**. this is where we have multiple pipelines, and we can execute multiple instructions at the same time. this is a form of parallelism.
 
@@ -103,24 +106,48 @@ note that we have two pipelines, and we can execute two instructions at the same
 
 the way your code behaves on your machine will end up depending on how it was compiled.
 
+## out of order execution
+
+sometimes the instructions can just be reordered for better parallelism. for example consider a CPU with 2-way superscalar execution. consider the following assembly:
+```assembly
+load R1, @aff0
+add R1, R1 @aff8
+load R2, @aff4
+add R2, R2, @affc
+add R1, R1, R2
+store R1, @bff0
+```
+we can re-order these instructions such that like operations can be execution in parallel (loads and adds):
+```assembly
+load R1, @aff0 ; parallel pair
+load R2, @aff4
+
+add R1, R1 @aff8 ; parallel pair
+add R2, R2, @affc
+
+add R1, R1, R2 ; true data dependency, can't parallelize with other add
+
+store R1, @bff0 
+```
+
+### branch dependencies
+
+
 ### underutilization of superscalar processor
 
-the performance of a superscalar processor is ultimately just determined by how many instructions we can execute at the same "level" of time. we call this "instruction level parallelism" (ILP).
+the performance of a superscalar processor is ultimately just determined by how many instructions we can execute at the same "level" of time. remember this is "instruction level parallelism" (ILP).
 
-## memory system performance
+# MEMORY SYSTEM PERFORMANCE
 
 performance depends on both cpu speed and memory system parameters.
 
-latency is just the time taken to serve a memory request (for example 100ns)
+**latency** is just the time taken to serve a memory request (for example 100ns)
 
-bandwith is the rate at which data can be served from memory (for example 10GB/s)
+**bandwith** is the rate at which data can be served from memory (for example 10GB/s)
 
-here's an analogy for water comingo ut of a pipe:
-
-1. latency = how fast water comes out of the pipe
-- better latency => needs more water pressure
-2. bandwith = how much water can come out of the pipe at the same time
-- better bandwith => need wider pipe
+**pizza truck analogy**:
+1. latency = how long it takes the pizza truck to deliver pizza. independent of how many pizzas it's carrying.
+2. bandwidth = max number of pizzas that can be transported at a time
 
 
 ### performance impact
