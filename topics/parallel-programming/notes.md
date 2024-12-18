@@ -182,13 +182,149 @@ lets consider an example. say we have:
 - 1 core cpu @4GHz clock rate
 - say CPU is capable of executing 4 instructions per cycle
 
-this means the peak processing rate is **16 GFLOPS** (billion floating point operations per second).
+we consider one floating point operation to be the same as 1 instruction. so we have:
+```
+4GHz * 4 = 16 GFLOPS 
+```
 
-however, from having to access memory, we may have significantly less performance.
+this means the peak processing rate is **16 GFLOPS** (16 x 10^9 FLOPS). FLOPS stands for floating point operations per second. 
+
+however, from having to access memory, we may have significantly less performance!
+
+for instance, suppose DRAM latency is 40ns and we have no caches. suppose we are computing the sum of an array's elements where 1 element is 1 word. then every time we need to make a memory request to retrieve 1 word from memory. so our computations are limited to doing a single floating point operation every 40 ns.
+```
+=> performance = 1 / (4 * 10^-8 s)
+                    = 0.25 * 10^8 FLOPS
+                    = 25 MFLOPS
+```
+this is technically neglecting the time for the floating point operation itself which is 1 / 16 * 10^9Hz (negligible compared to 40ns). our actual time would be 40ns + 1 / 16 * 10^9Hz for clarity.
+
+anyhow, we see we went from 16 GFLOPS to 25 MFLOPS! massive performance loss. this is a memory-bound process: computation rate is not bounded by CPU speed but rather memory access. 
 
 ### improving latency with caches
 
 so to avoid the loss of performance from DRAM, we can use caches. caches are small, fast memory units that store frequently accessed data. they are much faster than DRAM. 
+
+DRAM access took 40ns, and using the clock rate (4GHz), we know a single cycle takes = 1 / 4GHz = 0.25 ns. Then each DRAM access takes 40 / 0.25 = 160 cycles.
+
+now suppose we had a cache that was 32KB and had a latency of only 1 cycle. so 160 times faster! and suppose our entire array was able to fit into the cache. then we could compute the sum of the arrays elements much faster!
+
+if we had no pipelining, our performance would be 8 GFLOPS. with pipelining (overlapping fetches and addition) we could have 16 GFLOPS.
+
+### cache lines
+
+caches are managed at the granularity of **cache lines**. this is the size of memory that is loaded or evicted from a cache at once. so if we're accessing an element of an array, we load in a cache line of data around that element. 
+
+### improving performance with memory bandwidth 
+
+recall with no caches, our perfomrnace was 25 MFLOPS due to memory accesses. suppose our memory access still takes 40ns (160 cycles), but we can load 4 words in of the array at a time. that is, we have a higher bandwidth.
+
+so we can load in 4 elements, sum them, and then load the next 4. this means we can do 4 floating point operations every 40ns, or 1 floating point operation every 10ns.
+```
+performance = 1 / (10 * 10-9 s)
+            = 10^8 FLOPS
+            = 100 MFLOPS
+```
+four-fold performance increase compared to before. of course, we are again neglecting the time it would take for the floating point operations themselves (1/16 * 10^-9 s).
+
+the bandwidth is dependent on the **memory bus**. a memory bus of 4 words would be 4 * 32 = 128 bits (on a 32-bit system). however, having large bus width's is expensive and impractical.
+
+we can keep the memory bus width to be 32-bits and instead load put the next 3 words on each "subsequent bus cycle" (N.S. what this means for now: where are the next 3 words being loaded? is there some buffer?).
+
+so the practical solution is after the first word is sent, the next 3 are on the next 3 subsequent bus cycles. assuming that the memory bus speed is 1GHz (1ns), each access will then be 40ns + 3x * 1ns = 43 ns.
+- still remains close to 100 MFLOPS
+
+#### cache hit ratio
+the above gives us a cache hit ratio of 75% (3 words of 4 are essentially cached). this means 25% of accesses take 40ns and the rest are 1ns (memory bus speed). if we neglect cache access and memory bus speed, then we can say that
+```
+performance = 1 / (0.25 * 40 ns)
+            = 1 / (1*10^-8s)
+            = 100 MFLOPS
+```
+
+side note, 128-bit is actually too "expensive". DDR4 and DDR5 use 64-bit with dual channels making them effectively 128-bits. 
+
+notice that fetching "closeby" locations in memory benefits cache hit rates.
+- if a program accesses contiguous data items, we say it has good spatial locality. for example, accessing array elements that are contiguous in memory.
+
+### spatial locality & bandwidth utilization
+it's important to note that programs that have good spatial locality have good bandwidth utilization. 
+- data lies in same DRAM row
+- program takes advantage of things like burst transfers (more on this later)
+- compiler can also help with this by restructing code for better spatial locality in memory accesses.
+
+### spatial locality example
+
+consider the following code:
+```c
+int col_sum[1000];
+// a is an integer matrix of dimensions 1000 x 1000 already initialized
+for (int i = 0; i < 1000; i++) {
+   col_sumn[i] = 0.0;
+   for (j = 0; j < 1000; j++) {
+      col_sum[i] += a[j][i]
+   }
+} 
+```
+note when we do a[j][i], j accesses the  row, then i accesses the column inside that row. so if we iterate through i before j, then we are going through the matrix in a column-major acccess pattern:
+```
+# matrix:
+A  B  C 
+D  E  F
+G  H  I
+
+# column major access:
+1.
+[A] B  C
+ D  E  F
+ G  H  I
+
+2.
+ A  B  C
+[D] E  F
+ G  H  I
+
+3. 
+ A  B  C
+ D  E  F
+[G] H  I
+
+4.
+ A [B] C
+ D  E  F
+ G  H  I
+
+and so on... E, H, C, F, I
+```
+this is bad spatial locality because in C, memory is contiguous in ROWS! our matrix is essentially just a pointer to pointers (rows). for better spatial locality, we want to access in a row-major pattern.
+
+```
+# row major access
+
+# matrix:
+A  B  C 
+D  E  F
+G  H  I
+
+# access order
+A, B, C, D, E, F, G, H, I
+```
+
+we can restructure the code to do row-major access:
+
+```c
+for (int i = 0; i < 1000; i++) {
+   col_sum[i] = 0.0;
+}
+
+for (int j = 0; j < 1000; j++) {
+   for (int i = 0; i < 1000; i++) {
+      col_sum[i] += a[j][i];; 
+   }
+}
+```
+now we're going through a whole row at once and incrementing the column index `i` each iteration.ol
+
 
 ## hiding memory latency
 
@@ -199,24 +335,24 @@ load data from emory in advance (either in hardware or software), so that when w
 **an issue**: the data could be updated between load and use,
 - would need to reload it once again
 
-### hardware prefetching
+### prefetching
+
+#### hardware prefetching
 
 we can do this using "stream buffers".
 - on a cache miss, fetch **x** subsequent addresses into a buffer size of size **x**, i.e, the stream buffer.
     - note that by cache miss, we mean that the data we need is not in the cache, so we need to go to memory to get it.
 
-### software prefetching
+#### software prefetching
 
 - typically for loops with a large number of iterations. the compiler can prefetch the data into the cache before it's needed.
 
 an example is the following code:
 
 ```c
-
 for  (int i = 0); i < N; i++) {
     a[i] = 2 * a[i];
 }
-
 ```
 
 we prefetch like so:
@@ -228,7 +364,6 @@ for (int i = 0; i < N; i++) {
 ```
 
 let's make some assumptions to demonstrate this idea of prefetching:
-
 - assume that each element is on its own cac he line
 - prefetch the "stride" s elements ahead of time
 
@@ -236,10 +371,17 @@ for example, if each iteration takes 7 cycles and a cache miss is 49 cycles, the
 
 to clarify, when we say each iteration takes 7 cycles, we mean that the the processor takes 7 cycles to execute the code in one loop. 
 
-## threads
+### multi threading
+another way to hide latency is by multithreading. multithreading will be the primary focus on these notes actually. 
+- the idea is if lots of threads are running in parallel, while soem are waiting for data from memory, others already have some data that they are working with.
+- hide latency with multiple contexts of execution
+
+in the next section we explore threads with more detail.
+
+# THREADS
 
 threads are a way to have multiple tasks running concurrently. threads are lightweight processes that share the same memory space. threads are useful for parallelism.
- 
+
 
 ### why threads over processes?
 
@@ -247,9 +389,11 @@ processes take a lot more overhead. in short, threads are just more lightweight.
 
 threads are all the same process, but they have different stacks. so they all have the same PID, but they have different TIDs. whereas processes all have their own PID and don't share memory space.
 
-### pthreads
+### posix threads
 
-a standard interface for creating and managing threads in C is called **pthreads**. pthreads is a library that allows us to create and manage threads.
+a standard interface for creating and managing threads in C is called **pthreads** (posix threads). pthreads is a library that allows us to create and manage threads.
+
+in addition to these notes, learn more about pthreads here: https://hpc-tutorials.llnl.gov/posix/
 
 here is an example of how to create a thread in C using pthreads:
 
@@ -295,7 +439,7 @@ now let's focus on the code itself. so we have a few things going on here. first
 
 1. the thread object (where the thread will be stored)
 2. the thread attributes (NULL for default)
-3. the function to run in the thread
+3. the function to run in the thread, sometimes called the routine
 4. the arguments to pass to the function (only one argument, so we cast it to a `void *`)
 
 #### thread creation
@@ -305,9 +449,50 @@ in this case, we are creating 5 threads, and each thread is running the `PrintHe
 also, to pass multiple arguments to a function, you can create a struct and pass a pointer to that struct as the argument. we will go more in depth on this in the next section.
 
 #### exiting threads
-note that we are using `pthread_exit` to exit the threads. this is especially necessary inside `main`, because it will make sure that `main` waits for all the threads to finish before it exits. you can run this code in `creating_and_deleting_threads.c` inside `code_examples`.
+note that we are using `pthread_exit` to exit the threads. you can run this code in `creating_and_deleting_threads.c` inside `code_examples`.
 
-learn more about pthreads here: https://hpc-tutorials.llnl.gov/posix/
+we can exit with pthread_exit() and return any pointer type (just need to cast it to void).
+```c
+pthread_exit((void*)some_value);
+```
+if we have nothing to return, we can just do:
+```c
+pthread_exit(NULL);
+```
+you can access this value again using `pthread_join()`. more on this later.
+
+we can also exit by just returning a void pointer type back directly:
+```c
+return (void*)some_value;
+```
+and access the return value the same way (using `pthread_join`). 
+
+#### pthread_exit vs return
+there are 2 main differences between using `pthread_exit(val)` and `return val` for threads.
+1. control flow
+   - calling `return` in threads may not make threads exit if the return is placed inside another function that was called during the routine
+   - calling `pthread_exit()` always exits the thread
+2. main function
+   - calling `return` in main function terminates the **entire process**, including any separate threads
+   - calling `pthread_exit()` in main only terminates the main thread, while leaving any spawned threads still running. the program terminates once all threads exit. 
+
+control flow difference example:
+```c
+int helper(int n) {
+   if (n == 1) pthread_exit(NULL); // stops routine and exits whole thread
+   return n % 3;
+}
+
+void* thread_routine(void* arg) {
+   int n = *(int*)args;
+   int val = helper(n);
+   // ...
+   pthread_exit((void*)val);
+}
+
+```
+in `helper`, if we get `n == 1`, then the entire thread routine ends. on the other hand, if we end up doing `return n % 3`, control is returned to the calling function--the thread routine `thread_routine`, and then `pthread((void*)val)` is called.
+
 
 ### passing arguments to pthreads
 
