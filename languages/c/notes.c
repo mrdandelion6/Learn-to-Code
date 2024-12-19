@@ -5386,7 +5386,7 @@ int feature_test_macros() {
     // the idea is that the C library is a large collection of functions and headers. some of these functions are not part of the C standard.
 
     // for example signal.h gives certain features if we have _GNU_SOURCE defined. if we dont have this defined, we dont get these features.
-    // since i coded this on ubuntu, i needed to define _GNU_SOURCE to get the features of signal.h.
+    // since im compiling on ubuntu, i needed to define _GNU_SOURCE to get some features of signal.h.
 
     // it is important to note that these definitions need to be made before the first #include statement in the file.
 
