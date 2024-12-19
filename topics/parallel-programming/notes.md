@@ -449,7 +449,7 @@ in this case, we are creating 5 threads, and each thread is running the `PrintHe
 also, to pass multiple arguments to a function, you can create a struct and pass a pointer to that struct as the argument. we will go more in depth on this in the next section.
 
 #### exiting threads
-note that we are using `pthread_exit` to exit the threads. you can run this code in `creating_and_deleting_threads.c` inside `code_examples`.
+note that we are using `pthread_exit` to exit the threads. you can run this code in `pthreads/creating_and_deleting_threads.c` inside `code_examples`.
 
 we can exit with pthread_exit() and return any pointer type (just need to cast it to void).
 ```c
@@ -500,7 +500,9 @@ this is actually something you need to be careful about. firstly, note that all 
 
 now we ask the question, "given that created threads have a non-deterministic startup, how can we safely pass data to them?".
 
-the answer is: **MAKE SURE ALL DATA PASSED CANNOT BE CHANGED BY OTHER THREADS**. any data that you pass in should be not changeable by other threads.
+one answer is: **make sure all data passed cannot be changed by other threads**. any data that you pass in should be not changeable by other threads.
+- you can do things like pass in an array but each thread accesses a unique index
+- for concurrent read/writes to same data, we need to protect it with primitives like mutexes and semaphores (more on these later)
 
 for example, in the code we provided above, each thread received a unique `long` value, which is safe because no other thread can change that value.
 
@@ -508,24 +510,55 @@ DO NOT DO SOMETHING LIKE THIS:
 
 ```c
 int rc;
-long t;
+long t = 69;
 
-for(t=0; t<NUM_THREADS; t++) {
+for(int i = 0; i < NUM_THREADS; i++) {
    printf("Creating thread %ld\n", t);
-   rc = pthread_create(&threads[t], NULL, PrintHello, (void *) &t);
+   rc = pthread_create(&threads[i], NULL, PrintHello, (void *) &t);
    ...
 }
 ```
 
-this is bad because it passes the address of variable `t`, which is in a shared memory space and visible to all threads. as the loop iterates, the value of this memory location changes, possibly before the created threads have a chance to read it. if we had instead declared `t` inside the loop, it would be safe.
+this is bad because it passes the address of variable `t`, which is in a shared memory space and visible to all threads. as the loop iterates, the value of this memory location changes, possibly before the created threads have a chance to read it. we can instead pass the value of `t` itself (so not its address) masked as void*:
+
+```c
+int t = 69;
+for (int i = 0; i < NUM_iHREADS; i++) {
+   rc = pthread_create(&threads[i], NULL, PrintHello, (void*) t);
+}
+```
+this is safe so long as the thread routine properly handles the non-address value.
 
 ### joining and detaching threads
 
-suppose we have a thread that we want to wait for before we continue in the calling thread. or maybe we have multiple threads that we want to wait for before we continue in the calling thread. we can do this using `pthread_join`. calling `pthread_join` will make the calling thread wait for the specified thread to finish. 
+suppose we have a thread that we want to wait for before we continue in the calling thread. or maybe we have multiple threads that we want to wait for before we continue in the calling thread. we can do this using `pthread_join`. calling `pthread_join` will make the calling thread wait for the specified thread to finish and allow u to also read its value.
 
-joining a thread is useful because it allows us to obtain the thread's termination status.
+joining a thread is useful because it allows us to obtain the thread's termination status and any return value.
 
-we can obtain the thread's termination status if we specify in the target thread's call to `pthread_exit`. a thread can only be joined once. it is an error to join a thread that has already been joined.
+we can obtain the thread's termination status if we specify in the target thread's call to `pthread_exit`. a thread can only be joined once. it is an error to join a thread that has already been joined:
+```c
+void* thread_routine(void* arg) {
+   int x = (int)arg;
+   return x;
+}
+
+int main() {
+   int n = 8;
+   pthread_t threads[n];
+   for (int i = 0; i < n; i++) {
+      pthread_create(&threads[i], NULL, thread_routine, (void*)i);
+   }
+
+   // join threads
+   for (int i = 0; i < n; i++) {
+      int ret_val;
+      pthread_join(thread[i], (void*)ret_val);
+      printf("ret_val is: %d\n", ret_val);
+   }
+   return 0;
+}
+```
+you can run this code in `pthreads/joining_threads.c`
 
 there are also other synchronization mechanisms, such as `mutexes` and `condition variables`. we will go over these later.
 
