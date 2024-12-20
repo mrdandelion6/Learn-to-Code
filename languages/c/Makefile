@@ -1,32 +1,37 @@
-OBJFILES = notes.o sorting.o
+# compiler and flags
+CC = gcc
+CFLAGS =
+LDFLAGS =
+# no flags...
 
-notes_sort: $(OBJFILES)
-	gcc $(OBJFILES) -o notes_sort
+# directories
+SRC_DIR = src
+BUILD_DIR = build
 
-notes.o: notes.c sorting.h
-	gcc -c notes.c
+# source code
+SRCS = notes.c $(wildcard $(SRC_DIR)/*.c)
+OBJS = $(SRCS:%.c=$(BUILD_DIR)/%.o)
 
-sorting.o: sorting.c sorting.h
-	gcc -c sorting.c
+# binary
+TARGET = notes
 
-# the following rule is never called
-# even though we will go to the sorting.o and notes.o rules, the following rule is never called because the sorting.o and notes.o rules are more specific
-%.o: %.c sorting.h 
-	echo "BARS"
-	gcc -c $< -o $@ 
-# $< is the first prerequisite, $@ is the target
+# default target
+all: $(BUILD_DIR) $(TARGET)
 
+# create build directory
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)/$(SRC_DIR)
+
+# link object files
+$(TARGET): $(OBJS)
+	$(CC) $(OBJS) $(LDFLAGS) -o $@
+
+# create object files
+$(BUILD_DIR)/%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# clean build artifacts
 .PHONY: clean
 clean:
-	rm *.o notes_sort
-
-# some common automatic variables to know about:
-# $@ - the target, the name of the file that is being generated
-# $< - the first prerequisite, the name of the file that caused the rule to be triggered
-# $^ - all the prerequisites, separated by spaces
-
-# some less common automatic variables to know about:
-# $? - all the prerequisites that are newer than the target
-# $* - the stem of the target, the part of the filename that matched the % in the rule
-# $+ - all the prerequisites, separated by spaces, with duplicates included
-# $| - all the order-only prerequisites, separated by spaces
+	rm -f $(TARGET)
+	rm -rf $(BUILD_DIR)

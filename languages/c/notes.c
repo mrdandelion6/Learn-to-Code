@@ -11,7 +11,7 @@
 #include <stdbool.h> // for using bool types. though in C, we just use (1) for true and (0) for false
 #include <string.h>
 #include <time.h>
-#include "sorting.h"
+#include "src/sorting.h"
 #include <sys/types.h> 
 
 // these libraries are for forking processes
