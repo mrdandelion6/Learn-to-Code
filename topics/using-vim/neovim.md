@@ -47,3 +47,30 @@ neovim was created by refactoring vim's codebase, making it more maintainable an
 - nvim comes with modern defaults like colour support
 - nvim has better key mappings out of the box
 - mouse enabled by default
+
+## setting up neovim
+
+### basic installation
+we will be setting up neovim from scratch on ubuntu. first update ubuntu then install neovim:
+```bash
+sudo apt update
+sudo apt upgrade
+
+# once done updating
+sudo apt install neovim 
+```
+verify installation:
+```bash
+nvim --version
+```
+
+you can run neovim by doing `nvim` in terminal like this:
+```bash
+touch test.txt
+nvim test.txt
+```
+we'll go over how you can use the text editor later on but for now press `esc` to enter **normal mode** then press `:` and type `q!` to exit without saving any changes or `wq` to save your changes and exit.
+
+### configuration
+
+we need to "configure" neovim further to use it properly.
