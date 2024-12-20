@@ -44,6 +44,7 @@ I have made quite a few notes on important computer science topics as well.
 - 🚧 `HTTP`
 - 🚧 `Machine Learning`
 - 🚧 `Leetcoding` (will always be ongoing)
+- 🚧 `Using Vim`
 - 🏁 `Using VS Code`
 - 🚧 `Git`
   
