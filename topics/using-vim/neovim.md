@@ -48,9 +48,9 @@ neovim was created by refactoring vim's codebase, making it more maintainable an
 - nvim has better key mappings out of the box
 - mouse enabled by default
 
-## setting up neovim
+# setting up neovim
 
-### basic installation
+## basic installation
 we will be setting up neovim from scratch on ubuntu. first update ubuntu then install neovim:
 ```bash
 sudo apt update
@@ -71,6 +71,135 @@ nvim test.txt
 ```
 we'll go over how you can use the text editor later on but for now press `esc` to enter **normal mode** then press `:` and type `q!` to exit without saving any changes or `wq` to save your changes and exit.
 
-### configuration
+## configuration
 
-we need to "configure" neovim further to use it properly.
+we need to "configure" neovim further to use it properly. we need configuration for:
+- LSP
+    - gd
+    - error detection
+    - auto completion
+    - find references
+    - intelligent code refactoring
+- modern features
+    - tree-sitter
+    - fuzzy finding
+    - project-wide search
+    - file tree
+- quality of life improvements
+    - custom keybinds
+    - line numbers, indent guides
+    - multiple cursor support
+
+we will be **installing kickstart.nvim** to learn vim and help with configuration. before that, we need some prerequisites to setup.
+
+### prerequisites
+to begin, we will install kickstart. visit https://github.com/nvim-lua/kickstart.nvim and read the README. you will need the following prerequisites as listed on the README:
+1. basic utils: git, make, unzip, C Compiler (gcc)
+2. clipboard tool (xclip/xsel/win32yank or other depending on platform)
+3. a [nerd font](https://www.nerdfonts.com/font-downloads)
+4. language setup: npm for typescript, go for golang, etc.
+
+assuming you already have the basic utils set up on your linux machine (whether it's wsl2 ubuntu or actual os), here is how to set up the rest of the prerequisites.
+
+#### 2. clipboard tool
+```bash
+sudo apt install xclip
+```
+
+
+
+#### 3. nerd font
+
+choose a nerd font from https://www.nerdfonts.com/font-downloads and right click the download button to get the url. i will be using *3270 Nerd Font*.
+
+<details>
+<summary>in ubuntu wsl2</summary>
+
+```bash
+# in wsl2 ubuntu or any other windows terminal
+cd /mnt/c/Users/YourWindowsUser/Downloads
+wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/3270.zip
+unzip 3270.zip
+```
+it's important that for wsl2 setup that you download the font in windows. open the `C:/Users/YourWindowsUser/Downloads/3270/` folder in windows fire explorer and right click `3270NerdFontMono-Regular.ttf` (or anything else you prefer) and select `Install`. you can even install all of the fonts if you want to be able to pick and choose later.
+
+to apply the font do the following:
+- now close all instances of ubuntu and open it again
+- right click the top bar in your ubuntu terminal
+- select "properties"
+- in "Font", scroll up to 3270 Nerd Font Mono and select it
+- adjust your font size as needed
+</details>
+
+<details>
+<summary>in other linux</summary>
+
+```bash
+mkdir ~/.local/share/fonts/
+cd ~/.local/share/fonts/
+wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/3270.zip
+unzip 3270.zip
+rm 3270.zip
+fc-cache -fv
+```
+then edit your terminal to use the downloaded font. this process varies on your terminal and linux distro.
+</details>
+
+
+#### 4. language setup
+
+<details>
+<summary>for golang:</summary>
+
+only get this if you want to write go.
+
+```bash
+# in ubuntu 
+wget https://go.dev/dl/go1.22.1.linux-amd64.tar.gz
+sudo rm -rf /usr/local/go
+sudo tar -C /usr/local -xzf go1.22.1.linux-amd64.tar.gz
+```
+
+now add the following lines in `~/.bashrc` to have `go` in your path:
+```bash
+export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:$(go env GOPATH)/bin
+```
+</details>
+
+<details>
+<summary>for npm:</summary>
+
+only do this if you want to write typescript.
+
+```bash
+sudo apt update
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt install nodejs
+```
+
+verify
+```bash
+node --version
+npm --version
+```
+</details>
+
+### install kickstart.nvim
+
+continuing the README for https://github.com/nvim-lua/kickstart.nvim, you will now fork the repository. and do the following:
+
+``` bash
+# if neovim config not yet made
+mkdir -p ~/.config/nvim 
+
+# if already existing, we wipe it (backup if u need it)
+rm ~/.config/nvim
+
+# clone fresh copy
+git clone https://github.com/nvim-lua/kickstart.nvim.git ~/.config/nvim
+
+# now run the command
+nvim
+```
+the last command will be our first launch of nvim with kickstart which should trigger plugin installation via lazy vim.
