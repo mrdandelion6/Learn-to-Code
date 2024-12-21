@@ -202,4 +202,15 @@ git clone https://github.com/nvim-lua/kickstart.nvim.git ~/.config/nvim
 # now run the command
 nvim
 ```
-the last command will be our first launch of nvim with kickstart which should trigger plugin installation via lazy vim.
+the last command will be our first launch of nvim with kickstart which should trigger plugin installation via lazy vim. now just press `q` to close the  window.
+
+## init.lua
+`init.lua` is the main configuration file for neovim when using lua instead of the traditional `vimrc` for vim. it's where you define your core settings, keymaps, and plugin configurations.
+
+for **kickstart.nvim** specifically, their `init.lua` serves as both a working configuration and a well-documented example of how to configure neovim. 
+
+for the rest of these notes, we will be going through `init.lua`. to start with, first make a copy the original `init.lua` then open the original with neovim:
+```bash
+cp ~/.config/nvim/init.lua ~/.config/nvim/init.lua.backup
+nvim ~/.config/nvim/init.lua 
+```
