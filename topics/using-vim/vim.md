@@ -66,3 +66,12 @@ keep your index finger on j, middle finger on k, and ring finger on l.
 ### % (matching parenthesis)
 - jump to matching bracket or parenthesis
 
+## terminal & panes
+### creating and navigating panes
+- :vsp: create a vertical split with same editor
+- ctrl+w+w: cycle through splits
+- ctrl+w+h: go to next left split
+- ctrl+w+l: go to next right split
+- ctrl+w+j: go to next down split
+- ctrl+w+k: go to next up split
+
