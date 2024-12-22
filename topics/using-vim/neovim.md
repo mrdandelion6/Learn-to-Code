@@ -51,18 +51,31 @@ neovim was created by refactoring vim's codebase, making it more maintainable an
 # setting up neovim
 
 ## basic installation
-we will be setting up neovim from scratch on ubuntu. first update ubuntu then install neovim:
+we will be setting up neovim from scratch on ubuntu. we need to specifically install the latest stable version of neovim.
+
 ```bash
+# remove any old installations (back up important files first).
+sudo apt remove neovim
+sudo apt autoremove
+sudo rm -rf /usr/local/bin/nvim
+
+# update ubuntu
 sudo apt update
 sudo apt upgrade
 
-# once done updating
-sudo apt install neovim 
+# get latest stable version
+curl -L -o ~/.local/bin/nvim https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
+chmod u+x ~/.local/bin/nvim
+
+# add to path
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
 ```
 verify installation:
 ```bash
 nvim --version
 ```
+installation must be greater than 0.8.0 as of the time i'm writing this.
 
 you can run neovim by doing `nvim` in terminal like this:
 ```bash
@@ -95,20 +108,24 @@ we will be **installing kickstart.nvim** to learn vim and help with configuratio
 ### prerequisites
 to begin, we will install kickstart. visit https://github.com/nvim-lua/kickstart.nvim and read the README. you will need the following prerequisites as listed on the README:
 1. basic utils: git, make, unzip, C Compiler (gcc)
-2. clipboard tool (xclip/xsel/win32yank or other depending on platform)
-3. a [nerd font](https://www.nerdfonts.com/font-downloads)
-4. language setup: npm for typescript, go for golang, etc.
+2. ripgrep tool
+3. clipboard tool (xclip/xsel/win32yank or other depending on platform)
+4. a [nerd font](https://www.nerdfonts.com/font-downloads)
+5. language setup: npm for typescript, go for golang, etc.
 
 assuming you already have the basic utils set up on your linux machine (whether it's wsl2 ubuntu or actual os), here is how to set up the rest of the prerequisites.
 
-#### 2. clipboard tool
+#### 2. 
+```bash
+sudo apt install ripgrep
+```
+
+#### 3. clipboard tool
 ```bash
 sudo apt install xclip
 ```
 
-
-
-#### 3. nerd font
+#### 4. nerd font
 
 choose a nerd font from https://www.nerdfonts.com/font-downloads and right click the download button to get the url. i will be using *3270 Nerd Font*.
 
@@ -146,7 +163,7 @@ then edit your terminal to use the downloaded font. this process varies on your 
 </details>
 
 
-#### 4. language setup
+#### 5. language setup
 
 <details>
 <summary>for golang:</summary>

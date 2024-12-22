@@ -44,6 +44,13 @@ press `esc` to enter normal mode. while in normal mode you cannot type into the 
 ### insert mode
 press `i` to enter insert mode. while in insert mode, you can type and change text in files.
 
+### commands mode
+to enter command mode, press `:` while being in normal mode. you will see a bar at the bottom where you can type. here you run commands. for example,
+```
+:e /path/to/file
+# opens the file in the current buffer
+```
+
 ## movement
 
 ### h, j, k, l (single character)
