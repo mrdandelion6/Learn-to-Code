@@ -31,6 +31,19 @@ anyhow, that doesn't mean you shouldn't read these notes. you must absolutely re
 
 vim motions are the primary reason you should learn vim. they are key strokes and shortcuts that allow you to edit text quickly. you can enable them in other text editors like vscode using extensions.
 
+## modes
+vim has 4 modes:
+1. normal mode
+2. insert mode
+3. command mode
+4. visual mode
+
+### normal mode
+press `esc` to enter normal mode. while in normal mode you cannot type into the editor. in normal mode is when you will be using vim motions. for example, **h, j, k, l** will act as arrow keys (left, down, up, right respectively) in this mode. 
+
+### insert mode
+press `i` to enter insert mode. while in insert mode, you can type and change text in files.
+
 ## movement
 
 ### h, j, k, l (single character)
@@ -55,6 +68,10 @@ keep your index finger on j, middle finger on k, and ring finger on l.
 - gg: move to start of file
 - G: move to end of file
 
+## text editing
+- u: undo last change
+
+## advanced movement
 ### {, } (paragraph)
 - {: move up one paragraph
 - }: move down one paragraph
