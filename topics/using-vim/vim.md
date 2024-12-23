@@ -44,6 +44,25 @@ press `esc` to enter normal mode. while in normal mode you cannot type into the 
 ### insert mode
 press `i` to enter insert mode. while in insert mode, you can type and change text in files.
 
+
+## text editing
+- i: enter insert mode 
+- v: enter visual mode
+- u: undo last change
+- ctrl + r: redo
+- y: yank text
+    - before yanking, have cursor at either the beginning or end of the text you want to yank
+    - press y to begin yank
+    - press a movement key to yank text up till there
+    - eg) yank a paragraph below cursor: y + }
+    - doesn't have to be y + } at same time, can be y, }
+- p: paste yanked text
+- O: insert blank link above cursor
+- o: insert blank link below cursor and enter insert mode
+- dd: delete line
+- d: delete text
+    - same as yank 
+
 ## movement
 
 ### h, j, k, l (single character)
@@ -62,14 +81,11 @@ keep your index finger on j, middle finger on k, and ring finger on l.
 ### 0, $, ^ (line)
 - $: move to start of line
 - 0: move to end of line
-- move to first non-blank character of line
+- ^: move to first non-blank character of line
 
 ### gg, G (file)
 - gg: move to start of file
 - G: move to end of file
-
-## text editing
-- u: undo last change
 
 ## advanced movement
 ### {, } (paragraph)
@@ -83,17 +99,27 @@ keep your index finger on j, middle finger on k, and ring finger on l.
 ### % (matching parenthesis)
 - jump to matching bracket or parenthesis
 
-## buffer navigation
-- :e /path/to/file: opens the file in the current buffer
-- :ls: shows all open buffers
-    - you can see the buffer numbers in the leftmost column
-
 ## running multiple editors
 ### creating and navigating panes
-- :vsp: create a vertical split with same editor
 - ctrl+w+w: cycle through splits
 - ctrl+w+h: go to next left split
 - ctrl+w+l: go to next right split
 - ctrl+w+j: go to next down split
 - ctrl+w+k: go to next right split
 
+## buffer navigation
+- <leader> + /: current buffer fuzzy (word search in correct buffer)
+- <leader> + <leader>: find existing buffers    
+- 
+
+# vim commands
+
+## buffer navigation
+- vsp: create a vertical split with same editor
+- e /path/to/file: opens the file in the current buffer
+- ls: shows all open buffers
+    - you can see the buffer numbers in the leftmost column
+- term: start a terminal 
+
+# vim set up
+todo
