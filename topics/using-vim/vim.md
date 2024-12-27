@@ -27,6 +27,15 @@ if you are unfamiliar with vim, i urge you to first read up to the "differences"
 
 anyhow, that doesn't mean you shouldn't read these notes. you must absolutely read the vim motions section!! you do not need to read about using and configuring the vim program if you do not want to.
 
+## vim pwd
+it's important to note that vim will have it's **pwd** set to the location from where you invoke the vim command. for example suppose you call the following:
+```bash
+vim path/to/file.txt
+```
+then vim's working directory won't be `path/to/`, instead it will be the directory from which you invoked the command. this is important to understand because a lot vim's search functionality like fuzzy file finding is limited to the scope of the `pwd`. for example, if you're in `~` and you invoke the vim command from there, any fuzzy searching will search the entire system from `~`. 
+
+a good tip i personally follow is to cd into the directory for the project i'm working on and run `nvim .` so my fuzzy searching scope is limited to the project folder only.
+
 # vim motions
 
 vim motions are the primary reason you should learn vim. they are key strokes and shortcuts that allow you to edit text quickly. you can enable them in other text editors like vscode using extensions.
