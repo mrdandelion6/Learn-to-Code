@@ -40,7 +40,7 @@ a good tip i personally follow is to cd into the directory for the project i'm w
 
 vim motions are the primary reason you should learn vim. they are key strokes and shortcuts that allow you to edit text quickly. you can enable them in other text editors like vscode using extensions.
 
-the following keybinds mostly should work with plain vim, but some might need kickstart.nvim. the ones that are from nvim will be marked with (nvim).
+the following keybinds mostly should work with plain vim, but some might need neovim with kickstart.nvim set up. the ones that are from nvim will be marked with (nvim). you can follow the setup guide in (neovim.md)[neovim.md].
 
 keep your index finger on j, middle finger on k, and ring finger on l.
 
@@ -63,6 +63,7 @@ to enter command mode, press `:` while being in normal mode. you will see a bar 
 :e /path/to/file
 # opens the file in the current buffer
 ```
+we will now go over some default keybinds. to begin with, you can fuzzily search all keybinds with `<leader> + s + k`. you need neovim set up with kickstart.nvim for this bind.
 
 ## text editing
 - i: enter insert mode
@@ -76,7 +77,7 @@ to enter command mode, press `:` while being in normal mode. you will see a bar 
 - y: yank text
     - before yanking, have cursor at either the beginning or end of the text you want to yank
     - press y to begin yank
-    - press a movement key to yank text up till there
+    - press a motion key to yank text up till there
     - eg) yank a paragraph below cursor: y + }
     - doesn't have to be y + } at same time, can be y, }
 - p: paste yanked text
@@ -85,19 +86,22 @@ to enter command mode, press `:` while being in normal mode. you will see a bar 
 - d: delete text and yanks
     - same as yank 
 - diw: delete word under cursor and yank
+- dip: delete inner paragraph. note that di} doesn't work for this
 - dd: delete line and yanks
 - D: delete from cursor to end of line
 - c: delete and enter insert mode
     - same as yank
 - ciw: delete word under cursor and enter insert mode
-- cc: delete line and enter insert mode
+- cip: change inner paragraph
+- cc: delete line and enter insert mODE
 - C: delete from cursor to end of line and enter insert mode
 - _d: delete line without yank
     - same as yank
 - _dd: delete line without yank
+- gd: go to definition (implementation)
+- gD: go to declaration (prototype)
 
 ## movement
-
 ### h, j, k, l (single character)
 - h: left
 - l: right
@@ -143,6 +147,10 @@ to enter command mode, press `:` while being in normal mode. you will see a bar 
 ## buffer navigation
 - <leader> + /: (nvim) current buffer fuzzy (word search in correct buffer)
 - <leader> + <leader>: (nvim) find existing buffers
+- <leader> + s + f: (nvim) fuzzy search file within scope of `pwd`
+- <leader> + s + n: (nvim) fuzzy search neovim configuration files
+- ctrl + o: jump to previous cursor positions
+- ctrl + i: jump to newer cursor positions
 
 ## composable commands
 vim's composable commands have the following pattern:
@@ -160,22 +168,13 @@ what you want to do. eg)
 - c: change
 
 **number**
-how many times to do it (optional). any number like 2, 3, 4, etc.
+how many times to do it (optional). any number like 2, 3, 4, etc. can also use `i` instead of a number which will grab the "inner" of the item. for example, 
 
 **motions**
 where to do it, the "body" of text to work with. eg)
 - w: words
 - j: lines down
 - }: paragraphs down
-
-# vim commands
-
-## buffer navigation
-- vsp: create a vertical split with same editor
-- e /path/to/file: opens the file in the current buffer
-- ls: shows all open buffers
-    - you can see the buffer numbers in the leftmost column
-- term: start a terminal in working directory (will be ~ by default) 
 
 ## registers
 registers are a core part of vim's automation and text processing capabilities. they're used as clipboards for the most part but also offer extensive usage like macros, expression evaluations, and operations on files.
@@ -215,6 +214,21 @@ these registers act like a cache of recent recent deletions. they are prefixed w
 - `"%`: current file name
 - `":`: last executed command
 - `"/`: last search pattern
+
+# vim commands
+in this section we will cover commands we can run in vim using `:`.
+
+## general
+- lua <some lua code>: execute some lua code to change neovim configurations. useful for testing stuff out without having to reload neovim. eg) lua print("hello world!")
+
+## buffer navigation
+- e <path/to/file>: opens the file in the current buffer
+- vsp: create a vertical split with same editor
+- ls: shows all open buffers
+    - you can see the buffer numbers in the leftmost column
+- term: start a terminal in working directory (will be ~ by default) 
+- bp: go to previous buffer
+- bn: go to next buffer
 
 # vim set up
 todo
