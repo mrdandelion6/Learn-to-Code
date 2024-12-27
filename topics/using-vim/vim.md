@@ -31,6 +31,10 @@ anyhow, that doesn't mean you shouldn't read these notes. you must absolutely re
 
 vim motions are the primary reason you should learn vim. they are key strokes and shortcuts that allow you to edit text quickly. you can enable them in other text editors like vscode using extensions.
 
+the following keybinds mostly should work with plain vim, but some might need kickstart.nvim. the ones that are from nvim will be marked with (nvim).
+
+keep your index finger on j, middle finger on k, and ring finger on l.
+
 ## modes
 vim has 4 modes:
 1. normal mode
@@ -55,6 +59,7 @@ to enter command mode, press `:` while being in normal mode. you will see a bar 
 - i: enter insert mode
 - a: enter insert mode to the right of cursor
 - v: enter visual mode
+- ctrl+v: enter visual block mode (select columns)
 - u: undo last change
 - ctrl + r: redo
 - y: yank text
@@ -64,11 +69,20 @@ to enter command mode, press `:` while being in normal mode. you will see a bar 
     - eg) yank a paragraph below cursor: y + }
     - doesn't have to be y + } at same time, can be y, }
 - p: paste yanked text
-- O: insert blank link above cursor
-- o: insert blank link below cursor and enter insert mode
-- dd: delete line
-- d: delete text
+- O: insert blank link below cursor and enter insert mode
+- o: insert blank link below cursor, move cursor down, and edit insert mode
+- d: delete text and yanks
     - same as yank 
+- diw: delete word under cursor and yank
+- dd: delete line and yanks
+- c: delete and enter insert mode
+    - same as yank
+- ciw: delete word under cursor and enter insert mode
+- cc: delete line and enter insert mode
+- C: delete from cursor to end of line and enter insert mode
+- _d: delete line without yank
+    - same as yank
+- _dd: delete line without yank
 
 ## movement
 
@@ -78,12 +92,10 @@ to enter command mode, press `:` while being in normal mode. you will see a bar 
 - j: down
 - k: up
 
-keep your index finger on j, middle finger on k, and ring finger on l.
-
 ### w, b, e (words)
 - w: move forward to the start of the next word
-- b: move to the start of the current word
-- e: move to the end of the word
+- b: move backward to the start of the current word
+- e: move forward to the end of the word
 
 ### 0, $, ^ (line)
 - 0: move to start of line
@@ -117,9 +129,32 @@ keep your index finger on j, middle finger on k, and ring finger on l.
 - ctrl+w+x: swap split with next
 
 ## buffer navigation
-- <leader> + /: current buffer fuzzy (word search in correct buffer)
-- <leader> + <leader>: find existing buffers    
-- 
+- <leader> + /: (nvim) current buffer fuzzy (word search in correct buffer)
+- <leader> + <leader>: (nvim) find existing buffers
+
+## composable commands
+vim's composable commands have the following pattern:
+```
+[operator][number][motion]
+```
+an example is `d3w` which deletes 3 words (forwards).
+
+actually the order doesn't matter, as long as the motion isn't first. so `3dw` and `3wd` would also work but `w3d` wouldn't.
+
+**operators**
+what you want to do. eg)
+- d: delete
+- y: yank
+- c: change
+
+**number**
+how many times to do it (optional). any number like 2, 3, 4, etc.
+
+**motions**
+where to do it, the "body" of text to work with. eg)
+- w: words
+- j: lines down
+- }: paragraphs down
 
 # vim commands
 
@@ -129,6 +164,8 @@ keep your index finger on j, middle finger on k, and ring finger on l.
 - ls: shows all open buffers
     - you can see the buffer numbers in the leftmost column
 - term: start a terminal in working directory (will be ~ by default) 
+
+## registers
 
 # vim set up
 todo
