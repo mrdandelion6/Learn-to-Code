@@ -62,6 +62,8 @@ to enter command mode, press `:` while being in normal mode. you will see a bar 
 - ctrl+v: enter visual block mode (select columns)
 - u: undo last change
 - ctrl + r: redo
+- x: delete character
+- s: delete character and enter insert mode
 - y: yank text
     - before yanking, have cursor at either the beginning or end of the text you want to yank
     - press y to begin yank
@@ -75,6 +77,7 @@ to enter command mode, press `:` while being in normal mode. you will see a bar 
     - same as yank 
 - diw: delete word under cursor and yank
 - dd: delete line and yanks
+- D: delete from cursor to end of line
 - c: delete and enter insert mode
     - same as yank
 - ciw: delete word under cursor and enter insert mode
@@ -166,6 +169,43 @@ where to do it, the "body" of text to work with. eg)
 - term: start a terminal in working directory (will be ~ by default) 
 
 ## registers
+registers are a core part of vim's automation and text processing capabilities. they're used as clipboards for the most part but also offer extensive usage like macros, expression evaluations, and operations on files.
+
+to view whats in the registers, enter the command `:reg`. to see what's in a specific register, etner `:reg [reg-name]`, eg) `:reg a`.
+
+### pasting and copying
+in normal mode, simply enter `[register][p or y]`. for example, to paste from `"0` register, we would enter `"0p`. and to yank into `"0`, we would do `"0y`.
+
+### unnamed register ""
+the unnamed registerd `""` is the default register when no register is specified
+- y, d, p, without a register specified use this
+- like a default clipboard
+
+### numbered registers "0 to "9
+these registers act like a cache of recent recent deletions. they are prefixed with ". 
+- `"0` holds most recent yank
+- "1" to "9" hold last 9 deletions
+- each new deletion shifts content down
+
+### small delete register "-
+- `"-` holds deletions less than one line
+- gets automatically used for deletes or changes that are smaller than one line
+- for example, `dw`, `cw`, and `x` fill the `"-` register
+- register `"0` still also gets filled
+
+### named registers "a to "z
+- for explicitly saving text or macros
+- lowercase overwrites the register, eg) `"ay` yanks and overrides to `a`
+- uppercase appends to register, eg `"Ay` yanks and appends to `a`
+
+### special registers
+- `"+`: system clipboard
+- `"*`: system selection (for unix/linux)
+- `"_`: black hole register (deletes without saving)
+- `".`: last inserted text. type `[number].` to insert last inserted text number amount of times. eg) `3.`.
+- `"%`: current file name
+- `":`: last executed command
+- `"/`: last search pattern
 
 # vim set up
 todo
