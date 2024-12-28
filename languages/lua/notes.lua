@@ -1,7 +1,7 @@
 function Contents()
 	What_is_lua()
-	Lua_for_vim()
 	Basic_syntax()
+	Lua_for_vim()
 end
 
 function What_is_lua()
@@ -21,6 +21,6 @@ function What_is_lua()
 	--	software like adobe lightroom and neovim use lua for extensibility and plugin development.
 end
 
-function Lua_for_vim() end
-
 function Basic_syntax() end
+
+function Lua_for_vim() end
