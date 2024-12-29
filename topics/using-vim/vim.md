@@ -100,6 +100,12 @@ we will now go over some default keybinds. to begin with, you can fuzzily search
 - _dd: delete line without yank
 - gd: go to definition (implementation)
 - gD: go to declaration (prototype)
+- gc: comment text
+    - same as yank
+- gcc: comment line
+- >>: indent line out
+- <<: indent line in
+- ==: auto indent line
 
 ## movement
 ### h, j, k, l (single character)
