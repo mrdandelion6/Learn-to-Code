@@ -55,7 +55,7 @@ vim has 4 modes:
 press `esc` to enter normal mode. while in normal mode you cannot type into the editor. in normal mode is when you will be using vim motions. for example, **h, j, k, l** will act as arrow keys (left, down, up, right respectively) in this mode. 
 
 ### insert mode
-press `i` to enter insert mode. while in insert mode, you can type and change text in files.
+press `i` to enter insert mode. while in insert mode, you can type and change text in files. there's also `r` for **replace mode** which is very similiar to insert mode. instead of your keystrokes adding text, they replace text.
 
 ### commands mode
 to enter command mode, press `:` while being in normal mode. you will see a bar at the bottom where you can type. here you run commands. for example,
@@ -63,49 +63,9 @@ to enter command mode, press `:` while being in normal mode. you will see a bar 
 :e /path/to/file
 # opens the file in the current buffer
 ```
-we will now go over some default keybinds. to begin with, you can fuzzily search all keybinds with `<leader> + s + k`. you need neovim set up with kickstart.nvim for this bind.
+we will now go over some default keybinds. to begin with, you can fuzzily search all keybinds with `<leader> + s + k`. you need neovim set up with kickstart.nvim for this bind. if you are using vanilla vim, you can use the `:map` command in command mode.
 
-## text editing
-- i: enter insert mode
-- a: enter insert mode to the right of cursor
-- v: enter visual mode
-- ctrl+v: enter visual block mode (select columns)
-- u: undo last change
-- ctrl + r: redo
-- x: delete character
-- s: delete character and enter insert mode
-- y: yank text
-    - before yanking, have cursor at either the beginning or end of the text you want to yank
-    - press y to begin yank
-    - press a motion key to yank text up till there
-    - eg) yank a paragraph below cursor: y + }
-    - doesn't have to be y + } at same time, can be y, }
-- p: paste yanked text
-- O: insert blank link below cursor and enter insert mode
-- o: insert blank link below cursor, move cursor down, and edit insert mode
-- d: delete text and yanks
-    - same as yank 
-- diw: delete word under cursor and yank
-- dip: delete inner paragraph. note that di} doesn't work for this
-- dd: delete line and yanks
-- D: delete from cursor to end of line
-- c: delete and enter insert mode
-    - same as yank
-- ciw: delete word under cursor and enter insert mode
-- cip: change inner paragraph
-- cc: delete line and enter insert mODE
-- C: delete from cursor to end of line and enter insert mode
-- _d: delete line without yank
-    - same as yank
-- _dd: delete line without yank
-- gd: go to definition (implementation)
-- gD: go to declaration (prototype)
-- gc: comment text
-    - same as yank
-- gcc: comment line
-- >>: indent line out
-- <<: indent line in
-- ==: auto indent line
+# default keybinds and motions
 
 ## movement
 ### h, j, k, l (single character)
@@ -140,6 +100,58 @@ we will now go over some default keybinds. to begin with, you can fuzzily search
 
 ### % (matching parenthesis)
 - jump to matching bracket or parenthesis
+
+## basic text editing
+- i: enter insert mode
+- a: enter insert mode to the right of cursor
+- v: enter visual mode
+- r: enter replace mode
+- ctrl+v: enter visual block mode (select columns)
+- u: undo last change
+- ctrl + r: redo
+- x: delete character
+- s: delete character and enter insert mode
+- gd: go to definition (implementation)
+- gD: go to declaration (prototype)
+- p: paste yanked text below cursor
+- P: paste yank text at cursor
+- O: insert blank link at cursor and enter insert mode
+- o: insert blank link below cursor, move cursor down, and enter insert mode
+
+## operators
+operators like `d`, `y`, `c`, `gc`, and so on follow vims composable command structure. we will go over composable commands in more depth later on, but for now understand of these keybinds as needing more subsequent strokes to choose the body of text. for example, `dd` deletes the entire line.
+
+- d: delete text and yanks
+    - diw: delete word under cursor and yank
+    - dip: delete inner paragraph. note that di} doesn't work for this
+    - dd: delete line and yanks
+    - D: delete from cursor to end of line
+    - "_d: delete line without yank
+- c: delete and enter insert mode
+    - ciw: delete word under cursor and enter insert mode
+    - cip: change inner paragraph
+    - cc: delete line and enter insert mode at proper indent level
+    - C: delete from cursor to end of line and enter insert mode
+
+for the following operators, we will omit repetitive things like the `ip` suffix etc.
+
+- y: yank text
+    - Y: yank from cursor to end of line
+- gc: comment text
+    - gcc: comment line
+- >: indent line right
+    - >>: indent line out
+- <: indent line left
+    - <<: indent line in
+- =: auto indent
+    - ==: auto indent line
+
+## insert mode
+here are some keymaps while in vim's insert or replace mode. note that there aren't many.
+
+- ctrl + n: next autocomplete suggestion
+- ctrl + p: previous autocomplete suggestion
+- ctrl + y: accept current autocomplete suggestion
 
 ## running multiple editors
 ### creating and navigating panes

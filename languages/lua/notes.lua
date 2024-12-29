@@ -1,6 +1,9 @@
+-- RUN
+Variables()
+
 function Contents()
 	What_is_lua()
-	Basic_syntax()
+	Variables()
 	Lua_for_vim()
 end
 
@@ -21,6 +24,23 @@ function What_is_lua()
 	--	software like adobe lightroom and neovim use lua for extensibility and plugin development.
 end
 
-function Basic_syntax() end
+function Variables()
+	-- variables in lua can be either local or global
+	-- and just like in python, lua's variables are dynamically typed
+	-- so doing something like this,
+	x = 10
+	-- makes x a global variable of value 10
+	-- if we want to make a local variable, we use the local keyword
+	local y = 15
+
+	-- to create a scope we can use a do-end, more on this later but for now we use it to demonstrate access
+	do
+		x = 1
+		y = 0
+	end
+
+	print(x)
+	print(y)
+end
 
 function Lua_for_vim() end
