@@ -137,7 +137,7 @@ for the following operators, we will omit repetitive things like the `ip` suffix
 
 - y: yank text
     - Y: yank from cursor to end of line
-- gc: comment text
+- gc: (needs Comment.nvim plug) comment text
     - gcc: comment line
 - >: indent line right
     - >>: indent line out
