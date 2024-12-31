@@ -1,9 +1,13 @@
--- RUN
-Variables()
+function Main()
+	-- call the function you would like to run here to see any outputs.
+	-- RUN
+	Lua_Compilation()
+end
 
 function Contents()
 	What_is_lua()
 	Variables()
+	Lua_Tables()
 	Lua_for_vim()
 end
 
@@ -23,6 +27,28 @@ function What_is_lua()
 	-- 4. application scripting
 	--	software like adobe lightroom and neovim use lua for extensibility and plugin development.
 end
+
+function Lua_Compilation()
+	-- lua is an interpreted language but it still does get compiled.
+	-- similar to java, lua gets compiled into bytecode and then interpreted on a virtual machine
+	-- lua's bytecode is read by the lua virtual machine (LVM)
+	--
+	-- however, lua is much different than java! it is still considered an interpreted language because it's compilation is not discrete
+	-- lua's bytecode only stays in memory and does not actually get saved to disk like an java or c executable.
+	-- lua is also dynamically typed.
+	-- the LVM is also very small, only about 100KB.
+	--
+	-- to run lua, you need to install the lua interpreter binary. to begin with, install lua5.4 on your system.
+	-- for example, on ubutu you do `sudo apt install lua5.4`.
+
+	-- run this code by setting Lua_Compilation() as the function being called at the top under "-- RUN".
+	-- you must do: `lua notes.lua` to compile and run the code.
+	print("you ran lua code!")
+
+	-- note that the lua binary contains both the lua compiler and lua interpreter.
+end
+
+function Lua_Tables() end
 
 function Variables()
 	-- variables in lua can be either local or global
@@ -44,3 +70,5 @@ function Variables()
 end
 
 function Lua_for_vim() end
+
+Main()
