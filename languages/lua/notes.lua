@@ -336,6 +336,17 @@ function Loops_and_conditionals()
 	end
 	-- using the built in pairs()
 	-- if you want to ignore key use _ like for _, v
+
+	-- IF CONDITIONALS
+	-- if statements are similiar to python, they just have then-end for scoping
+	local x = 5
+	if x < 10 then
+		print("case 1")
+	elseif 10 < x < 15 then
+		print("case 2")
+	else
+		print("case 3")
+	end
 end
 
 function Lua_for_vim() end
