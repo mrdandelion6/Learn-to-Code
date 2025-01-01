@@ -1,7 +1,7 @@
 function Main()
 	-- call the function you would like to run here to see any outputs.
 	-- RUN
-	Data_types()
+	Loops_and_conditionals()
 end
 
 function Contents()
@@ -320,6 +320,22 @@ function Loops_and_conditionals()
 	for i = 5, 20, 2 do -- start 5, end 20, step 2
 		print(i)
 	end
+
+	-- generic for loop over a sequential table
+	local fruits = { "apple", "banana", "orange", "pear" }
+	for index, value in ipairs(fruits) do
+		print(index, value)
+	end
+	-- using the built in ipairs(), i for index
+	-- if you want to ignore inde use _ like for _, v
+
+	-- generic for loop over a key-value table
+	local person = { name = "henry", age = 69, snack = "cheesecake" }
+	for key, value in pairs(person) do
+		print(key, value)
+	end
+	-- using the built in pairs()
+	-- if you want to ignore key use _ like for _, v
 end
 
 function Lua_for_vim() end
