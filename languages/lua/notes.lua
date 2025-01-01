@@ -358,6 +358,9 @@ function Loops_and_conditionals()
 	end
 end
 
-function Lua_for_neovim() end
+function Lua_for_neovim()
+	-- lua is the language used for configuring neovim
+	-- in order to best customize your neovim, you should understand the basics of lua, which is everything we just went over.
+end
 
 Main()
