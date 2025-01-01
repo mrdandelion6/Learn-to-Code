@@ -1,7 +1,7 @@
 function Main()
 	-- call the function you would like to run here to see any outputs.
 	-- RUN
-	Lua_for_neovim()
+	What_is_lua()
 end
 
 function Contents()
@@ -11,7 +11,10 @@ function Contents()
 	Data_types()
 	Lua_tables()
 	Loops_and_conditionals()
+
 	Lua_for_neovim()
+	Vim_global_object()
+	Essential_configuration_patterns()
 end
 
 function What_is_lua()
@@ -361,6 +364,130 @@ end
 function Lua_for_neovim()
 	-- lua is the language used for configuring neovim
 	-- in order to best customize your neovim, you should understand the basics of lua, which is everything we just went over.
+	-- in the next sections we will now go over the following topics for lua:
+	--	vim global object
+	--	essential configuration patterns
+	--	autocommands and events
+	--	plugin development basics
+	--	advanced concepts
+	--	asynchronous operations
+	--	performance optimization
+	--
+	-- note that attempting to run any of the neovim related functions will fail because the standard lua binary does not include things like the vim global and other required modules.
+	--
+	-- KEY DIFFERENCES FROM STANDARD LUA
+	--	1. path handling uses neovim's runtime path
+	--	2. built-in package.path is modified to include neovim directories
+	--	3. additional global objects like vim, assert, etc.
+	--	4. concurrent execution model differences
+end
+
+function Vim_global_object()
+	-- the vim object is your primary interface with neovim. it provides access to:
+	--	API functions, via vim.api
+	--	neovim-specific functions, via vim.fn
+	--	variables and options via:
+	--		vim.g (global)
+	--		vim.b (buffer)
+	--		vim.w (window)
+	--		vim.o (options
+	--	utility functions like vim.inspect() for debugging
+	--
+	-- here is an example of a basic interaction,
+	vim.g.mapleader = " " -- set the leader key as space
+	vim.opt.number = true -- setting display line numbers to be true
+
+	-- now here is an example of using api functions
+	vim.api.nvim_set_keymap("n", "<leaderw", ":write<CR>", { noremap = true, silent = true })
+	-- most of learning how to effectively script your neovim config with lua involves learning how to use the different properties from the vim global.
+end
+
+function Essential_configuration_patterns()
+	-- for neovim, we keep our configuration files typically in ~/.config/nvim/
+	-- here is an example of how the nvim/ tree looks like (it is important to understand this for configuring properly)
+	--
+	-- ~/.config/nvim/
+	-- ├── init.lua			      # main configuration entry point
+	-- ├── lua/                           # custom lua modules
+	-- │   └── user/		      # your configuration modules
+	-- │       ├── init.lua			# main module initialization
+	-- │       ├── options.lua		# editor options
+	-- │       ├── keymaps.lua		# key mappings
+	-- │       ├── plugins.lua		# plugin management
+	-- │       ├── autocmds.lua		# autocommands
+	-- │       └── utils.lua		# utility functions
+	-- ├── after/			      # loads after plugins
+	-- │   └── plugin/                    # configuration that runs after plugins load
+	-- │       └── telescope.lua		# example plugin-specific config
+	-- ├── plugin/			      # automatically loaded scripts
+	-- │   └── filetypes.lua		# example filetype-specific settings
+	-- ├── ftplugin/	              # filetype-specific settings
+	-- │   ├── lua.lua			# settings for lua files
+	-- │   └── python.lua			# settings for python files
+	-- └── snippets/		      # custom snippets
+	--     └── lua.json			# snippets for lua
+	--
+	-- best practice is to organize our configuration into modules like shown above in lua/user/
+	-- as shown, the main directories are:
+	--	lua/
+	--	after/
+	--	plugin/
+	--	ftplugin/
+	--	snippets/
+	--
+	-- lua/
+	--	contains modules with custom configurations.
+	--	configurations can be for keymaps, editor options, auto commands (more on this later), managing plugins, etc.
+	--	plugins are loaded here, specifically in `lua/plugins.lua`
+	--
+	-- after/
+	--	files here load AFTER all plugins have been loaded
+	--	this is crucial when your configuration DEPENDS on plugins having first been fully initialized
+	--	perfect for plugin-specific settings that need the plugin to be loaded first
+	--
+	-- plugin/
+	--	files here load at startup, BEFORE plugins are loaded
+	--	used for configurations that don't depend on plugins
+	--	good for vim's built-in settings, autocommands, or commands that need to be available immediately
+	--
+	-- ftplugin/
+	--	this directory holds filetype-specific settings that are loaded only when you open a file of that type
+	--	the files inside must much the filetype name exactly. eg) lua.lua, python.lua, java.lua.
+	--	here is an example, suppose it is inside ftplugin/python.lua
+	vim.opt_local.expandtab = true
+	vim.opt_local.shiftwidth = 4
+	vim.opt_local.softtabstop = 4
+	vim.opt_local.textwidth = 88
+	--	this will set these settings specifically for python files.
+	--	note you should use vim.opt_local instead of vim.opt to set buffer-specific options.
+	--	you can also add custom keymaps like this
+	vim.keymap.set("n", "<leader>lr", ":luafile %<CR>", { buffer = true }) -- use buffer = true for buffer-local maps
+
+	-- snippets/
+	--	files here are for custom snippets for language specific files.
+	--	snippets are quick ways of typing in code, for example 'for' + <tab> for a for loop.
+	--	example files: lua.lua, python.lua, all.lua
+	--	we can have a file for global snippet settings as well (all.lua)
+	--	the filles in snippets/ may not always be .lua ones, it depends on your snippet engine.
+	--	for example, the .lua snippets are from the LuaSnip snippet engine.
+	--	we also have .json snippets like lua.json, python.json, global.json, which is used by many snippet engines. you may recognize these from VS code.
+	--	then there's also the SnipMate snippet engine that jas lua.snippets, python.snippets, and _all.snippets.
+	--	your snippet engine is a plugin that you would load (recall we can load plugins in `lua/user/plugins.lua`
+	--
+	-- ORDER OF EXECUTION
+	-- we will now go over the order of execution of files in nvim/ in depth.
+	-- first we must understand that some folders are enforced to execute at a certain stage by nvim and some are just conventional.
+	-- here is the core execution order enforced by neovim:
+	--	1. init.lua			# first thing that is loaded
+	--	2. plugin/*.lua:		# loaded before plugins are loaded
+	--					# plugins get loaded, this typically includes snippets
+	--	3.after/plugin/*.lua:		# loaded after plugins
+	--	4. ftplugin/*.lua:		# gets loaded when opening matching filetypes
+	--
+	--	note that lua/user/ does not get automatically loaded by neovim!
+	--	evertyhing  in lua/user is not enforced by neovim and requires use to call `require()` from init.lua
+	--	example, suppose the following is in nvim/init.lua:
+	require("user.options") -- this runs lua/user/options.lua. note that we don't need to do 'lua.user.options'
 end
 
 Main()
