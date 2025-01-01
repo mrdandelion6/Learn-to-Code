@@ -342,10 +342,19 @@ function Loops_and_conditionals()
 	local x = 5
 	if x < 10 then
 		print("case 1")
-	elseif 10 < x < 15 then
+	elseif 10 < x and x < 15 then -- use and, not &&
 		print("case 2")
-	else
+	elseif (20 < x and x < 25) or (60 < x and x < 65) then -- use or, not ||
 		print("case 3")
+	elseif x ~= 69 then -- use ~= instead of !=
+		print("case 4")
+	else
+		print("case 5")
+	end
+
+	local flag = true
+	if not flag then -- use not, not !
+		print("hello!")
 	end
 end
 
