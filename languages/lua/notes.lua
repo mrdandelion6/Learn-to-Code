@@ -1,13 +1,14 @@
 function Main()
 	-- call the function you would like to run here to see any outputs.
 	-- RUN
-	Printing()
+	Data_types()
 end
 
 function Contents()
 	What_is_lua()
 	Variables()
 	Printing()
+	Data_types()
 	Lua_tables()
 	Loops_and_conditionals()
 	Lua_for_vim()
@@ -93,6 +94,20 @@ function Printing()
 	-- we can use .. concat to print variables in our text
 	local name = "faisal"
 	print("hi, " .. name .. " is the coolest person ever.")
+
+	-- now, we will show how to print tables.
+	-- you will properly learn about tables later, but they are essentially a datastructure that combines both arrays and dictionaries.
+
+	-- we will first go over printing a simple array like table:
+	local arr = { "apple", "banana", "mango", "pineapple" }
+	print("contents of arr are " .. table.concat(arr, ", "))
+	-- to print key-value tables, you will need to iterate over them and print the key-value pairs one by one.
+	-- we will see an example of this in Loops_and_conditionals()
+
+	-- to print booleans in concat, we must use the tostring() built in method
+	local bool_x = true
+	print(bool_x) -- this works fine because we are just printing it by itself.
+	print("bool_x is " .. tostring(bool_x)) -- for this, since we are concat the string with .., need tostring() around bools
 end
 
 function Variables()
@@ -132,6 +147,77 @@ function Variables()
 	print("z is now " .. z)
 end
 
+function Data_types()
+	-- lua has 8 basic data types
+	-- 1. nil
+	--	a special value that represences absence of value, like null
+	local value = nil
+
+	-- 2. boolean
+	--	true or false
+	value = true
+
+	-- 3. number
+	--	represents real (double precision floating point) numbers
+	--	no distinction between integers and floats
+	--	can also use scientification notation
+	value = 3.14
+	value = 4
+	value = 1.23e-5
+
+	-- 4. string
+	--	immutable sequences of characters
+	--	can define with single quotes, double quotes, or long brackets [[ ]]
+	--	the below would print:
+	--	hello
+	--	world
+	value = "hello"
+	value = "world"
+	value = [[hello
+world
+]]
+	print(value)
+
+	-- 5. functrion
+	--	first class values that can be stored in variables
+	--	can be passed as arguments and returned from other functions
+	--	support closures and proper tial calls
+	--	this of course means we can have functions nested inside functions (they're first-class after all)
+	local function add(a, b)
+		return a + b
+	end
+	local funky = add
+	print("funky(2, 3) is " .. funky(2, 3))
+	-- can also get it anonymously like in javascript
+	local multiply = function(a, b)
+		return a * b
+	end
+	print("multiply(6, 9) is " .. multiply(6, 9))
+
+	-- 6. userdata
+	--	represents arbitrary C data
+	--	typically used for representing different new types created by application program or lirbraries
+	--	cannot be created or modified in lua, only through C API
+	local file = io.open("examples/test.txt") -- this is userdata type
+	print(type(file)) -- prints userdata
+
+	-- 7. thread
+	--	represents independent threads of execution
+	--	used to implement coroutines
+	--	not related to operating system threads, i.e, cant achieve true parallelism
+	--	these are useful for game dev, event driven programming, and so on but we won't get into them for now
+
+	-- 8. table
+	--	the only data structuring mechanism in lua
+	--	there is no OOP, there is only tables
+	--	implements associativearrays
+	--	can represent ordinary arrays, sequences, symbol tables, sets, records, graphs, trees, maps, etc.
+	--	we will go over these in more depth in the next section Lua_tables()
+	local tab = { 1, 2, 3 }
+	tab = { age = 21, name = "faisal" }
+	print(table.concat(tab, ", "))
+end
+
 function Lua_tables()
 	-- tables are one of the most fundamental and powerful features of lua.
 	-- they are the main--and only--data structure in the language.
@@ -142,9 +228,83 @@ function Lua_tables()
 	-- creating an empty table
 	local myTable = {}
 
-	-- tables as arrays (numeric indices starting at 1)
+	-- tables as arrays (numeric indices starting at 1).
+	-- these are also called "sequential tables"
 	local fruits = { "apple", "banana", "orange" }
 	print("fruits[1] is " .. fruits[1]) -- prints "apple" because lua arrays start at 1, not 0
+
+	-- tables as dictionaries. note that any table with a key-value pair is NOT sequential.
+	local person = {
+		name = "faisal",
+		age = 30,
+		["favorite colorr"] = "blue",
+	}
+	-- square brackets [] are needed if we want to use a key that contains:
+	--	- spaces
+	--	- special characters
+	--	- starts with a number
+
+	print(person.name) -- access value with .key
+	print(person["name"]) -- can also use [key] for dynamic access
+	local dynamic_key = "age"
+	print("person's age is " .. person[dynamic_key])
+
+	-- tables can contain both single values and key-value pairs at once, acting as both arrays and dictionaries.
+	-- tables can also nest other tables.
+	local mixed = {
+		1,
+		"hello",
+		size = 10,
+		{
+			"apple",
+		},
+		user = {
+			id = 123,
+			active = true,
+		},
+		[69] = 6969, -- need to wrap number keys with []
+	}
+	print("mixed[2] is " .. mixed[2])
+	print("mixed.size is " .. mixed.size)
+	print("mixed[3] is " .. table.concat(mixed[3], ", "))
+	-- notice that the key-value pairs are not counted towards the indices.
+	-- that is, mixed[3] skips over `size = 10` and instead grabs the next non-pair item, which is `{ "apple" }`
+
+	-- LENGTH OPERATOR
+	-- we can also get the length of a table with the length operator #
+	-- this only works reliably for sequential tables.
+	local vegetables = { "mango", "monkey", "alligator", "apple" }
+	print("length of fruits is " .. #vegetables) -- prints 4
+
+	-- TABLES ARE REFERENCE TYPES
+	-- when you assign a table to a new variable, both variables refer to the same table
+	local t1 = { 2025, 2024, 2023 }
+	local t2 = t1
+	t2[1] = 69
+	print("t1[1] is now " .. t1[1])
+
+	-- TABLES CAN GROW DYNAMICALLY
+	-- just like python lists, tables grow dynamically.
+	-- however, one difference is that you won't get an index out of bounds for assignments in lua.
+	t1[1000] = "6969" -- this is perfectly valid even though it would fail in python!
+	print("t1[1000] is " .. t1[1000])
+	-- this actually creates a "sparse"
+
+	-- BOOLEANS AS KEYS
+	-- lua lets you have booleans as keys as well!
+	local boolean_table = {}
+	boolean_table[true] = "hi"
+	print("boolean_table[true] is " .. boolean_table[true]) -- works fine, prints "hi"
+	boolean_table[false] = "byebye"
+	print("boolean_table[false] is " .. boolean_table[false]) -- works fine, prints "byebye"
+	print("boolean_table[true] is " .. boolean_table[true]) -- also prints "byebye" !
+
+	local boolean_table2 = {
+		[false] = true, -- need to wrap boolean keys with []
+		[true] = false,
+	}
+	print("boolean_table2[true] is " .. tostring(boolean_table2[true]))
+	print("boolean_table2[true] is " .. tostring(boolean_table2[false]))
 end
 
 function Loops_and_conditionals()
