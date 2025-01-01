@@ -1,7 +1,7 @@
 function Main()
 	-- call the function you would like to run here to see any outputs.
 	-- RUN
-	Loops_and_conditionals()
+	Lua_for_neovim()
 end
 
 function Contents()
@@ -11,7 +11,7 @@ function Contents()
 	Data_types()
 	Lua_tables()
 	Loops_and_conditionals()
-	Lua_for_vim()
+	Lua_for_neovim()
 end
 
 function What_is_lua()
@@ -358,6 +358,6 @@ function Loops_and_conditionals()
 	end
 end
 
-function Lua_for_vim() end
+function Lua_for_neovim() end
 
 Main()
