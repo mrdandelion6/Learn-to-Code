@@ -1,7 +1,7 @@
 function Main()
 	-- call the function you would like to run here to see any outputs.
 	-- RUN
-	What_is_lua()
+	Modules()
 end
 
 function Contents()
@@ -11,10 +11,11 @@ function Contents()
 	Data_types()
 	Lua_tables()
 	Loops_and_conditionals()
+	Modules()
 
 	Lua_for_neovim()
 	Vim_global_object()
-	Essential_configuration_patterns()
+	Neovim_configuration_patterns()
 end
 
 function What_is_lua()
@@ -361,6 +362,105 @@ function Loops_and_conditionals()
 	end
 end
 
+function Modules()
+	-- modules in lua are fundamentally just lua files that return a value (usually a table).
+	-- we will now investigate how they work. open the file mymodule.lua
+	--
+	-- in mymodule.lua, we see that we have a variable
+	local M = {} -- it is common convention to use M for a 'module table'
+	-- this table will be returned at the end of mymodule.lua.
+	-- we add keys to M like functions and more.
+	-- when we add functions to tables, we refer to them as 'methods', just like how classes have methods.
+	M.method = function()
+		return "I'm a method"
+	end
+	-- now we can call it like so
+	print(M.method())
+	--
+	-- another way to create a method for a table is as follows
+	function M.method2()
+		return "I'm also a method, entirely equivalent"
+	end
+	print(M.method2())
+	-- note that mehod2() is entirely the same as method(), it is just syntactic sugar.
+	-- you could also do
+	local N = {
+		function_name = function()
+			return "I'm a method defined directly inside N"
+		end,
+	}
+	print(N.function_name())
+	-- however, this is not preferred because it nests everything inside and makes it harder to read.
+	--
+	-- REQUIRING FILES
+	-- now to actually "import" or "inlcude" modules, we simply use the built in `require()` function.
+	-- this function is used very often in things like neovim configuration, as you need to import a lot of modules often.
+	local mymod = require("mymodule")
+	-- when we call requrie() to load the module, lua does the following:
+	-- 1. checks package.loaded["mymodule"] for cached module
+	-- 2. if not found, searches package.path for the file
+	-- 3. loads and executes the file
+	-- 4. caches the reteurn value in package.loaded
+	-- 5. returns the cached value
+	--
+	-- note that the `package` in lua is a global table that contains variables and functions related to module loading.
+	-- here are some of its key components::
+	-- 1. package.path
+	--	a string that tells lua where to look for modules
+	print("package.path is " .. package.path)
+	--	from the above we get something like this
+	--
+	--	package.path is /usr/local/share/lua/5.4/?.lua;/usr/local/share/lua/5.4/?/
+	--	init.lua;/usr/local/lib/lua/5.4/?.lua;/u sr/local/lib/lua/5.4/?/init.lua;
+	--	/usr/share/lua/5.4/?.lua;/usr/share/lua/5.4/?/init.lua;./?.lua;./?/init.lua
+	--
+	--	notice that we have "./?.lua" as one of the paths.
+	--	this is same as ./*.lua, which just means also search the PWD.
+	--	an important thing to note is that ./ refers to the directory where the lua program was launched from!
+	--	./ does not refer to the location of the source code where require() is being called.
+	--
+	-- 2. package.loaded
+	--	a table that acts as a cache for loaded modules.
+	--	when you require a module lua first checks if it's in package.loaded
+	--
+	-- let's use our imported module now.
+	print("mymod.example_method() returns " .. mymod.example_method())
+	--
+	-- REQUIRING DIRECTORIES
+	-- we can also require entire directories
+	local dir_mod = require("examples") -- imports the examples directory
+	-- this will look for a file called `init.lua` inside the examples/ directory.
+	-- once it's found it will run the file and return whatever it returns, just like if we required init.lua directly.
+	print(dir_mod.greet())
+
+	-- CLOSURES & PRIVATE STATES
+	-- when a module is loaded, all its code runs but the local variables it creates continue to exist in memory as long as there are functions (closures) that reference them.
+	-- for example, take a look at examples/init.lua.
+	-- we have the local variable counter that is not inside M.
+	-- even though it's not inside M, it is referenced by M.increment, hence it's value gets preserved in memory.
+	dir_mod.increment() -- will print updated counter
+	dir_mod.increment() -- keeps state
+
+	-- what's more is that each time we call require() on the module, we take the cached M.
+	-- don't forget that M (from dir_mod) is cached in package.loaded.
+	-- this means that each new require() of the module will preserve the counter as well!
+	--
+	-- we say that the counter has a private state because it is not directly accessible.
+	-- we can only modify it through the API we provide which is essentially the functions of the table M.
+	--
+	-- USING SETUP()
+	-- we often use a setup method returned by module tables in neovim plugins and other lua projects.
+	-- this function is useful because it:
+	--	allows users to configure the module before it's used
+	--	maintains private state using local variables (as we just saw)
+	--	validates configuration
+	--	merges user config with defaults
+	--	prevents multiple initializations
+	--	ensures setup is called before using other functionality
+	--
+	-- take a look at examples/typical_module.lua to see exactly how setup() is used.
+end
+
 function Lua_for_neovim()
 	-- lua is the language used for configuring neovim
 	-- in order to best customize your neovim, you should understand the basics of lua, which is everything we just went over.
@@ -402,7 +502,7 @@ function Vim_global_object()
 	-- most of learning how to effectively script your neovim config with lua involves learning how to use the different properties from the vim global.
 end
 
-function Essential_configuration_patterns()
+function Neovim_configuration_patterns()
 	-- for neovim, we keep our configuration files typically in ~/.config/nvim/
 	-- here is an example of how the nvim/ tree looks like (it is important to understand this for configuring properly)
 	--
