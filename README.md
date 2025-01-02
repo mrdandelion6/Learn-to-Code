@@ -21,7 +21,7 @@ Here are notes I've made on various programming languages. Most of them are ongo
 - 🚧 `R` (probably not gonna finish this)
 - 🚧 `PHP`
 - 🚧 `Go` (not continuing this any time soon)
-- 🚧 `Lua` and Neovim config
+- 🏁 `Lua` and configuring Neovim
 
 ### To Start
 - CUDA (know it already)
