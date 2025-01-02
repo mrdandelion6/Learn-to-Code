@@ -679,4 +679,129 @@ function Neovim_autocommands()
 	--		just generation organization, will be easier to see where everything is semantically
 end
 
+function Neovim_plugin_structure()
+	-- a basic neovim plugin structure looks like this:
+
+	-- plugin/myplugin.lua
+	if vim.g.loaded_myplugin then
+		return
+	end
+	vim.g.loaded_myplugin = true
+
+	-- lua/myplugin/init.lua
+	local M = {}
+	function M.setup(opts)
+		opts = opts or {}
+		-- Merge default options
+		local default_opts = {
+			highlight = true,
+			patterns = { "*.txt", "*.md" },
+		}
+		opts = vim.tbl_deep_extend("force", default_opts, opts)
+
+		-- Plugin implementation
+	end
+	return M
+
+	-- pretty simple, just combines a lot if ideas we have already discussed.
+	-- recall we discussed using M.setup() in Modules()
+end
+
+function Neovim_using_API()
+	-- neovim provides an api table from the vim global table.
+	-- accessed by vim.api.
+	-- the following are some simple examp
+	--
+	-- buffer manipulation
+	local bufnr = vim.api.nvim_get_current_buf() -- gets the number of the buffer you're working with
+	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false) -- retreives all lines from buffer,
+	--	bufnr: buffnumber to target,
+	--	0: start from first line,
+	--	-1: get until last line,
+	--	false: don't include a line that's being partially edited
+	local new_lines = {
+		"First line",
+		"Second line",
+		"Third line",
+	}
+
+	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, new_lines)
+
+	-- window manipulation
+	local winnr = vim.api.nvim_get_current_win()
+	local config = vim.api.nvim_win_get_config(winnr)
+	print(table.concat(config, ", "))
+	-- gets the config of the current window, including properties like:
+	--	position
+	--	size
+	--	border-style
+
+	-- highlights
+	-- search this up, im lazy to explain but you get the idea of using the API by now
+	vim.api.nvim_set_hl(0, "MyHighlight", {
+		fg = "#ff0000",
+		bg = "#00ff00",
+		bold = true,
+		italic = true,
+	})
+	-- of course there's a lot of things part of the nvim api, so you will likely need to read docs often or use AI.
+	-- use `:help api` to see docs
+end
+
+function Neovim_create_floating_window()
+	-- here is an example of a function that creates a new buffer for a floating window:
+	local function create_float()
+		local buf = vim.api.nvim_create_buf(false, true)
+		local width = math.floor(vim.o.columns * 0.8)
+		local height = math.floor(vim.o.lines * 0.8)
+		local win = vim.api.nvim_open_win(buf, true, {
+			relative = "editor",
+			width = width,
+			height = height,
+			col = math.floor((vim.o.columns - width) / 2),
+			row = math.floor((vim.o.lines - height) / 2),
+			style = "minimal",
+			border = "rounded",
+		})
+		return buf, win
+	end
+	create_float()
+	-- don't worry about memorizing this, it is just to provide an example if you would like to attempt doing so on your own.
+end
+
+function Neovim_asynch_operations()
+	-- you can also run asynch operations in neovim.
+	-- an asynch operation is a task that runs independently of the main editor thread, allowing the editor to remain responsive while the task executes.
+	-- this is particularly important for neovim as it is a text editor and should not block while doing work in the background.
+	-- the following are some ways to do asynch operations in neovim with lua.
+	--
+	-- using vim.schedule
+	vim.schedule(function()
+		-- this runs on the main thread next time it's available
+		print("Scheduled operation")
+	end)
+
+	-- using vim.defer_fn
+	vim.defer_fn(function()
+		-- this runs after 1000ms
+		print("Deferred operation")
+	end, 1000)
+
+	-- using vim.loop (libuv)
+	local timer = vim.uv.new_timer()
+	timer:start(1000, 0, function()
+		vim.schedule(function()
+			print("Timer triggered")
+		end)
+	end)
+	-- creates timer using libuv.
+	-- starts timer with a 1000ms delay.
+	-- 0 means it will only run once and not repeat.
+	-- notice how vim.schedule() is inside the callback.
+	--
+	-- use vim.schedule() for immediate queueing on main thread
+	-- use vim.defer_fn() for simple delayed operations
+	-- use vim.uv.new_timer() for more fine grained control
+end
+
 Main()
