@@ -16,6 +16,13 @@ function Contents()
 	Lua_for_neovim()
 	Vim_global_object()
 	Neovim_configuration_patterns()
+	Neovim_keymapping()
+	Neovim_autocommands()
+	Neovim_plugin_structure()
+	Neovim_using_API()
+	Neovim_create_floating_window()
+	Neovim_asynch_operations()
+	Neovim_debugging()
 end
 
 function What_is_lua()
@@ -588,6 +595,88 @@ function Neovim_configuration_patterns()
 	--	evertyhing  in lua/user is not enforced by neovim and requires use to call `require()` from init.lua
 	--	example, suppose the following is in nvim/init.lua:
 	require("user.options") -- this runs lua/user/options.lua. note that we don't need to do 'lua.user.options'
+end
+
+function Neovim_keymapping()
+	-- basic mapping
+	vim.keymap.set("n", "<leader>ff", ":Telescope find_files<CR>")
+	-- first arg is string of mode, "n", "i", "v"
+	-- second arg is key stroke, <leader> + f + f
+	-- third arg is the command
+
+	-- with options table as fourth arg
+	vim.keymap.set("n", "<leader>w", ":write<CR>", {
+		noremap = true, -- don't use recursive mappings
+		silent = true, -- don't show command in command line
+		desc = "Save File", -- description for which-key or similar plugins
+	})
+
+	-- creating multiple mappings
+	local mappings = {
+		n = { -- normal mode mappings
+			["<leader>ff"] = { ":Telescope find_files<CR>", "Find files" },
+			["<leader>fg"] = { ":Telescope live_grep<CR>", "Live grep" },
+		},
+		i = { -- insert mode mappings
+			["jk"] = { "<ESC>", "Exit insert mode" },
+		},
+	}
+
+	for mode, mode_mappings in pairs(mappings) do
+		for lhs, mapping_info in pairs(mode_mappings) do
+			local rhs, desc = unpack(mapping_info)
+			vim.keymap.set(mode, lhs, rhs, { noremap = true, desc = desc })
+		end
+	end
+end
+
+function Neovim_autocommands()
+	-- auto commands are powerful features that let you automatically execute commands when specific events occur in neovim.
+	--
+	-- you set auto commands using the vim.api table like this:
+	-- vim.api.nvim_create_autocmd()
+	-- here is the prototype:
+	--	nvim_create_autocmd(string event, table {
+	--						string pattern,
+	--						function callback
+	--					})
+	-- here's an example,
+	vim.api.nvim_create_autocmd("FileType", {
+		pattern = "python",
+		callback = function()
+			vim.opt_local.tabstop = 4
+			vim.opt_local.shiftwidth = 4
+		end,
+	})
+	-- this means, as soon as the filetype is changed, if the pattern matches "python", we execute the callback function.
+	--
+	-- here are some events like FileType
+	--	BufWritePre: triggers before saving a file
+	--	BufEnter: triggers when entering a buffer
+	--	FileType: triggerrs when file type is set
+	--	VimEnter: triggers when vim starts
+	--	BufNewFile: triggers when creating a new file
+	--
+	-- you can also group different auto commands together.
+	-- first create a group
+	local python_group = vim.api.nvim_create_augroup("python_settings", { clear = true })
+	vim.api.nvim_create_autocmd("FileType", {
+		pattern = "python",
+		group = python_group,
+		callback = function()
+			vim.opt_local.tabstop = 4
+			vim.opt_local.shiftwidth = 4
+		end,
+	})
+	-- the benefit of having groups:
+	--	1. preventing duplicate autocommands
+	--		when you reload config, { clear = true } option ensures old autocommands in that group are c leared before new ones are added.
+	--	2. easy enable/disable
+	--		can easily switch off and on a whole group of autocmds
+	--	3. debugging
+	--		when something goes wrong, groups make it easier to track down which autocommands are firing by checking the group name in :autocmd
+	--	4. organization
+	--		just generation organization, will be easier to see where everything is semantically
 end
 
 Main()
