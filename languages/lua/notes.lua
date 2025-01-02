@@ -22,7 +22,7 @@ function Contents()
 	Neovim_using_API()
 	Neovim_create_floating_window()
 	Neovim_asynch_operations()
-	Neovim_debugging()
+	Neovim_debugging_and_safety()
 end
 
 function What_is_lua()
@@ -802,6 +802,64 @@ function Neovim_asynch_operations()
 	-- use vim.schedule() for immediate queueing on main thread
 	-- use vim.defer_fn() for simple delayed operations
 	-- use vim.uv.new_timer() for more fine grained control
+end
+
+function Neovim_debugging_and_safety()
+	-- pcalls are lua's way of implementing try-catch blocks.
+	local status, result = pcall(function()
+		-- Potentially failing code
+		return require("some_module").setup()
+	end)
+	-- status returns true if the function executed successfully, false if there was an error.
+	if not status then
+		vim.notify("Error: " .. result, vim.log.levels.ERROR)
+		return
+	end
+	-- vim.notify typically displays message at bottom of screen in command line.
+	-- use command :messages to see all messages
+
+	-- debug utilities
+	local my_table = { name = "test", items = { 1, 2, 3 } }
+	vim.notify("Debug: " .. vim.inspect(my_table))
+	-- vim.inspect() creates a human-readable string representation of lua objects
+	-- particularly useful for tables which normally don't print well.
+	-- output would look like this:
+	-- {
+	--   name = "test",
+	--   items = {
+	--     1,
+	--     2,
+	--     3
+	--   }
+	-- }
+	--
+	-- nvim_echo() is used for displaying messages in neovim's command line area with specific formatting and highlighting.
+	vim.api.nvim_echo({ { result, "ErrorMsg" } }, true, {})
+	-- parameters
+	--	1. table { string text, string highlight_group }
+	--	2. boolean truncate_previous_messages
+	--	3. table options {} # rarely used
+
+	-- Logging
+	local log = require("vim.lsp.log") -- this is a specific module
+	-- vim.lsp.log module provides structured logging, specifically for LSP-related activities.
+	-- doing log = require("vim.lsp.log") gives us different logging levels.
+	-- some examples below.
+	log.info("Something happened")
+	log.error("Something went wrong")
+	-- here are other logging levels:
+	--	log.warn()
+	--	log.debug()
+	--	log.info()
+	--	log.error()
+	--	log.trace()
+	--
+	-- by default, logs are written to neovim's log file.
+	-- location varies on your OS.
+	-- unix: ~/.local/state/nvim/lsp.log
+	-- windows: ~/AppData/Local/nvim-data/lsp.log
+	--
+	-- you can also view the log file directly inside neovim by using the :LspLog command.
 end
 
 Main()
