@@ -670,7 +670,7 @@ function Neovim_autocommands()
 	})
 	-- the benefit of having groups:
 	--	1. preventing duplicate autocommands
-	--		when you reload config, { clear = true } option ensures old autocommands in that group are c leared before new ones are added.
+	--		when you reload config, { clear = true } option ensures old autocommands in that group are cleared before new ones are added.
 	--	2. easy enable/disable
 	--		can easily switch off and on a whole group of autocmds
 	--	3. debugging
