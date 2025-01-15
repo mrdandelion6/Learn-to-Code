@@ -293,6 +293,7 @@ function Lua_tables()
 	local t2 = t1
 	t2[1] = 69
 	print("t1[1] is now " .. t1[1])
+	-- you can create a deep copy of tables by creating a new one and using a for loop.
 
 	-- TABLES CAN GROW DYNAMICALLY
 	-- just like python lists, tables grow dynamically.
