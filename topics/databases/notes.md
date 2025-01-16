@@ -72,14 +72,16 @@ a data model is a collection of concepts for describing data.
 - basically a table with rows and columns
 - every relation has a **schema**, a which describes the columns (also referred to as fields)
 
-### scheme
-a scheme is a description of a particular collection of data, using a given data model.
+### schema
+a schema is a description of a particular collection of data, using a given data model.
+- relation schema describes the schema of a table/relation
+- database schema is a set of all relation schemas in the database
 
 ## data independence
 applications insulated from how data is structured and stored.
 ### logical data independence
 - make the database independent from the rest of the application
-### physics data independence
+### physical data independence
 - hardware level considerations
 - protection from changes in physical structure of data
 - abstract the database from the hardware
@@ -89,5 +91,112 @@ concurrent execution of user programs is key idea to good DBMS performance
 - keep CPU working on several programs concurrently
 - interleave actions of different programs
 
+### relational database
+a relational database is a set of relations. a relation is made of two parts:
+1. instance: a table w rows and columns
+2. schema: specifies name of a relation, and, name of each columns
+- a blueprint that defines the the structure of a relation, aka table
+- below is an example of a schema
+```
+Books (
+    book_id: INTEGER,
+    title: VARCHAR(100),
+    author: VARCHAR(50),
+    publication_year: INTEGER,
+    isbn: VARCHAR(13),
+    available_copies: INTEGER
+)
+```
 
+to make it easier, think of a relation as a **set** of **rows** and **tuples**. each row should be a distinct "entity". 
+
+### tuples vs rows
+tuples and rows are terms used interchangeably sometimes but theres a strict theoretical difference between them.
+
+tuples are immutable and the order matters. whereas rows are mutable and the order typically doesnt matter, you access values with column names
+
+# relational model terminology
+1. **relation**: a table
+2. **attribute**: a column
+3. **tuple**: usually we mean a row.. but see above (tuples vs rows)
+4. **arity/degree**: number of attributes in a relation
+5. **cardinality**: number of tuples/rows in a relation
+
+###  tuple index notation
+say we have the following relation schema
+```
+CREATE TABLE Student (
+    id INT,
+    name VARCHAR(50),
+    age INT
+);
+```
+and we have a table
+```
+id | name      | age
+--------------------
+1  | zack      | 30
+2  | jack      | 69
+3  | mack      | 40
+4  | back      | 69
+```
+we can "index" with composite keys. consider the composite key K1 = {id, name}. now let t1 be the tuple (1, zack, 30).
+
+=> t1[K1] = (1, zack)
+
+similarly if we say K2 = {id, name, age}
+
+=> t1[K2] = (1, zack, 30)
+
+which just gives us all of t1
+
+## a relation is a table
+a relation is just another word for a table. the order of tuples in relations doesn't matter, i.e, they are unordered.
+
+## levels of abstraction
+- many views
+    - think of them like APIs 
+- single conceptual scehma
+    - the logical structure of the database, not necessarily directly available
+    - high level overview of the entire database
+- single physical scehma
+    - the low level implementation of the database
+    - describes actual storage structure
+    - eg) using balance trees etc
+```
+view-1         view-2           view-3
+  |              |                |
+  ---------------|-----------------
+                 |
+          conceptual schema # defines logical structure
+                 |
+           physical schema # defines how files and indexes are used
+```
+
+here is an example of abstractions with a **university database**:
+
+#### physical schema
+- relations stored as unordered files
+- index on the first column of students
+#### conceptual schema
+- Students(sid: string, cname: string, age: int, gpa: float)
+- Courses(cid: string, cname: string, credits: int)
+- Enrolled(sid: string, cid: string, grade: int)
+#### external schema (aka views)
+- course_info(cid: string, enrollment: int)
+
+## keys
+a key is a set of attributes that uniquely identifies tuples in a relation
+
+### precise defintion
+**super key**:
+- a set of precise attributes K is a superkey for a relation R if R cannot contain two distinct tuples t1, t2 such that t1[K] == t2[K]
+
+**candidate key**
+- a candidate key K for R is a minimum superkey, i.e, if we remove any attribute from K, it is nno longer a super key.
+    - in other words, there exists no K' proper subset of K s.t K' is a superkey
+- we sometimes refer to candidate keys as just keys
+
+## relational query languages
+a major strength of the relational model is that we can easily query into data.
 
