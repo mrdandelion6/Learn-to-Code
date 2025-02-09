@@ -36,7 +36,7 @@ CREATING & MANAGING DATABASES & TABLES:
         > create table
         > drop table
         > use table
-    
+
 CORE SQL OPERATIONS:
     - select_statements()
         > basic queries
@@ -114,7 +114,7 @@ DELIMITER //
 CREATE PROCEDURE what_is_sql()
 BEGIN
     /*
-    SQL stands for structured query language. it is a language used to communicate with databases. 
+    SQL stands for structured query language. it is a language used to communicate with databases.
     query means to ask a question. so SQL is used to ask questions to a database.
     SQL is used to perform tasks such as updating data on a database, or retrieving data from a database.
     SQL is an interpreted language like python or bash. it is interpreted by the database in use.
@@ -122,10 +122,10 @@ BEGIN
 
     /*
     DATABASES
-    databases, also known as database management systems (DBMS), are software systems designed to store, manage, and organize data. 
+    databases, also known as database management systems (DBMS), are software systems designed to store, manage, and organize data.
     some popular databases are MySQL, PostgreSQL, SQLite, Oracle, and MongoDB.
     the way data is stored can vary depending on the database. some databases store data in tables, while others store data in json documents.
-    you can think databases as sophisticated digital filing systems. 
+    you can think databases as sophisticated digital filing systems.
     in order to query with these databases, we need some sort of 'query language support', like SQL.
     */
 END //
@@ -135,7 +135,7 @@ DROP PROCEDURE IF EXISTS setup_mysql;
 DELIMITER //
 CREATE PROCEDURE setup_mysql()
 BEGIN
-    /* 
+    /*
     SETUP
     in these notes, we will be using the MySQL database.
     these notes will assume you are working on a linux environment like ubuntu.
@@ -183,7 +183,7 @@ BEGIN
     Dec 10 22:00:05 Acer-DK systemd[1]: Started MySQL Community Server.
      */
 
-    /* 
+    /*
     UNIX SOCKET AUTHENTICATION
     you need to now setup local authentication that uses your system user credentials.
     this is so we don't have to use sudo each time we want to run mysql.
@@ -207,7 +207,7 @@ DROP PROCEDURE IF EXISTS how_to_use_these_notes;
 DELIMITER //
 CREATE PROCEDURE how_to_use_these_notes()
 BEGIN
-    /* 
+    /*
     RUNNING CODE FROM NOTES
     before proceeding with understanding SQL itself, we must first see how we can use these notes.
     specifically, how we can run the demonstrations and examples i wrote inside them.
@@ -217,11 +217,11 @@ BEGIN
     just like functions, procedures are a set of same instructions which can be called again, foo(1, 2)
     however, SQL functions and SQL procedures have some differences!
     */
-    
-    /*  
+
+    /*
     STORED PROCEDURES vs FUNCTIONS:
     stored procedures are pre-written sets of SQL statements that can be saved and reused later, like a recipe you can follow multiple times.
-    
+
     STORED PROCEDURES:
         - can perform multiple operations like INSERT, UPDATE, DELETE, and SELECT
         - can modify the data in the database
@@ -236,18 +236,18 @@ BEGIN
         - are typically used for calculations or data retrieval
     */
 
-    /* 
+    /*
     RUNNING NOTES
     this file, notes.sql, "creates" many procedures. if we run this source file in mysql, all the created procedures will persist.
-    i.e, they will be stored in our MySQL server until we explicitly "drop" them. 
-    you will learn more these create, drop operations soon in the notes.
+    i.e, they will be stored in our MySQL server until we explicitly "drop" them.
+    you will learn more about these create, drop operations soon in the notes.
     the key takeaway is that we only need to run the source code once, and all of our procedures get stored as metadata.
 
     to run the source code, we can simply do: mysql < notes.sql
     this creates a new database "sql_notes" where all of our data will be stored
     now we start mysql for this database by doing: mysql sql_notes
     or you could do:
-        my sql
+        mysql
         USE sql_notes
     and then we can see all procedures defined in our notes by running: SHOW PROCEDURE STATUS WHERE Db = 'sql_notes';
     as the procedures are all stored in the system's metadata tables, they will persist until you drop them.
@@ -258,7 +258,7 @@ BEGIN
         CALL how_to_use_these_notes();
     */
     SELECT 'hello world!' AS output;
-    /* 
+    /*
     because of the command above, calling this procedure will print the following:
 
         mysql> CALL how_to_use_these_notes();
@@ -272,14 +272,14 @@ BEGIN
         Query OK, 0 rows affected (0.00 sec)
     */
 
-    /*  
+    /*
     DUPLICATE PROCEDURES
     whenever we modify or add some procedures, we will need to drop them and readd them (because they persist).
     we cannot create a procedure with name X if one with name X already exists.
-    that is why we have the command: DROP PROCEDURE IF EXISTS procedure_name; above every procedure creation. 
+    that is why we have the command: DROP PROCEDURE IF EXISTS procedure_name; above every procedure creation.
     */
 
-    /* 
+    /*
     well now you know how to get started with these notes. here is a quick summary of all the steps again:
 
         1. run: mysql < notes.sql
@@ -293,9 +293,9 @@ DROP PROCEDURE IF EXISTS delimiter;
 DELIMITER //
 CREATE PROCEDURE delimiter()
 BEGIN
-    /*  
+    /*
     in SQL, a delimiter is the character that marks the end or separation of an SQL statement.
-    it is like a period at the ned of a sentence.
+    it is like a period at the end of a sentence.
     the standard delimiter in SQL is the semicolon ;
 
     delimiters are important because:
@@ -351,8 +351,8 @@ BEGIN
 
     /*
     we see that the "users" table has a column called "team_id". this column is a foreign key that references the "id" column of the "teams" table.
-    this means that the users table is related to the teams table. 
-    this might seem very simple, but there is a good reason for why we choose the relational database model. 
+    this means that the users table is related to the teams table.
+    this might seem very simple, but there is a good reason for why we choose the relational database model.
     below we motivate some reasons for why we might want to use a relational database.
     */
 
@@ -364,7 +364,7 @@ BEGIN
     3. SCALABILITY: you essentially "normalize" your data by storing it in multiple tables. this makes it easier to scale your database as your data grows.
         NORMALIZATION just refers to splitting your data into multiple tables.
         an example is, suppose for the above users table, we had a column called "team_name" instead of "team_id". this would be redundant, because the team name is already stored in the teams table.
-        and you might say, "well, why not just store the team name in the users table and get rid of the teams table?" 
+        and you might say, "well, why not just store the team name in the users table and get rid of the teams table?"
         in our case we could do that but suppose we had a column called "team_location" as well, or just a lot of columns related to the team. it is better design to encapsulate all the team data in a separate table and reference it with a foreign key.
     */
 END //
@@ -374,7 +374,7 @@ DROP PROCEDURE IF EXISTS commands_and_statements;
 DELIMITER //
 CREATE PROCEDURE commands_and_statements()
 BEGIN
-    -- so SQL is not ony used to create, read, update, and delete data (CRUD), but it also gives data a structure.
+    -- SQL is not ony used to create, read, update, and delete data (CRUD), but it also gives data a structure.
 
     -- SQL COMMANDS & STATEMENTS
     -- now we go over some basic SQL syntax
@@ -385,7 +385,7 @@ BEGIN
     -- SELECT is used to retrieve data from a database. it is the most commonly used SQL command. the data is returned in a table format, and referred to as a result set. here's an example:
     SELECT * FROM users WHERE age > 18; -- this will return all the rows from the "users" table where the age is greater than 18
     -- we say the entire line above is a "statement"
-    -- the column is sage, and the table name is users, these are known as 'identifiers' in the statement
+    -- the column is age, and the table name is users, these are known as 'identifiers' in the statement
     -- in this case, we are selecting all rows by using the asterisk (*), with the filter that the age is greater than 18
 
     -- INSERT
