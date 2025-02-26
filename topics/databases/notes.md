@@ -1,16 +1,13 @@
 # databases notes
-
 welcome to my database notes.
 
 # introduction
-
 ## topics
-
 - relational model
 - ER model
 - SQL
 - aggregation and joins
-- contraints and trriggers
+- contraints and triggers
 - database security
 - relational algebra
 - views and indexes
@@ -41,7 +38,6 @@ no, but debatable
 - it's search only
 
 ### search vs query
-
 a query is:
 - a request of information from a database
 - in DBMS a specialized query language is used, for example structured query language (SQL)
@@ -70,7 +66,7 @@ a data model is a collection of concepts for describing data.
 
 ### relational data model
 - basically a table with rows and columns
-- every relation has a **schema**, a which describes the columns (also referred to as fields)
+- every relation (table) has a **schema**, which describes the columns (also referred to as fields)
 
 ### schema
 a schema is a description of a particular collection of data, using a given data model.
@@ -107,8 +103,7 @@ Books (
     available_copies: INTEGER
 )
 ```
-
-to make it easier, think of a relation as a **set** of **rows** and **tuples**. each row should be a distinct "entity". 
+to make it easier, think of a relation as a **set** of **rows** and **tuples**. each row should be a distinct "entity".
 
 ### tuples vs rows
 tuples and rows are terms used interchangeably sometimes but theres a strict theoretical difference between them.
@@ -122,7 +117,7 @@ tuples are immutable and the order matters. whereas rows are mutable and the ord
 4. **arity/degree**: number of attributes in a relation
 5. **cardinality**: number of tuples/rows in a relation
 
-###  tuple index notation
+### tuple index notation
 say we have the following relation schema
 ```
 CREATE TABLE Student (
@@ -155,7 +150,8 @@ a relation is just another word for a table. the order of tuples in relations do
 
 ## levels of abstraction
 - many views
-    - think of them like APIs 
+    - think of them like APIs
+    - how user interacts with database
 - single conceptual scehma
     - the logical structure of the database, not necessarily directly available
     - high level overview of the entire database
@@ -193,7 +189,7 @@ a key is a set of attributes that uniquely identifies tuples in a relation
 - a set of precise attributes K is a superkey for a relation R if R cannot contain two distinct tuples t1, t2 such that t1[K] == t2[K]
 
 **candidate key**
-- a candidate key K for R is a minimum superkey, i.e, if we remove any attribute from K, it is nno longer a super key.
+- a candidate key K for R is a minimum superkey, i.e, if we remove any attribute from K, it is no longer a super key.
     - in other words, there exists no K' proper subset of K s.t K' is a superkey
 - we sometimes refer to candidate keys as just keys
 
