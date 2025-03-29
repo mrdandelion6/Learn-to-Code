@@ -9,6 +9,7 @@ tempCodeRunnerFile*
 *.exe
 *.out
 *.o
+*.swp
 
 # shell
 utmlab.sh
