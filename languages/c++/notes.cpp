@@ -7,7 +7,6 @@
 #include <cmath>
 // remark .. C++ prefers camel case. i will be using snake case for many things though :p
 
-
 // WELCOME TO MY C++ NOTES
 // hello, welcome to my C++ notes
 // in these notes, you will learn how to write C++ code
@@ -112,13 +111,13 @@ int what_is_cpp() {
     // each of these features will have its own topic, we will just be taking a look at an overview
 
     // C++ vs C
-    
+
     // classes and objects
     // C++ supports object-oriented programming (OOP) through classes and objects. for example:
     class Position {
     private:
         int x, y;
-        
+
     public:
         Position(int initial_x, int initial_y) : x(initial_x), y(initial_y) {} // constructor
         void move(int dx, int dy) {
@@ -209,13 +208,13 @@ int data_types() {
 
     // character types
     char h;               // 1 byte
-    
+
     // boolean
     bool i;               // 1 byte
 
     // void
     // void j;               // no bytes. note we cannot even declare this
-    
+
 
     // NON PRIMITIVE DATA TYPES
     // non-primitive types can can hold multiple values and/or have methods associated
@@ -1004,7 +1003,7 @@ int aggregates() {
     // these behave differently:
     Aggregate a1;           // x and y are default-initialized (could be garbage)
     // NonAggregate n1;       // won't compile - no default constructor
-                        
+
     Aggregate a2 = {1};    // sets x=1, y is zero-initialized
     // NonAggregate n2 = {1}; // won't compile - constructor needs 2 args
 
@@ -1111,7 +1110,7 @@ int new_delete_operator() {
 
     // integers have no constructors so they both do the same thing in effect.
     // the main difference is that using new is a lot cleaner.
-    
+
     // the main scenarios in which we need malloc() are when:
         // 1.) interfacing with C code
         // 2.) need to use realloc() calls 
@@ -1195,7 +1194,7 @@ int classes() {
     // these are member functions which we will delve into soon
     // here is a basic example of a class
 
-    class Student {        
+    class Student {
     private:
         char* name;
         int age;
@@ -1255,7 +1254,7 @@ int classes() {
     cool_struct structo = cool_struct(4, 'a', 1); // construct locally
     std::cout << "structo.x is " << structo.x << std::endl;
     // we are able to access structo.x by default
-    
+
     // now lets see the default access for a class
     class Dog {
         char* name; // default access
