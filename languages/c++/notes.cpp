@@ -130,7 +130,6 @@ int what_is_cpp() {
             // its just print(f"Position: ({x}, {y})"). u will learn later.
         }
     };
-
     // note that we align the private, public, and protected keywords with the class keyword.
 
     Position pos(0, 0);
@@ -139,7 +138,6 @@ int what_is_cpp() {
     pos.print_position();
     pos.move(2, -1);
     pos.print_position();
-
 
     // STL
     // STL stands for standard template library
@@ -169,7 +167,6 @@ int what_is_cpp() {
     // people often say the C++ standard library is a superset of STL, but i am not sure how accurate this is!
     // the main takeaway regarding the STL, is that it provides common data structures and algorithms (much like the Java Collections Framework)
     // this is a big difference from C where we have to make everything ourselves.
-
 
     // namespaces
     // C++ also makes use of namespaces, which are encapsulations of blocks of code which protect against name collisions.
@@ -284,13 +281,13 @@ int objects() {
         // 1.) a type
         // 2.) a size
         // 3.) a lifetime 
-    
+
     // so anything from structs, to ints, to classes, they are all considered objects.
     int x = 4;
     std::string str1 = "Hello"; // string class
     int arr[30];
     std::vector<int> vec = {1, 2, 3}; // vector class
-    
+
     // VARIABLE vs OBJECT
     // to be even more clear, the variable 'person' itself is a variable.
     // a variable is an "identifier" that refers to an object.
@@ -350,7 +347,7 @@ int compiling_cpp() {
     // the reason we want assembly code is because it creates architecture specific code. 
     // for example, many computers use x86 or ARM architecture, but the actual binary for each computer may be different.
     // having assembly code allows for a portable low level code that can quickly be translated to the proper binary (object) code for each computer.
-    
+
     // why object code?
     // the reason we would want object code rather than just directly going to an executable is because of many reasons.
     // 1. modular compilation (individual recompilation):
@@ -379,7 +376,7 @@ int compilation_flags() {
 
     // in C++ we have
         // g++ -o notes notes.c 
-    
+
     // the only difference is that c++ has some specific flags:
         // -fno-exceptions: disable exception handling
         // -fno-rtti: disable runtime type info
@@ -402,7 +399,7 @@ int cmake() {
         // visual studio project files on windows
         // xcode project ffiles on macOS
         // other build systems like Ninja
-        
+
     // that's why cmake is called cross platform make!
 
     // to learn how to properly write CMakeLists.txt files, see CMakeLists.txt inside ./example-project/
@@ -433,7 +430,7 @@ int cmake() {
         // │   └── main.cpp
         // └── build/          # all generated files stay here
         //     └── ...
-        
+
     // note that you do not add the build folder to your version control.
 
     return 0;
@@ -1127,7 +1124,7 @@ int oop() {
     // object oriented programming allows for classes, which will be the discussed in the next section
 
     // with object oriented programming we have:
-    
+
     // 1. BASIC CLASS/OBJECT FEATURES
         // structs with oop capabilities
         // member functions (methods)
@@ -1137,7 +1134,7 @@ int oop() {
         // destructors
         // `this` pointer
         // static members
-    
+
     // 2. INHERITANCE FEATURES
         // single inheritance
         // multiple inheritance
@@ -1381,7 +1378,7 @@ int initializer_list() {
 
     // each member is initialized in the format: member_name(initial_value)
     // these initializations happen before the constructor body executes, which then calls strcpy(name, n)
-    
+
     // to make things even better, we can do the following:
     class Tiger {
     private:
@@ -1470,6 +1467,44 @@ int constructors_destructors() {
 
         }
     };
+
+    return 0;
+}
+
+int lambda_functions() {
+    // lambda functions , also known as lambda functions allow for anonymous function objects.
+    // this is practical for short functions you wouldn't want to name and just make them in line.
+
+    // here is the basic syntax:
+    // [capture_clause](parameters) -> return_type { function_body }
+
+    // eg)
+    auto add = [](int a, int b) -> int { return a + b };
+    std::cout << "5 + 3 = " << add(5, 3) << std::endl;
+    // now we can use add(a, b) to add stuff. notice we catured nothing in this example.
+
+    // CAPTURING VARIABLES
+    // lambda functions have a unique feature called caturing variables, whatever you but inside the [].
+    // what it means to capture a variable is that you give a copy of that variable to the lambda object.
+
+    // for example
+    int x = 69;
+    auto foo = [x](int a) -> int {return x + a};
+    // here , foo gets its own copy of x baked into the lambda object. think of the lambda object as adopting
+    // a constant with the value x. in this case u can almost imagine that x is some non-mutable field of the lambda.
+
+    std::cout << "foo(5) is " << foo(5) << std::endl;
+
+    // CAPTURE CLAUSE OPTIONS
+    //  []: captures nothing
+    //  [=]: captures all variables by value
+    //  [&]: captures all variables by reference
+    //  [var]: captures var by value
+    //  [&var]: captures var by reference
+    //  [=, &var]: captures all variables by value but var by reference
+    //  [&, var]: captures all variables by reference but var by value
+    //  [this]: captures the `this` pointer
+
 
     return 0;
 }
