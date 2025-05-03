@@ -33,7 +33,28 @@ imagine you want to write a book with a friend. you could email each other the b
 
 git is a version control system. github is a website that hosts git repositories.
 
-## git lfs
+## stages of git tracked files
+you can view the state of files using `git status`. there are two primary categories:
+
+1. untracked
+- files that exist in your working directory but aren't tracked by git yet
+- they are NOT in .gitignore
+- you can begin tracking them by staging them with `git add`
+
+2. tracked
+- many sub-stages for these
+
+### tracked files
+further divided into:
+- unmodified: haven't been changed since last commit
+- modified: go figure
+- staged: modifed files that have been marked to go into the next commit. this is done by using `git add`.
+- commited: files whose state has been saved in the local git repo. achieved by running `git commit`.
+- pushed: committed changes that have been uploaded to a remote repository
+```
+Working Directory → Staging Area → Local Repository → Remote Repository
+    (modified)        (staged)        (committed)        (pushed)
+```
 
 ## git branches
 a branch in git is essentially a lightweight movable *pointer* to a specific commit in your repository's history.
@@ -68,7 +89,7 @@ before we explore some important branch concepts, we will first motivate why we 
 - this branch is typically considered the "official" version of your codebase.
 - each commit on this branch should represent a *stable* version of your code.
 #### branch references
-- every branch is actually just a 41 byte text file containing the SHA-1 hash of the commit it points to 
+- every branch is actually just a 41 byte text file containing the SHA-1 hash of the commit it points to
 - when you create a new branch, git simply creates a new pointer--it doesn't create a new set of files
 - the special pointer `HEAD` tells git which branch you are currently working on
 
@@ -77,7 +98,7 @@ before we explore some important branch concepts, we will first motivate why we 
 ```bash
 git checkout -b feature/user-authentication
 ```
-- putting `feature/` doesn't do anything special like create a category. it is not a keyword either. it simply names the branch  
+- putting `feature/` doesn't do anything special like create a category. it is not a keyword either. it simply names the branch
 - used for developing new features
 - usually branched from and merged back into main branch
 - naming convention usually follows: `feature/feature-name`
@@ -105,7 +126,7 @@ now we have:
 - `release/2.0` contains only completed features A and B
 
 now to even further demonstrate, suppose we later on find a bug in our release 2.0. since we have it as its own isolated branch, we can:
-- create a fix branch from the release branch 
+- create a fix branch from the release branch
 - fix the bug
 - merge fix back into release
 - merge fix back into main
@@ -161,7 +182,7 @@ git checkout -b feature/login # new feature branch
 example workflow:
 ```bash
 # start in dev
-git checkout dev 
+git checkout dev
 git checkout -b feature/new-dashboard # work on a feature, create new branch
 
 # work on feature
@@ -264,11 +285,11 @@ main    A --- B --- C --- F
               |         /
 feature       D --- E /
 ```
-now after the merge, a new commit F has been made. `main` points to F, and `feature` remains pointing to E! the edge from E to F doesn't mean `feature` now points to F, it just means E is a parent of F. 
+now after the merge, a new commit F has been made. `main` points to F, and `feature` remains pointing to E! the edge from E to F doesn't mean `feature` now points to F, it just means E is a parent of F.
 
 but how exactly do we carry out this merge? in what way do C and E become combined to form F? we now take a look at different ways merges take place.
 
-### fast-forward merge 
+### fast-forward merge
 - occurs when the target and source branches have not diverged
 - happens automatically, no need for manual merging
 - simply moves the pointer forward for the target branch
@@ -276,7 +297,7 @@ but how exactly do we carry out this merge? in what way do C and E become combin
 - maintains a linear history
 - eg) when `main` hasn't changed since `feature` branch was created
 ```
-main      A --- B --- C 
+main      A --- B --- C
                       |
 feature               D --- E --- F --- G
 ```
@@ -289,11 +310,11 @@ and the our commits become like this
 ```
 main      A --- B --- C --- D --- E --- F --- G
                                           \
-feature                                     \ G 
+feature                                     \ G
 ```
 note that `feature`'s history was not wiped or anything, we simply restructured the graph. the edges show the commit history. also `G --- G` is a bit misleading, it does not mean there are two separate commits for G. it just meants `feature` and `main` both point to the G commit.
 
-### recursive three-way merge 
+### recursive three-way merge
 - the default merge strategy for when there is a branch divergence
 - creates a new merge commit
 - combimes changes frm both branches
@@ -321,7 +342,6 @@ feature      D --- E /
 a new commit F gets created that combines E and C. this commit uses the three points mentioned before. we need the common ancestor to determine what the differences were. it serves as a reference to when the divergent branches were the same.
 
 #### resolving merge
-
 we will demonstrate how exactly F gets created. here is the algorithm:
 1. identify the base (this is B)
 2. for each line/chunk of code compare all three versions

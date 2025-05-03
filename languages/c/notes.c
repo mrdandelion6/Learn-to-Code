@@ -1383,7 +1383,7 @@ int makefile() {
     // makefile consist of a sequence of rules.
     // each rule has:
         // - target (the excecutable file to be constructed)
-        // - recipe (the list of commands to create the target)
+        // - recipe (the list of shell commands to create the target, also known as an action)
         // - dependencies (the stuff the target is dependent on)
 
     // FORMAT
@@ -1422,7 +1422,6 @@ int makefile() {
         // 2.) all the dependencies are checked
         // 3.) if the dependencies for the first rule are also targets in the makefile, it will jump and evaluate those rules first
         // 4.) this way, the rules in the makefile are recursively evaluated
-    
     // hence it is important to select your first rule wisely if you want to just call `make`
     // otherwise you can call a specific rule to evaluate by specifying the target: `make clean`
     // here is an example of a smartly structured Makefile. all of the rules are recursively evaluated here.
@@ -1446,19 +1445,33 @@ int makefile() {
 
     // lets analyze this part by part:
         // %.o: %.c sorts.h
-        // here the target is %.o and the dependencies are %.c (a source file of the same name) and sorts.h
+        // here the target is %.o and the dependencies are %.c (a source file of the same name) and sorts.h. % is like * for regex, it matches any nonempty string % that's followed by .c
 
         // gcc -c $< -o $@
-        // here we create an object file from $< which symbolizes the first name in the list of dependencies, ie; $.c
-        // and $@ just means the target's name, so we give it the name of the target
+        // here we create an object file from $< which symbolizes the name of the first dependency, ie; %.c
+        // and $@ just means the target's name, so we give it the name of the target %.o
 
-    // one last thing is that makefile can include variables.
+    // another thing is that makefile can include variables.
     // this can help a lot against having to rewrite a whole chain of files over and over again
     // at the top we define variables like:
         // OBJFILES = notes.o sorting.o
     // and we can reference the variable by doing $(OBJFILES) instead of having to write notes.o sorting.o each time.
     // the primary benefit of this is that we wont have to go and change several lines of code if we decide to add another file later into the mix.
     // its all factored out into the OBJFILES variable, the only thing we will have to change. basic coding principle.
+
+    // LIST OF WILDCARDS
+    // here is a list of useful wildcards:
+    // $< : first dependency of the rule
+    // $@ : target of the rule
+    // $? : all dependencies that are newer than the target
+    // $^ : all dependencies of current rule with duplicates removed
+    // $* : the "stem" of a string matched by %. for example if main.c is matched by %.c, then the stem $* is just main
+
+    // less usefull ones:
+    // $(@D) : directory of the target file if given
+    // $+ : same as $^ but preserves duplicates
+
+
 
     return 0;
 }

@@ -12,7 +12,7 @@ while you may or may not want to use the vim program, **everyone** should use vi
 
 ## neovim vs vim
 
-now that we have some motivation to use vim, at least vim motions, let us compare its differences between neovim. 
+now that we have some motivation to use vim, at least vim motions, let us compare its differences between neovim.
 
 ### what is neovim ?
 
@@ -20,16 +20,16 @@ neovim is a fork and extension of the vim text editor that aims to modernize vim
 
 ### differences
 
-#### 1. codebase: 
+#### 1. codebase:
 neovim was created by refactoring vim's codebase, making it more maintainable and easier to contribute to. vim is written in c, while neovim is written in c and includes **lua** integration. this means you can write your entire **configuration** in lua instead of **vimscript**. more on these later.
 
 #### 2. built in features
 - neovim includes a built-in terminal emulator
     - i.e, you can run a terminal inside a terminal
-    - you can split your nvim (neovim) editor and have code on one side and a terminal on the other side without leaving neovim 
+    - you can split your nvim (neovim) editor and have code on one side and a terminal on the other side without leaving neovim
 - nvim has built-in LSP (language server protocol) for IDE-like features
     - gd: go to definition, can jump to a function/variables definition
-    - gr: find references 
+    - gr: find references
     - gi: go to implementation
     - error highlighting as you type
     - inline error messages
@@ -40,7 +40,7 @@ neovim was created by refactoring vim's codebase, making it more maintainable an
     - all you need to do is install the LSP for your language whereas for vim, you need to install lots of extension and plugins
 - nvim has native lua support for configuration and plugins
 - nvim supports asynchronous i/o by default
-    - syntax highlighting and other nice features don't block text editing 
+    - syntax highlighting and other nice features don't block text editing
     - modern vim mostly supports this but not as much as nvim (i think ?)
 
 #### 3. default settings
@@ -115,7 +115,7 @@ to begin, we will install kickstart. visit https://github.com/nvim-lua/kickstart
 
 assuming you already have the basic utils set up on your linux machine (whether it's wsl2 ubuntu or actual os), here is how to set up the rest of the prerequisites.
 
-#### 2. 
+#### 2.
 ```bash
 sudo apt install ripgrep
 ```
@@ -162,7 +162,6 @@ fc-cache -fv
 then edit your terminal to use the downloaded font. this process varies on your terminal and linux distro.
 </details>
 
-
 #### 5. language setup
 
 <details>
@@ -171,7 +170,7 @@ then edit your terminal to use the downloaded font. this process varies on your 
 only get this if you want to write go.
 
 ```bash
-# in ubuntu 
+# in ubuntu
 wget https://go.dev/dl/go1.22.1.linux-amd64.tar.gz
 sudo rm -rf /usr/local/go
 sudo tar -C /usr/local -xzf go1.22.1.linux-amd64.tar.gz
@@ -208,7 +207,7 @@ continuing the README for https://github.com/nvim-lua/kickstart.nvim, you will n
 
 ``` bash
 # if neovim config not yet made
-mkdir -p ~/.config/nvim 
+mkdir -p ~/.config/nvim
 
 # if already existing, we wipe it (backup if u need it)
 rm ~/.config/nvim
@@ -224,10 +223,10 @@ the last command will be our first launch of nvim with kickstart which should tr
 ## init.lua
 `init.lua` is the main configuration file for neovim when using lua instead of the traditional `vimrc` for vim. it's where you define your core settings, keymaps, and plugin configurations.
 
-for **kickstart.nvim** specifically, their `init.lua` serves as both a working configuration and a well-documented example of how to configure neovim. 
+for **kickstart.nvim** specifically, their `init.lua` serves as both a working configuration and a well-documented example of how to configure neovim.
 
 for the rest of these notes, we will be going through `init.lua`. to start with, first make a copy the original `init.lua` then open the original with neovim:
 ```bash
 cp ~/.config/nvim/init.lua ~/.config/nvim/init.lua.backup
-nvim ~/.config/nvim/init.lua 
+nvim ~/.config/nvim/init.lua
 ```
