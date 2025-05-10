@@ -39,6 +39,7 @@ I have made quite a few notes on important computer science topics as well.
 ### Doing (🚧) / Done (🏁)
 - 🏁 `Data Science`
 - 🚧 `Data Structures` (made for **CSCB63 Summer 2024**)
+- 🚧 `Databases` (made for CSC343H5 Winter 2025)
 - 🚧 `Cyber Security ` (made for **CSC347H5 Fall 2024**)
 - 🚧 `Operating Systems` (made for **CSC369H5 Fall 2024**)
 - 🚧 `Parallel Programming` (made for **CSC367H5 Fall 2024**)
@@ -48,10 +49,9 @@ I have made quite a few notes on important computer science topics as well.
 - 🚧 `Using Vim`
 - 🏁 `Using VS Code`
 - 🚧 `Git`
+- 🚧 `Docker`
   
 ### To Start
-- Databases (for CSC343H5 Winter 2025)
-- Using Vim
 - Quantum Computing (architecture, underlying physics, but mostly focused on programming with Qiskit)
 
 #### Happy coding.
