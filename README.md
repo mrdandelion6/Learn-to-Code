@@ -26,7 +26,6 @@ Here are notes I've made on various programming languages. Most of them are ongo
 ### To Start
 - CUDA (know it already)
 - HIP (to learn)
-- Docker (know it already)
 - MATLAB (know it already)
 - TypeScript (know it already)
 - React (know it already)
