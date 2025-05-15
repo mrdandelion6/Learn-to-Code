@@ -1,5 +1,4 @@
 # learn docker
-
 welcome to my docker notes. 
 
 docker is a platform to develop, ship, and run applications in "containers." 
@@ -35,18 +34,44 @@ unlike a traditional OS , docker images dont have the following:
 ## how does docker work?
 docker uses a client-server architecture. the docker client talks to the docker daemon, which does the heavy lifting of building, running, and distributing your docker containers.
 
-think of each container like a little ecosystem where you can specify what dependencies are needed and of course the ecosystem itself: ubuntu , debian , alpine.
+### containers
+think of each container like a little ecosystem that's running where you can specify what dependencies are needed and of course the ecosystem itself: ubuntu , debian , alpine.
 
-you specify all the details of the ecosystem using a `Dockerfile`--a file that's literally named "Dockerfile" , like how you might have a `Makefile` in C.
+### dockerfile
+to use docker, you need to create a `Dockerfile`. this file contains instructions on how to build the image.
 
-## dockerfile
-to use docker, you need to create a dockerfile. this file contains instructions on how to build the image.
+### images
+a docker image is just like a system image , it is snapshot or blueprint of the container to run. think of a container as a running operating system , and a docker image as a snapshot of that system before it runs... like an image of an operating system.
 
-## docker-compose.yml
-a `docker-compose.yml` file is a configuration file used by docker for when we:
+you specify all the details of the ecosystem in this file. the file is literally named "Dockerfile" , like how you might have a `Makefile` in C.
+
+### dockerfile -> docker image -> docker container
+here is an overview of the process for creating containers:
+- a dockerfile is written by developer
+- a docker image is built from a dockerfile: `docker build -t <image_name>` or `docker-compose build`
+- a docker container is started and run from an existing image: `docker run <image_name>`
+
+however , there is another step that may often may happen before the dockerfile builds an image.. this is there is an additional docker-compose.yml file (see below).
+
+### docker-compose.yml
+in addition to a dockerfile we also have a `docker-compose.yml`. this is a configuration file used by docker for when we:
 - need to configure multiple related services in one file
 - define networks between containers
 - set up volumes for persistent data
 - manage environment variables across containers
 - need multiple containers for the application
 - want to simplify complex Dockerfile run commands
+
+note that each "service" has its own dockerfile on instructions for how to create a container. **each service is its own independent blueprint for making a container**. 
+
+containers built from the services can communicate and work together , much like microservices architecture if you know a bit about that.
+
+remember that services are each defined by their own dockerfile... a service is not a container , it is like a dockerfile... just a configuration to make an image which a container loads.
+
+## full pipeline for docker
+including the docker-compose.yml file , this is the entire process for docker:
+- the `docker-compose build` command is run and docker reads the `docker-compose.yml` file in the current directory.
+- for each service defined in the `docker-compose.yml` file , docker looks for its dockerfile.
+- docker reads the services' dockerfiles and builds any images.
+- docker runs the containers from images , all good to go
+
