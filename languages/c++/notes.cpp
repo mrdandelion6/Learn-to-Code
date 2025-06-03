@@ -240,7 +240,7 @@ int data_types() {
     };
 
     // classes
-    // similar to structures but with data hiding
+    // identical to structs except the default access level. see classes().
     class Person {
     public:
         static void shout() {std::cout << "AHHH" << std::endl;}
@@ -258,7 +258,7 @@ int objects() {
     // oftentimes when we refer to objects, we may be thinking of some instantiation of a class.
     // however in C++, every data type isn't a class!
     // primitive data types like ints, floats, chars are not a class.
-    // non-primitive data types like strings, pointers, and structs are also not classes.
+    // non-primitive data types like pointers, and structs are also not classes.
     // however these are also referred to as objects.
 
     // if we are thinking of objects in the context of object-oriented-programming and classes, then it would be wrong to say that int x; is an object.
@@ -283,7 +283,7 @@ int objects() {
     // an object is a region of space in memory that has:
         // 1.) a type
         // 2.) a size
-        // 3.) a lifetime 
+        // 3.) a lifetime
 
     // so anything from structs, to ints, to classes, they are all considered objects.
     int x = 4;
@@ -311,10 +311,10 @@ int compiling_cpp() {
     // similarly, C++ uses g++
 
     // the compilation process for C++ is much more complex than for C.
-    // C is just a procedural programming language, so its compilation at the file level mostly consists 
-    // of simply turning C source code into machine code. 
+    // C is just a procedural programming language, so its compilation at the file level mostly consists
+    // of simply turning C source code into machine code.
     // whereas C++ is a multi-paradigm language that supports many high level things like oops, templates
-    // and exceptions. 
+    // and exceptions.
     // this leads to a much more complex compilation process for C++.
 
     // the compilation process for C++ itself is also very similar to C.
@@ -330,7 +330,7 @@ int compiling_cpp() {
 
     // for C++ the process is very similar:
     // 1. preprocessing
-        // the C++ preprocessor cleans up source code (#include and #define) 
+        // the C++ preprocessor cleans up source code (#include and #define)
         // also cleans up macros that can handle templates (more on templates later)
         // the output source file typically has an (.i) extension
     // 2. compilation
@@ -347,7 +347,7 @@ int compiling_cpp() {
     // you may be wondering what the point is of having assembly code and object code. why not just directly make the executable?
 
     // why assembly code?
-    // the reason we want assembly code is because it creates architecture specific code. 
+    // the reason we want assembly code is because it creates architecture specific code.
     // for example, many computers use x86 or ARM architecture, but the actual binary for each computer may be different.
     // having assembly code allows for a portable low level code that can quickly be translated to the proper binary (object) code for each computer.
 
