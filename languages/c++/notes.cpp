@@ -880,7 +880,23 @@ int references() {
     // REFERENCES CLARIFICATION
     // so far we have bene saying y is a reference of x.
     // but it is more accurate to say that x and y are variables that reference the same object.
-    // the object of course is the array itself which resides in memory.  
+    // the object of course is the array itself which resides in memory.
+
+    // REFERENCES AS PARAMETERS
+    // recall when we wanted to modify some arguments in another function in C,
+    // we passed their address. for C++ we can also do the same thing , or we
+    // could just use references. using a reference type as the parameter
+    // avoids the need to derefence pointer variables.
+
+    // consider this lambda function that takes reference type parameter.
+    auto mutate_int = [](int &a) { a += 1; };
+
+    int dada = 69;
+    mutate_int(dada);
+    std::cout << "dada is now: " << dada << std::endl;
+    // prints 70
+    // note that we passed in dada which is of type int into the parameter for
+    // `a` which is of type &int. this is how references as parameters work.
 
     return 0;
 }
