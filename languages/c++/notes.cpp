@@ -1522,14 +1522,16 @@ int constructors_destructors() {
 }
 
 int lambda_functions() {
-    // lambda functions , also known as lambda functions allow for anonymous function objects.
+    // lambda functions allow for anonymous function objects.
     // this is practical for short functions you wouldn't want to name and just make them in line.
+    // they also allow you to define functions within functions , something you
+    // otherwise could not do.
 
     // here is the basic syntax:
-    // [capture_clause](parameters) -> return_type { function_body }
+    // [capture_clause](parameters) -> return_type { function_body; };
 
     // eg)
-    auto add = [](int a, int b) -> int { return a + b };
+    auto add = [](int a, int b) -> int { return a + b; };
     std::cout << "5 + 3 = " << add(5, 3) << std::endl;
     // now we can use add(a, b) to add stuff. notice we catured nothing in this example.
 
@@ -1539,11 +1541,18 @@ int lambda_functions() {
 
     // for example
     int x = 69;
-    auto foo = [x](int a) -> int {return x + a};
+    auto foo = [x](int a) -> int {return x + a; };
     // here , foo gets its own copy of x baked into the lambda object. think of the lambda object as adopting
     // a constant with the value x. in this case u can almost imagine that x is some non-mutable field of the lambda.
 
     std::cout << "foo(5) is " << foo(5) << std::endl;
+
+    // if we wanted to mutate x , we could pass it by reference like this:
+    auto bar = [&x](int a) { x += a; };
+    bar(5); // should mutate existing variable x by adding 5 to it
+
+    std::cout << "x is now: " << x << std::endl;
+    // should be 69 + 5 = 74 now.
 
     // CAPTURE CLAUSE OPTIONS
     //  []: captures nothing
@@ -1554,7 +1563,6 @@ int lambda_functions() {
     //  [=, &var]: captures all variables by value but var by reference
     //  [&, var]: captures all variables by reference but var by value
     //  [this]: captures the `this` pointer
-
 
     return 0;
 }
