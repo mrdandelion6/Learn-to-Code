@@ -419,8 +419,8 @@ int cmake() {
     // here is an example using Ninja:
         // mkdir build
         // cd build
-        // cmake -G "Ninja" .. 
-        // ninja 
+        // cmake -G "Ninja" ..
+        // ninja
 
     // note that we specify that we are using Ninja to build our files with the -G "Ninja" 
     // also note a generic way to execute build (whether its make or ninja), is to use:
@@ -624,7 +624,7 @@ int stl() {
         // errno.h
         // signal.h
     // and so on.
-    
+
     // <as a refresher, we will go over what <stdlib.h> in C contains.
         // you don't need to read this.
 
@@ -633,7 +633,7 @@ int stl() {
         // calloc() - allocate and clear a block of memory
         // realloc() - resize an allocated memory block
         // free() - free an allocated block of memory
-        
+
         // process control stuff:
         // exit() - terminates the calling process
         // abort() - causes asn abnormal program termination
@@ -657,7 +657,6 @@ int stl() {
     // note that we are only including the headers at the top of our code.
     // the actual implementation of these headers, of the C standard library, is provided by the compiler you use.
     // the compiler, like gcc, is responsible for providing an implementation of the C standard library.
-
     // gcc specifically provides the GNU C Library (glibc) implementation.
 
     // the concept is exactly the same in C++.
@@ -666,15 +665,15 @@ int stl() {
     // for headers part of the C++ standard library, we do not include a .h or .hpp.
     // for instance:
         // #include <vector>
-    // note that this is only for C++ standard library headers! 
-    
+    // note that this is only for C++ standard library headers!
+
     // STL vs C++ standard library
     // now the main topic of this section: the STL
     // STL stands for standard template library, which consists of certain iterators and data structures in C++
     // the STL is part of the C++ standard library, i.e; the STL is a subset of the C++ standard library
     // (at least as far as i know, but there seems to be debate around this topic so do your own research).
 
-    // STL specifically refers to the components originally designed by Alexander Stepanov which 
+    // STL specifically refers to the components originally designed by Alexander Stepanov which
     // focus on containers, iterators, algorithms, and function objects.
 
     // STL headers include:
@@ -694,7 +693,7 @@ int stl() {
     // #include <iterator>
 
     // function objects (functors)
-    // #include <functional>  
+    // #include <functional>
 
     // meanwhile, here are some examples of headers part of C++ standard library but not in STL:
     // I/O streams
@@ -746,7 +745,7 @@ int stl() {
 
 int stl_containers() {
     // in the following sections we will learn about the containers below:
-    
+
     // SEQUENCE CONTAINERS
         // vector: dynamic array, continuous memory
         std::vector<int> vec; // needs #include <vector>
