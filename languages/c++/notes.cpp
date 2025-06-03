@@ -832,12 +832,24 @@ int vectors() {
     // for integers, it's still one step for emplace_back():
     vec.push_back(69);
     // this does not create a temporary variable
-    
+
     // so you might wonder, when do we want to use push_back() instead then?
     // if the object already exists, then push_back will be more efficient than emplace_back or at least equally as much.
 
     std::string existing_string = "Yoskies";
     str_vec.push_back(existing_string);
+
+    // INEFFICENT INITIALIZATION
+    std::vector<float> fvec(5, 40);
+    // this above is inefficient because it generates 5 integers of value 40
+    // then converts them into floats. use '40.0f'instead
+
+    std::vector<float> fvec2(5, 40.0);
+    // this is also inefficient because it generates doubles then turns them
+    // into floats. we want an 'f' at the end of the 40.0
+
+    std::vector<float> fvec3(5, 40.0f);
+    // this is efficient because it directly creates floats.
 
     return 0;
 }
