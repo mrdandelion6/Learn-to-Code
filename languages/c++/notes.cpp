@@ -1,9 +1,12 @@
 #include <iostream>
+#include <unistd.h> 
 #include <cstring>
 #include <string>
 #include <limits>
-#include <unistd.h> 
 #include <vector>
+#include <deque>
+#include <list>
+#include <forward_list>
 #include <cmath>
 // remark .. C++ prefers camel case. i will be using snake case for many things though :p
 
@@ -55,7 +58,8 @@ int default_arguments();
 int lambda_functions();
 
 // MEMORY AND RESOURCES
-int new_delete_operator();
+int free_and_malloc_review();
+int new_delete_operators();
 int smart_pointers();
 int raii();
 int move_semantics();
@@ -93,7 +97,7 @@ int variadic_templates();
 
 int main() {
     // RUN
-    aggregates();
+    references();
 }
 
 int what_is_cpp() {
@@ -211,7 +215,6 @@ int data_types() {
 
     // void
     // void j;               // no bytes. note we cannot even declare this
-
 
     // NON PRIMITIVE DATA TYPES
     // non-primitive types can can hold multiple values and/or have methods associated
@@ -746,10 +749,19 @@ int stl_containers() {
     
     // SEQUENCE CONTAINERS
         // vector: dynamic array, continuous memory
+        std::vector<int> vec; // needs #include <vector>
+
         // array: fixed sized array, continuous memory
+        int arr[] = {1, 2, 3};
+
         // deque: double ended queue, fast insertion/removal at both ends
+        std::deque<int> deq;
+
         // list: doubly linked list, fast insertion/removal anywhere
-        // forward list: 
+        std::list<int> lst; // needs #include <list>
+
+        // forward list: a singly linked lsit , only have next pointers
+        std::forward_list<int> flst; // needs #include <forward_list>
 
     // ASSOCIATIVE CONTAINERS
     // ORDERED
@@ -767,7 +779,7 @@ int stl_containers() {
 
     // CONTAINERS ARE CLASSES
     // all these containers are actually classes.
-    // typically we uppercase (camelcase) classes in C++ (and most other languages) but of course this is not required. 
+    // typically we uppercase (camelcase) classes in C++ (and most other languages) but of course this is not required.
     // for classes from the standard library like vector, string, etc, we do not have CamelCase and instead have snake_case
 
     // standard library classes: snake case
@@ -781,7 +793,6 @@ int vectors() {
     // #include <vector>
 
     // CREATING VECTORS:
-
     // empty vector
     std::vector<int> vec;
 
@@ -1261,7 +1272,7 @@ int classes() {
 
     // syntax remarks:
     // note that that we need to add ; to the end of the class definition
-    // also note that prviate, protected, and public (access specifiers) are aligned with the class keyword. more on access specifiers soon.
+    // also note that private, protected, and public (access specifiers) are aligned with the class keyword. more on access specifiers soon.
 
     // CLASS MEMBERS
     // we refer to the components of a class--the variables it stores and functions it has--as class members.
@@ -1417,8 +1428,8 @@ int initializer_list() {
         char* name;
         int age;
     public:
-        Cat(const char* n, int a) : name(new char[strlen(n) +1 ]), age(a) { 
-            strcpy(name, n); 
+        Cat(const char* n, int a) : name(new char[strlen(n) +1 ]), age(a) {
+            strcpy(name, n);
         }
         ~Cat() { delete[] name; }
     };
@@ -1475,7 +1486,7 @@ int initializer_list() {
     // name(n) calls the appropriate constructor for the class, in this case for std::string.
     // the string's constructor is used to initialize the member directly.
 
-    // the most important part to pay attention to is for classes. 
+    // the most important part to pay attention to is for classes.
     // always remember that member(value) will invoke the constructor of the value class if value is a class type.
 
     // INITIALIZATION ORDER
