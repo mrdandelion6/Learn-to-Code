@@ -1023,13 +1023,39 @@ int aggregates() {
     return 0;
 }
 
-int new_delete_operator() {
-    // recall in C we would use malloc and free
-    // in C++ we can also use the 'new' and 'delete' keyword for memory management.
-
-    // we can still use malloc and free of course:
+int free_and_malloc_review() {
+    // recall in C we would use malloc and free. we also can in C++.
     int* ptr1 = (int*)malloc(sizeof(int));
     free(ptr1);
+
+    // but lets review how the program knows how much to free.
+    // when we first do malloc(sizeof(int)) , the runtime system tracks
+    // allocation sizes. when we call free() , the runtime system is looked
+    // up to determine how much to free.
+
+    char* ptr = (char*)malloc(100);  // you specify 100 bytes
+    int* nums = (int*)malloc(10 * sizeof(int));  // you specify 40 bytes
+
+    // internally, most implementations do something like storing the size of
+    // array just befor your data like this:
+
+    // [SIZE_INFO][YOUR_DATA_STARTS_HERE]
+    //            ^-- your pointer points here
+
+    free(ptr);   // free() looks backward to find the stored size (100)
+    free(nums);  // free() looks backward to find the stored size (40)
+
+    // a common mistake is doing this:
+    char* ptr2 = (char*)malloc(100);
+    ptr2 += 50;  // move pointer to middle of allocation.
+    free(ptr2);  // CRASH! free() can't find the size info because ptr no longer
+    //             points to start.
+
+    return 0;
+}
+
+int new_delete_operators() {
+    // in C++ we can also use the 'new' and 'delete' keyword for memory management.
 
     // we can also use 'new' now:
     int* ptr2 = new int;
@@ -1059,7 +1085,7 @@ int new_delete_operator() {
         // this is a destructor
         ~Dog() {
             delete[] name;
-        } 
+        }
 
         void getName() {
             std::cout << "my name is " << name << std::endl;
@@ -1073,9 +1099,12 @@ int new_delete_operator() {
     // this allocates all the memory for the Dog class
     // the memory allocated is calculated by how many 'member variables' we have
     // that is:
-        // char* name
-        // int age
-    // and then it also calls the constructor.
+        // char* name (8 bytes)
+        // int age (4 bytes)
+    // if the compiler also adds padding to the Dog class for allignment then
+    // that will also be allocated. in other words , the compiler allocates
+    // sizof(Dog) bytes... note the sizeof() operator accounts for padding.
+    // after allocation , compiler also calls the constructor.
 
     // if we didnt use new, it would just allocate the memory on the stack:
     Dog doggy2 = Dog("saadu", 200);
@@ -1086,6 +1115,9 @@ int new_delete_operator() {
     // this does the following:
         // 1.) call the destructor
         // 2.) frees memory like calling free()
+    // remember , since everything is statically typed in C / C++ , the
+    // compiler knows how much size each type takes. hence calling free() on a
+    // Dog pointer (doggy) frees sizeof(Dog) bytes. same thing for delete.
 
     // now doggy is a dangling pointer, so we should set it to nullptr:
     doggy = nullptr;
@@ -1097,6 +1129,8 @@ int new_delete_operator() {
     memcpy(doggy, &temp, sizeof(Dog));
     doggy->getName();
     // prints shazaza
+    // however this is very bad. memcpy() copies the pointers from temp to
+    // doggy. so temp.name and doggy->name both point to the same memory.
 
     // DELETE WITHOUT DELETE
     doggy->~Dog();
