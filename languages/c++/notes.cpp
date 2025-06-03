@@ -406,17 +406,28 @@ int cmake() {
     // that's why cmake is called cross platform make!
 
     // to learn how to properly write CMakeLists.txt files, see CMakeLists.txt inside ./example-project/
-    // to use the CMakeLists.txt that you have typed up, you will want to first create a folder named "build":
+    // to use the CMakeLists.txt that you have typed up, you will want to first create a directory named "build".
+    // the CMakeLists.txt should exist at the same level as the build directory (usually in the project root).
+
+    // PROJECT STRUCTURE
+    // so your project sturcture should look like this:
+    // project/
+    // ├── CMakeLists.txt
+    // ├── src/
+    // ├── include/
+    // └── build/  
+
         // mkdir build
         // cd build
         // cmake ..
-    // this is assuming the CMakeLists.txt file is outside the build file (in ..)
 
-    //then inside the build directory, (we already cd'd here), you would just run make:
-        // make
+    // then inside the build directory, (we already cd'd here), you would just run make:
+        // cmake --build .
 
-    // the above example is if we use make.
-    // here is an example using Ninja:
+    // or if we are using make , we could specifically just run `make` in the
+    // build directory instead of `cmake --build .`
+
+    // and if we used Ninja ,
         // mkdir build
         // cd build
         // cmake -G "Ninja" ..
