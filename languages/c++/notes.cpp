@@ -68,10 +68,13 @@ int memory_model();
 // OBJECT ORIENTED PROGRAMMING
 int oop();
 int classes();
+int access_specifiers();
 int structs();
 int initializer_list();
 int constructors_destructors();
-int inheritance_polymorphism();
+int static_keyword();
+int inheritance();
+int polymorphism();
 int virtual_functions();
 int templates();
 int operator_overloading();
@@ -1212,7 +1215,7 @@ int oop() {
         // structs with oop capabilities
         // member functions (methods)
         // data members (fields)
-        // access specifiers 
+        // access specifiers
         // constructors
         // destructors
         // `this` pointer
@@ -1301,7 +1304,10 @@ int classes() {
     // so variables are class members, often called: data members, member variables, or fields
     // and class functions are also class members, often called: methods or member functions
 
-    // ACCESS SPECIFIERS
+    return 0;
+}
+
+int access_specifiers() {
     // access specifiers are keywords that determine the visibility of class members.
     // there are 3 access specifiers: private, protected, and public:
 
@@ -1393,7 +1399,7 @@ int structs() {
     // clearly structs seem to have nearly everything classes do. 
     // so we ask: what is the difference between the two? why are classes needed?
     // well.. they're actually not! there is not any technical benefit of using classes rather than structs.
-    // structs can do everything classes can. 
+    // structs can do everything classes can.
     // the only differences are as follows:
         // default access specifier for structs is public and for classes it's private
         // default inheritance for structs is public and for classes it's private (more on this later)
