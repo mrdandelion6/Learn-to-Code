@@ -41,16 +41,16 @@ add_executable(example-project src/main.cpp)
 
 # now we discuss more CMake commands and features..
 
-# COMMENTS: 
+# COMMENTS:
 # use # for comments, like this one
 
-# VARIABLES: 
+# VARIABLES:
 # use set() to define variables and use ${} to access them
 set(MY_VARIABLE "Hello, World!")
-message(${MY_VARIABLE}) 
+message(${MY_VARIABLE})
 # note that message prints "Hello, World!" to the terminal
 
-# FUNCTIONS: 
+# FUNCTIONS:
 # use function() to define functions
 function(say_hello)
     message("Hello, Function!")
@@ -61,7 +61,7 @@ say_hello()
 
 # ADDING DIRECTORIES:
 # use add_subdirectory() to add directories
-# this is useful for organizing your project'
+# this is useful for organizing your project
 # for example, suppose you have the following directory structure:
     # languages/c++/example-project/
     # ├── CMakeLists.txt
@@ -90,8 +90,8 @@ add_subdirectory(lib/math)
     #3     include/math.h
     #4 )
     #5
-    #6 target_include_directories(mathlib 
-    #7     PUBLIC 
+    #6 target_include_directories(mathlib
+    #7     PUBLIC
     #8         ${CMAKE_CURRENT_SOURCE_DIR}/include
     #9 )
 
@@ -137,4 +137,4 @@ add_subdirectory(lib/math)
 
 # PRIVATE means that the property will only be applied to the target itself.
 # for example, if we have a target A that links to target B, and target B has a PRIVATE property, target A will not inherit that property.
-# so in our above example, ${CMAKE_CURRENT_SOURCE_DIR}/include will only be available to mathlib and not any target that links to mathlib.
+# so in our above example , if we had PRIVATE , ${CMAKE_CURRENT_SOURCE_DIR}/include would only be available to mathlib and not any target that links to mathlib.
