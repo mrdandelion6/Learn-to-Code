@@ -1197,12 +1197,39 @@ int string_handling() {
 }
 
 int size_t_type() {
-    // size_t is a type in both c and c++ that is an unsignend intereger type
-    // which represents the size of objects in bytes and is commonly used for
+    // size_t is a type in both c and c++ that is an unsigned integer type which
+    // usually represents the size of objects in bytes and is commonly used for
     // array indexing and loop counting.
     std::vector<int> vec{1, 2, 3, 4, 5};
     size_t s = vec.size();
     std::cout << "vec size is: " << s << std::endl;
+
+    // since size_t is unsigned , it can only be of a positive value , which
+    // makes it perfect for sizes and counts that are inherently non-negative.
+    // the actual size of size_t depends on your platform. on 64 bit systems ,
+    // its typically 64 bits / 8 bytes. while on 32 bit systems , it's usually
+    // 4 bytes.
+
+    for (size_t i = 0; i < s; ++i) {
+        std::cout << vec[i] << " ";
+    }
+    std::cout << std::endl;
+    // even though size_t can be used for the bytes an object takes , it can be
+    // used for things like counting elements as well because it's an unsigned
+    // int.
+
+    for (int i = 0; i < vec.size(); ++i) {
+        std::cout << vec[i] << " ";
+    }
+    std::cout << std::endl;
+    // suppose we did int instead of size_t , the compiler could generate
+    // comparison warings about comparing int with vec.size() which is of type
+    // size_t. though it might not ... mine seems to be fine lol.
+
+    // it's also worth noting that since size_t is unsigned and also usually
+    // larger than int , it can contain larger numbers without overflowing.
+    std::cout << "size_t size is: " << sizeof(size_t) << " bytes." << std::endl;
+    std::cout << "int size is: " << sizeof(int) << " bytes." << std::endl;
 
     return 0;
 }
