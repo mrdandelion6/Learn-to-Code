@@ -1124,6 +1124,56 @@ int string_handling() {
     // to learn more about iterators , see iterators().
 
     // LITERALS
+    // recall string literals from c. we will do a review here.
+    char s[] = "hello world!";
+    // when we create a string like the above , the compiler creates a string
+    // literal "hello world!" so string literals are "baked" into your
+    // executable (program image). at run time this is loaded into the read
+    // only segment of your process memory , and copied on to the stack.
+    // since we did not declare const , the stack gets a COPY of the string ,
+    // one we can modify by doing something like s[5] = 'x'.
+
+    // if we use const , then instead of getting a copy of the string , we only
+    // get a pointer to it.
+    const char* p = "hello world!";
+    // this points to the read only segment of your process and cannot be
+    // modified. note that s took up two places in memory: in read only and on
+    // the stack. p is only a pointer on the stack which points to the string
+    // literal in read only data (.rodata). so it is important to add const
+    // keyword for when you are not going to be modifying a string--it is more
+    // memory efficient. though the compiler may optimize your code by itself ,
+    // that is not guaranteed and it's just better to add it yourself.
+
+    // when it comes to std::string , making string variable is not the same as
+    // when we do char s[] = "abc".
+    std::string s2 = "hello world!";
+    // this will create a string literal in .rodata (if an identical one there
+    // doesn't already exist) , and then a modifiable copy will be made on the
+    // HEAP. the string class constructor is called and the string object is
+    // created on the STACK. the object contains a pointer to the string data
+    // (like char*) which is allocated on the heap. when the variable goes out
+    // of scope , the deconstructor is called automatically. this is known as
+    // RAII , see raii() for more details.
+
+    // here is a diagram of making std::string s2 on the stack.
+    /*
+            STACK:
+    _______________________
+    | std::string object  |  <- s2 lives here
+    | ___________________ |
+    | | char* data -----|-|--> HEAP: ['h']['e']['l']['l']['o']...
+    | | size_t size     | |
+    | | size_t capacity | |
+    | |_________________| |
+    |_____________________|
+
+    READ-ONLY (.rodata):
+    "hello world!\0"  ← original string literal
+    */
+
+    // there is no std::string equivalent to const char* , i.e. , getting a
+    // pointer to a string literal in .rodata. for this , just use c-style
+    // const char* strings. std::string is designed for safe modifiable data.
 
     // BEST PRACTICES
     // use std::string over c-style strings because it handles memory on its
