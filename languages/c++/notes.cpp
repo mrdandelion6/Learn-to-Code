@@ -107,7 +107,7 @@ int variadic_templates();
 
 int main() {
     // RUN
-    size_t_type();
+    iterators();
 }
 
 int what_is_cpp() {
@@ -1288,7 +1288,96 @@ int range_based_for() {
     return 0;
 }
 
-int iterators() { return 0; }
+int iterators() {
+    // iterators in c++ act like pointers , allowing you to traverse through
+    // containers easily. they provide an abstraction layer between algorithms
+    // and data structures.
+
+    // TYPES OF ITERATORS
+    // there are many different kinds of iterators:
+    // input iterators:
+    //      read-only , forward movement only
+    // output iterators:
+    //      write-only , forward movement only
+    // forward iterators:
+    //      read/write , forward movement only
+    // bidirectional iterators:
+    //      read/write , forward and backward movement
+    // random access iterators
+    //      read/write , can jump to any position. most powerful type iterators.
+
+    // ITERATORS WITH VECTORS
+    // we use auto for iterator types because the actual type can be ugly.
+    std::vector<int> vec = {1, 4, 8, 16, 32, 64};
+    auto it = vec.begin(); // points to first element
+    auto end_it = vec.end(); // points to last element
+
+    // you can dereference iterators to access the items:
+    std::cout << "*it: " << *it << std::endl;
+    // prints 1. increment it will change actual values!
+    (*it)++;
+    std::cout << "vec[0]: " << vec[0] << std::endl;
+
+    // you can move iterator to next element:
+    ++it;
+    std::cout << "*it: " << *it << std::endl;
+
+    // vector iterators are random access iterators and can jump many positions
+    // at a time:
+    it += 2; // should now be at 4th index.
+    std::cout << "*it: " << *it << std::endl; // prints 16
+
+    // random access iterators also have an ordering to them. that is , for all
+    // iterators i , i < i + 1. you can also calculate the middle iterator like
+    // this:
+    auto middle = vec.begin() + vec.size() / 2;
+    std::cout << "*middle: " << *middle << std::endl; // prints 16
+
+    // or find the "distance" of the vector like this:
+    auto distance = vec.end() - vec.begin();
+    std::cout << "distance: " << distance << std::endl; // prints 6
+
+    // in contrast to vectors , std::list iterators are only bidirectional.
+    // cannot have it + n , only ++ and --. std::forward_list iterators are
+    // only forward , cannot do -- , only ++. std::map and std::set are both
+    // bidirectional like std::list.
+
+    // ITERATORS IN LOOPS
+    // you can also use iterators in a loop like this:
+    std::cout << "vec is: ";
+    for (auto it = vec.begin(); it != vec.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+    // the reason we do ++i instead of i++ is for better performance. i++ does:
+    auto increment = [](int& i) {
+        int tmp = i;
+        i += 1;
+        return tmp;
+    };
+    // creates a temporary variable and returns the value before incrementing.
+
+    // ++i does this:
+    auto good_increment = [](int& i) {
+        i += 1;
+        return i;
+    };
+    // for primitive types this won't make that much of a difference because
+    // compilers usually optimize the code. but this matters a lot with
+    // iterators and objects. imagine the increment function , but our tmp
+    // calls a constructor instead of simply = i. this is very bad as we will
+    // be calling a constructor every iteration.. much slower.
+
+    // REVERSE ITERATORS
+
+    // CONST ITERATORS
+
+    // STL ALGORITHM WITH ITERATORS
+
+    // CUSTOM ITERATORS
+
+    return 0;
+}
 
 int aggregates() {
     // in C++ an aggregate is a type that allows its members to be initialized directly with curly brace initialization.
@@ -1931,7 +2020,7 @@ int lambda_functions() {
     // now we can use add(a, b) to add stuff. notice we catured nothing in this example.
 
     // CAPTURING VARIABLES
-    // lambda functions have a unique feature called caturing variables, whatever you but inside the [].
+    // lambda functions have a unique feature called capturing variables, whatever you but inside the [].
     // what it means to capture a variable is that you give a copy of that variable to the lambda object.
 
     // for example
