@@ -1196,7 +1196,16 @@ int string_handling() {
     return 0;
 }
 
-int size_t_type() { return 0; }
+int size_t_type() {
+    // size_t is a type in both c and c++ that is an unsignend intereger type
+    // which represents the size of objects in bytes and is commonly used for
+    // array indexing and loop counting.
+    std::vector<int> vec{1, 2, 3, 4, 5};
+    size_t s = vec.size();
+    std::cout << "vec size is: " << s << std::endl;
+
+    return 0;
+}
 
 int range_based_for() { return 0; }
 
