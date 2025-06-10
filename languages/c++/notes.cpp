@@ -1293,9 +1293,12 @@ int free_and_malloc_review() {
     // a common mistake is doing this:
     char* ptr2 = (char*)malloc(100);
     ptr2 += 50;  // move pointer to middle of allocation.
+
+    #pragma GCC diagnostic ignored "-Wfree-nonheap-object"
     free(ptr2);  // CRASH! free() can't find the size info because ptr no longer
     //             points to start.
-
+    #pragma GCC diagnostic warning "-Wfree-nonheap-object"
+    // the lines with #pragma suppress compile warnings.
     return 0;
 }
 
