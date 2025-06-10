@@ -1234,7 +1234,59 @@ int size_t_type() {
     return 0;
 }
 
-int range_based_for() { return 0; }
+int range_based_for() {
+    // range based for loops are like python "for x in container" loops. very
+    // simple. here is the usual synax:
+    /*
+    for (auto element : container) {
+        body
+    }
+    */
+
+    // here's a simple example with vectors
+    std::vector<int> vec{1, 2, 3, 4, 5};
+    for (int i : vec) { std::cout << i << " "; }
+    std::cout << std::endl;
+
+    // we can use this on any iterable containers like strings , vectors , maps
+    // and sets. they work with any containers that provide begin() and end()
+    // iterators. more on interators in the next section iterators(). you can
+    // also use the auto keyword for the element type and the compiler will
+    // deduce the type automatically.
+    std::vector<std::string> v1 = {"hello", "you", "are", "my", "friend."};
+    for (auto e : v1) {
+        std::cout << e << " ";
+    }
+    std::cout << std::endl;
+    // we could have also just used std::string for the type on e instead.
+
+    // USING REFERENCES WITH RANGE BASED LOOP
+    // you can also use references to change the items in place instead of
+    // using indices. this is very useful you want to both mutate and perform
+    // some operations with the elements.
+    int sum = 0;
+    for (int& num : vec) {
+        sum += num;
+        num++;
+    } // this modifies the items in vec and without needing for indexing.
+    std::cout << "new vec values: ";
+    for (int i : vec) { std::cout << i << " "; }
+    std::cout << std::endl;
+    std::cout << "value of sum is: " << sum << std::endl;
+
+    // USING CONST
+    // we can also use const with reference type for safety if we do not want
+    // modify values. this provides no perfomance benefit for speed or memory
+    // afaik , but is good for safety.
+    for (const std::string& word : v1) {
+        std::cout << word << " ";
+    }
+    std::cout << "again." << std::endl;
+    // the reference prevents us from copying the whole string object over each
+    // iteration and the const prevents us from accidentally modifying data we
+    // don't want to modify. together they make a good pair.
+    return 0;
+}
 
 int iterators() { return 0; }
 
