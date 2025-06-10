@@ -2,7 +2,8 @@
 #include <iostream>
 #include <ostream>
 #include <stdexcept>
-#include <unistd.h> 
+#include <thread>
+#include <chrono>
 #include <cstring>
 #include <string>
 #include <limits>
@@ -106,7 +107,7 @@ int variadic_templates();
 
 int main() {
     // RUN
-    string_handling();
+    size_t_type();
 }
 
 int what_is_cpp() {
@@ -599,27 +600,32 @@ int stdin_stdout() {
     return 0;
 }
 
+void _sleep_for(int ms) {
+    // not using usleep because it's not standard c++
+    std::this_thread::sleep_for(std::chrono::microseconds(ms));
+}
+
 int no_flush() {
     // in this function you see how different things flush the buffer.
 
     // newline flushes the buffer
     std::cout << "Hello newline\n";
-    usleep(3000000);
+    _sleep_for(3000000);
 
     // endl flushes the buffer
     std::cout << "Hello endl" << std::endl;
-    usleep(3000000);
+    _sleep_for(3000000);
 
     // cin flushes the buffer
     std::cout << "cin time\n";
     int number;
     std::cout << "Hello cin";
     std::cin >> number;
-    usleep(3000000);  
+    _sleep_for(3000000);
 
     // there is nothing to flush the buffer. only flushes after program termination
     std::cout << "Hello..";
-    usleep(3000000);
+    _sleep_for(3000000);
     // after the sleep is done, program terminates and flushes the buffer.
 
     return 0;
