@@ -1,4 +1,7 @@
+#include <ios>
 #include <iostream>
+#include <ostream>
+#include <stdexcept>
 #include <unistd.h> 
 #include <cstring>
 #include <string>
@@ -39,23 +42,26 @@ int no_flush();
 
 // STANDARD LIBRARY
 int stl();
-int string_handling();
 int stl_containers();
 int vectors();
+int strings();
+int string_handling();
+int iterators();
 int maps();
 int sets();
-int iterators();
 
 // LANGUAGE FEATURES
 int references();
 int aggregates();
+int size_t_type();
 int range_based_for();
+int lambda_functions();
 int namespaces();
 int scope_resolution_operator();
 int function_overloading();
+int exceptions();
 int exception_handling();
 int default_arguments();
-int lambda_functions();
 
 // MEMORY AND RESOURCES
 int free_and_malloc_review();
@@ -100,7 +106,7 @@ int variadic_templates();
 
 int main() {
     // RUN
-    references();
+    string_handling();
 }
 
 int what_is_cpp() {
@@ -937,6 +943,209 @@ int references() {
     return 0;
 }
 
+int strings() {
+    // we introduce strings in this section. you should already be familiar
+    // with c-style strings from c. in c++ we also have the modern std::string
+    // class that has a lot of convenient features.
+
+    // C-STYLE STRINGS
+    // c-style strings are null-terminated character arrays.
+    char cstr1[20] = "Hello";
+    char cstr2[] = "World";
+    char cstr3[20];
+
+    // basic operations
+    strcpy(cstr3, "copy this");
+    strcat(cstr1, "world");
+    int len = strlen(cstr1);
+    int cmp = strcmp(cstr1, cstr2);
+    // for more detail see my C notes.
+    std::cout << "cmp: " << cmp << ", len: " << len << std::endl;
+
+    // STD::STRING CLASS
+    // the std::string class is much safer and more convenient.
+    std::string str1 = "Hello";
+    std::string str2("World");
+
+    // copy constructor
+    std::string str3{str1};
+
+    // the reason we don't have to worry about null termination for std::string
+    // is because of how it stores its data. there are three key pieces of info
+    // 1. a pointer to the character data
+    // 2. the length / size of the string
+    // 3. the total capacity (how much memory it is allocated)
+
+    // conceptually , std::string looks something like this:
+    class string {
+    private:
+        char* data;
+        size_t length;
+        size_t capacity;
+    };
+
+    return 0;
+}
+
+int string_handling() {
+    // we will go over different string operations for std::string class.
+    // for learning more about printing to and reading from stdout and stdin ,
+    // see stdin_stdout().
+    std::string str1 = "hello";
+    std::string str2 = "world";
+
+    // CONCATENATION:
+    str1 += " " + str2;
+    std::cout << "str1 is: " << str1 << std::endl;
+
+    // LENGTH AND EMPTY
+    int len = str1.length(); // class method
+    bool empty = str1.empty();
+    std::cout << "len: " << len << ", empty: " << empty << std::endl;
+    // prints `len: 11, empty: 0`
+    // note that .size() is an identical method to .length() , they do the same
+    // thing , just two names for the same method.
+    int len2 = str1.size();
+    std::cout << "len2: " << len2 << std::endl; // also prints 11
+
+    // ACCESSING CHARACTERS
+    char first = str1[0]; // indexing has no bounds checks , can lead to issues
+    char second = str1.at(0); // this has bounds checking , will thorugh an
+    // exception , std:out_of_range , instead of undefined behaviour. this is
+    // protects against buffer overruns (check out my cyber security notes).
+
+    try {
+        char c = str1.at(500);
+    } catch (const std::out_of_range& e) {
+        std::cout << "exception caught: " << e.what() << std::endl;
+    } // to learn more about exceptions , see exceptions() section
+
+    // SUBSTRINGS
+    std::string sub = str1.substr(6, 5);
+    // substr(int start, int length)
+    // so for str1 , we go to index 6 and take 5 characters from there.
+    std::cout << "sub: " << sub << std::endl; // should print `sub: world`
+
+    // you can also find substrings:
+    size_t pos = str1.find("world");
+    if (pos != std::string::npos) {
+        std::cout << "found at index: " << pos << std::endl;
+    } // npos is returned by .find() when there is no match for substring.
+    // prints 6.
+
+    // REPLACING , INSERTING , AND ERASING:
+    // we first do some replacing.
+    str1.replace(6, 5, "gango");
+    // this means , replace the content that starts at index 6 and has length 5
+    // (ends at index 11) with the string 'gango'
+    std::cout << "str1 is now: " << str1 << std::endl; // prints `hello gango`
+
+    // now inserting.
+    str1.insert(6, "wsg ");
+    std::cout << "str1 is now: " << str1 << std::endl; // prints `hello wsg
+    // gango`
+
+    // now erasing
+    str1.erase(11, 3); // erase 3 characters at index 11
+    std::cout << "str1 is now: " << str1 << std::endl; // prints `hello wsg go`
+
+    // COMPARISON
+    std::string a = "apple";
+    std::string b = "banana";
+
+    std::cout << "a < b: " << (a < b) << std::endl;
+    // a < b is lexicograhpical comparison. this compares the strings char to
+    // char, from left to right by ascii value. so a (97) < b (98) is true.
+    // and axyz < b is also true (a* < b is true).
+
+    // an important note on precedence of using < and <<. if for the above we
+    // did not have () around (a < b) , we would have issues. the << opertator
+    // would evaluate before the < operator. this is what would happen:
+    //      1. "a < b: " gets sent to cout
+    //      2. a gets sent to cout
+    //      3. the result of that cout operation ges compared with b using <
+    //      4. the boolean result gets send to cout
+    //      5. endl gets sent to cout
+    // would print something like "a < b: apple0"
+
+    // generally its better to evaluate the boolean first like:
+    bool result = a < b;
+    std::cout << "a < b: " << result << std::endl;
+    // this prints "a < b: 1".
+
+    // if we want to make it more readable and print
+    // true or false instead , we can send boolalpha to cout first:
+    std::cout << std::boolalpha << "a < b: " << result << std::endl;
+    // this prints "a < b: true".
+
+    // CONVERSON BETWEEN TYPES
+    // we can use the stoi function (from std namespace) to go from str to int:
+    std::string num_str = "123";
+    int num = std::stoi(num_str);
+
+    // and stod to go from str to double:
+    std::string doub_str = "3.14";
+    double doub = std::stod(doub_str);
+
+    // we can turn numbers to string:
+    int val1 = 69;
+    double val2 = 69.69;
+    std::string st1 = std::to_string(val1);
+    std::string st2 = std::to_string(val2);
+    std::cout << "st1 is: " << st1 << ", st2 is: " << st2 << std::endl;
+
+    // and we can convert from and to cstrings:
+    const char* cstr = "bababooey";
+    std::string std_str(cstr); // initializes std_str from cstr
+    const char* back = std_str.c_str(); // .c_str() method creates c string.
+
+    // ITERATION
+    std::string text = "dandelion";
+
+    // range-based for loop:
+    for (char c : text) { // like "for c in text"
+        std::cout << c << " ";
+    }
+    std::cout << std::endl;
+    // for understanding range-based for loops , see range_based_for().
+
+    // traditional indexing loop
+    for (size_t i = 0; i < text.length(); ++i) {
+        std::cout << text[i] << " ";
+    }
+    std::cout << std::endl;
+    // for understanding why we use size_t instead of int , see size_t_type().
+
+    // using iterators:
+    for (auto it = text.begin(); it != text.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+    // to learn more about iterators , see iterators().
+
+    // LITERALS
+
+    // BEST PRACTICES
+    // use std::string over c-style strings because it handles memory on its
+    // own , provides bound checking with at() , and has many convenient
+    // methods.
+
+    // use at() over [] or ensure your indices are valid when using [] , for
+    // example , using idx < text.length().
+
+    // use string literals efficiently by declaring tem as const when they
+    // won't change.
+
+    // handle empty strings using .empty() method to be safe.
+    return 0;
+}
+
+int size_t_type() { return 0; }
+
+int range_based_for() { return 0; }
+
+int iterators() { return 0; }
+
 int aggregates() {
     // in C++ an aggregate is a type that allows its members to be initialized directly with curly brace initialization.
     // this is known as aggregate initialization.
@@ -1495,7 +1704,7 @@ int initializer_list() {
     };
     // std::string constructor automatically handles copying the string so we don't need to do it ourselves.
     // and we have no need for a destructor because string handles its own cleanup automatically.
-    // for notes on how std::string works, see the string_handling() function.
+    // for notes on how std::string works, see the strings() function.
 
     // UNDER THE HOOD
     // what exactly does member_name(initial_value) do?
