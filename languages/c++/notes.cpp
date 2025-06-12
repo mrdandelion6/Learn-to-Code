@@ -1,6 +1,8 @@
+#include <fstream>
 #include <ios>
 #include <iostream>
 #include <ostream>
+#include <fstream>
 #include <stdexcept>
 #include <thread>
 #include <chrono>
@@ -12,6 +14,7 @@
 #include <list>
 #include <forward_list>
 #include <cmath>
+#include <memory>
 // remark .. C++ prefers camel case. i will be using snake case for many things though :p
 
 // WELCOME TO MY C++ NOTES
@@ -66,11 +69,12 @@ int default_arguments();
 
 // MEMORY AND RESOURCES
 int free_and_malloc_review();
-int new_delete_operators();
-int smart_pointers();
-int raii();
-int move_semantics();
 int memory_model();
+int new_delete_operators();
+int ownership();
+int raii();
+int smart_pointers();
+int move_semantics();
 
 // OBJECT ORIENTED PROGRAMMING
 int oop();
@@ -107,7 +111,7 @@ int variadic_templates();
 
 int main() {
     // RUN
-    iterators();
+    smart_pointers();
 }
 
 int what_is_cpp() {
@@ -1158,7 +1162,7 @@ int string_handling() {
     // HEAP. the string class constructor is called and the string object is
     // created on the STACK. the object contains a pointer to the string data
     // (like char*) which is allocated on the heap. when the variable goes out
-    // of scope , the deconstructor is called automatically. this is known as
+    // of scope , the destructor is called automatically. this is known as
     // RAII , see raii() for more details.
 
     // here is a diagram of making std::string s2 on the stack.
@@ -1535,6 +1539,11 @@ int free_and_malloc_review() {
     return 0;
 }
 
+int memory_model() {
+
+    return 0;
+}
+
 int new_delete_operators() {
     // in C++ we can also use the 'new' and 'delete' keyword for memory management.
 
@@ -1599,6 +1608,7 @@ int new_delete_operators() {
     // remember , since everything is statically typed in C / C++ , the
     // compiler knows how much size each type takes. hence calling free() on a
     // Dog pointer (doggy) frees sizeof(Dog) bytes. same thing for delete.
+    // note: every new must have a matching delete!
 
     // now doggy is a dangling pointer, so we should set it to nullptr:
     doggy = nullptr;
@@ -1641,11 +1651,12 @@ int new_delete_operators() {
 
     // the main scenarios in which we need malloc() are when:
         // 1.) interfacing with C code
-        // 2.) need to use realloc() calls 
+        // 2.) need to use realloc() calls
         // 3.) when implementing very custom memory allocators and doing low level memory management
 
     // at application level C++, you will rarely use malloc().
     // in fact, both new and malloc() are less preferred than something like smart pointers.
+    // modern c++ prefers smart pointers for safety.. see smart_pointers() to learn more.
 
     return 0;
 }
@@ -1997,9 +2008,7 @@ int constructors_destructors() {
         char* breed;
         int weight;
     public:
-        Dog() {
-
-        }
+        Dog() {}
     };
 
     return 0;
@@ -2154,7 +2163,337 @@ int inheritance() {
     return 0;
 }
 
+int ownership() {
+    // ownership in c++ is a principle about which part of your code is
+    // responsible for managing a resource's lifetime. applies to any resource
+    // that needs cleanup.
+
+    // ownership determines who is responsible for:
+    //      1. creating / acquiring a resource
+    //      2. ensuring proper cleanup / destruction
+    //      3. deciding when the resource should be released
+    // the owner has the responsibility and authority to destroy the resource
+    // when it's no longer needed.
+
+    // for example , stack objects are owned by the function they are defined
+    // in:
+    auto funco =  []() {
+        std::string name = "hello"; // function owns this vector
+        std::vector<int> vec = {1, 2, 3}; // function owns this string
+        std::cout << name << std::endl;
+        vec.push_back(4);
+        return 0;
+    }; // automatic cleanup when function ends
+    // the same idea applies for file handles (see file_handles()) , database
+    // connections , classes cleaning up their members (via destructor) ,
+    // and smart pointers.
+
+    // TYPES OF OWNERSHIP
+    // 1. exclusive ownership
+    // 1. shared ownership
+    // 1. non-ownership
+
+    // exclusive ownership:
+    // one entity owns the resource exclusively:
+    class Car {
+        int miles; // car exclusively owns its miles member
+    };
+
+    // shared ownership:
+    // multiple entities share responsibility. for example shared_ptr , see
+    // smart_pointers() to learn about shared pointers.
+    std::shared_ptr<int> shr = std::make_shared<int>(69);
+
+    // non-ownership:
+    // simple when something isn't owned by something. for example a reference
+    // inside a function.. the function doens't own the reference.. it's just a
+    // reference.
+    auto fun = [](int& x) {
+        std::cout << x << std::endl; // doesn't own x , only borrowing it.
+    };
+
+    // OWNERSHIP TRANSFER
+    // resources can change ownership. for example a unique pointer that is
+    // returned by a function.
+    auto make_uptr = []() {
+        std::unique_ptr<int> uptr = std::make_unique<int>(69); // make_uptr is
+        // owned by the make_uptr() function right now.
+
+        return uptr; // transfer ownership to caller.
+    };
+    std::unique_ptr<int> uptr = make_uptr(); // now owned by ownership()
+    // function.
+
+    // RAII
+    // `resource acquisition is initialization` (raii) is c++'s primary way for
+    // ownership management. more on this in the next section , raii().
+
+    return 0;
+}
+
+int raii() {
+    // the primary principle of raii (resource acquisition is initialization)
+    // is:
+    //      1. acquire resources in constructors
+    //      2. release resources in destructors
+    //      3. let scope and object lifetime manage resource lifetime
+
+    // simply put , when an object is created , it should acquire its resources
+    // and when it is destroyed it should release its resources.
+
+    // without raii you might code like this:
+    auto risky_function = []() {
+        int* ptr = new int(42);
+        FILE* f = fopen("example.txt", "r");
+
+        bool some_condition = true;
+        if (some_condition) {
+            return;  // memory leak and file leak..
+        }
+
+        delete ptr;
+        fclose(f);
+    };
+
+    auto safe_function = []() {
+        std::unique_ptr<int> ptr = std::make_unique<int>(42);
+        std::ifstream file("data.txt");
+
+        bool some_condition = true;
+        if (some_condition) {
+            return;  // no memory leaks , runs destructors automatically before
+            // leaving scope.
+        }
+
+        // no need for any manual cleanup.
+    };
+
+    // also , just like how we free pointers in the reverse order of allocating
+    // them , raii automatically calls destructors in the reverse order of
+    // constructing them.
+    /*
+        Creating A
+        Creating B
+        Creating C
+        About to return
+        ~ResourceC destructor
+        ~ResourceB destructor
+        ~ResourceA destructor
+        Returns
+    */
+
+    return 0;
+};
+
+int smart_pointers() {
+    // smart pointers are one of the biggest upgrades from c to c++. they are
+    // objects that act like traditional pointers but automatically manage
+    // memory allocation and deallocation. they are part of the c++ 11 standard
+    // and help prevent common memory management errors like memory leaks ,
+    // dangling pointers , and double deletion.
+
+    // RAW POINTERS
+    int* ptr = new int(42);
+    // we have to manually delete this later like so:
+    delete ptr;
+    // error prone cause you may forget to call delete for every new. this is
+    // why we have smart pointers. raw pointers are pure memory addresses ,
+    // whereas smart pointers are objects that contain a pointer. they are not
+    // pointers themselves! you can dereference smart pointers using * the same
+    // way you can with regular pointers.
+
+    // THREE TYPES
+    // there are three main smart pointers. we will learn about all of them and
+    // their differences.
+    // 1. std::unique_ptr
+    // 2. std::shared_ptr
+    // 3. std::weak_ptr
+
+    // STD::UNIQUE_PTR
+    // this represents exclusive ownership of a resource. only one unique_ptr
+    // can own a particular object at a time.
+    std::unique_ptr<int> uptr = std::make_unique<int>(42);
+    // memory is automatically freed when uptr goes oout of scope (raii). no
+    // need to call delete. we can dereference uptr like so:
+    std::cout << "uptr holds: " << *uptr << std::endl;
+    // the unique_ptr class object lives on the stack , referenced by the uptr
+    // variable , and the integer 42 lives on the heap. the unique_ptr object
+    // holds a pointer to the integer which lives on the heap.
+
+    // SMART POINTERS ARE CLASS OBJECTS
+    // here's a simplified view of what's inside smart pointers (unique_ptr)
+    /*
+        template<typename T>
+        class unique_ptr {
+            T* ptr;
+            Deleter deleter;
+        };
+    */
+    // again , smart pointers aren't just addresses like regular pointers are.
+    // they are objects that live on the stack like all class objects and just
+    // hold a pointer to some object on the heap.
+
+    // UNIQUENESS OF UNIQUE PTR
+    // can't have another ptr point to the same thing.
+    // std::unique_ptr<int> uptr2 = uptr;
+    // the above won't work and give compile errors if you uncomment it and try
+    // to compile.
+
+    // you can however transfer ownership with std::move
+    std::unique_ptr<int> uptr2 = std::move(uptr);
+    // this sets uptr to nullptr , and uptr owns the memory now.
+    if (uptr == nullptr) { std::cout << "uptr is null" << std::endl; }
+    else { std::cout << "uptr is not null" << std::endl; }
+    // should print that it is null.
+
+    // STD::SHARED_PTR
+    // shared_ptr allows multiple pointers share ownership of the same
+    // resource. it uses reference counting--the object is deleted when the
+    // last shared pointer to it is destroyed.
+    std::shared_ptr<int> sptr1 = std::make_shared<int>(69);
+    std::shared_ptr<int> sptr2 = sptr1;
+    std::cout << "sptr1 is: " << *sptr1 << ", and sptr2 is: " << *sptr2
+        << std::endl;
+    // the shared pointer object will be destroyed when both sptr1 and sptr2 go
+    // out of scope. reference counting is important to keep in mind!
+
+    // STD::WEAK_PTR
+    // std::weak_ptr is a non-owning smart pointer that holds a weak reference
+    // to an object managed by std::shared_pointer. it designed to solve
+    // specific problems that arise with shared ownership. here is how to make
+    // a weak_ptr:
+    std::shared_ptr<int> sptr = std::make_shared<int>(99);
+    std::weak_ptr<int> wptr = sptr;
+    // simply assign to an existing shared pointer.
+
+    // here is a problem we get when using shared pointers.. we get a circular
+    // reference issue:
+    struct Child;
+    struct Parent {
+        std::shared_ptr<Child> child;
+        ~Parent() { std::cout << "parent destroyed" << std::endl; }
+    };
+    struct Child {
+        std::shared_ptr<Parent> parent;
+        ~Child() { std::cout << "child destroyed" << std::endl; }
+    };
+
+    // this creates a circular dependency on the cleanup due to reference
+    // counting. parent <--> child. if we have something like this:
+    auto problematic_code = []() {
+        auto parent = std::make_shared<Parent>();
+        auto child = std::make_shared<Child>();
+        parent->child = child;
+        child->parent = parent; // circular reference
+
+        // when the function ends , the child and parent variables are
+        // destroyed , but the shared pointer objects they refernce are still
+        // not cleaned up. this is because:
+        // 1. before variables are destroyed:
+        //      parent object has ref count of 2 (parent var and child->parent)
+        //      child object also has same ref count of 2
+        // 2. child variable is destroyed first
+        //      child has a ref count of 1 , from parent->child still , so the
+        //      child object cannot be destroyed.. it needs a ref count of 0.
+        //      this means that it also still holds the parent pointer member.
+        // 3. parent variable is destroyed next
+        //      parent has a ref count of 1 , as the child object still exists.
+        //      because of child->parent , the parent object cannot destruct.
+    };
+    // this essentially causes a deadlock where both parent and child objects
+    // cannot destruct because of each other.
+
+    // to fix this we use a weak_ptr:
+    struct BetterChild;
+    struct BetterParent {
+        std::shared_ptr<BetterChild> child;
+        ~BetterParent() { std::cout << "parent destroyed" << std::endl; }
+    };
+    struct BetterChild {
+        std::weak_ptr<BetterParent> parent; // made this weak!
+        ~BetterChild() { std::cout << "child destroyed" << std::endl; }
+    };
+
+    auto good_code = []() {
+        auto parent = std::make_shared<BetterParent>();
+        auto child = std::make_shared<BetterChild>();
+        parent->child = child;
+        child->parent = parent;
+
+        // this time:
+        // 1. before vars are destroyed
+        //      parent has ref count of 1 , child->parent does not add a ref
+        //      child has ref count of 2 , parent->child is a shared_ptr
+        // 2. child var is destroyed
+        //      child object has ref count of 1 from parent->child , no cleanup
+        // 3. parent var is destroyed
+        //      parent object has a ref count of 0 , it cleans up and releases
+        //      member.
+        // 4. reference count for child object goes to zero and it cleans up.
+    };
+
+    // USING WEAK_PTR WITH LOCK()
+    // the .lock() method is crucial for safely using weak_ptr. the problem is
+    // that since weak_ptr doesn't own th ojbect , the object it points to can
+    // be destroyed at any time by other code. if you try to access a destroyed
+    // object you get undefined behaviour like crash , garbage data , etc.
+
+    // .lock() tries to "promote" the weak_ptr to a shared_ptr temporarily. it
+    // returns a valid shared_ptr if the object still exists , or a null
+    // shared_ptr is fhe object was destroyed. for example , with our child and
+    // parent classes:
+    class Child1;
+    class Parent1 {
+    public:
+        std::string name;
+        std::shared_ptr<Child1> child;
+        Parent1(const std::string& n) : name(n) {}
+        ~Parent1() = default;
+    };
+
+    class Child1 {
+    public:
+        std::string name;
+        std::weak_ptr<Parent1> parent;
+        Child1(const std::string& n) : name(n) {}
+
+        // we use .lock() to acquire shared_ptr
+        void printParentName() {
+            // this temporarily increases ref count of parent object by 1
+            if (std::shared_ptr<Parent1> parent_ptr = parent.lock()) {
+                std::cout << parent_ptr->name << std::endl;
+            } else { std::cout << "i have no parents" << std::endl; }
+            // once if statement ends , parent_ptr goes out of scope and parent
+            // ref count drops by 1.
+        };
+
+        ~Child1() = default;
+    };
+
+    std::shared_ptr<Parent1> par = std::make_shared<Parent1>("bobby");
+    std::shared_ptr<Child1> chi = std::make_shared<Child1>("frake");
+    par->child = chi;
+    chi->parent = par;
+
+    chi->printParentName();
+    par.reset(); // sets parent object ref count to 0
+    chi->printParentName(); // prints that it is an orphan
+    // note that we used .reset() to clean up the shared_ptr. more on this and
+    // other smart pointer functions in the next section ,
+    // smart_pointer_tools().
+
+    return 0;
+}
+
 int polymorphism() {
     return 0;
 }
 
+int virtual_functions() {
+    return 0;
+}
+
+int templates() {
+
+    return 0;
+}
