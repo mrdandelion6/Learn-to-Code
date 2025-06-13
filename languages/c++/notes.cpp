@@ -2364,7 +2364,10 @@ int smart_pointers() {
     // a weak_ptr:
     std::shared_ptr<int> sptr = std::make_shared<int>(99);
     std::weak_ptr<int> wptr = sptr;
-    // simply assign to an existing shared pointer.
+    // simply assign to an existing shared pointer. you CANNOT DEREFERNCE weak
+    // pointers! you must use .lock() on them to get a shared_ptr that you can
+    // dereference. more on this soon. for now let's see why we need weak_ptr's
+    // in the first place.
 
     // here is a problem we get when using shared pointers.. we get a circular
     // reference issue:
@@ -2466,6 +2469,8 @@ int smart_pointers() {
             // once if statement ends , parent_ptr goes out of scope and parent
             // ref count drops by 1.
         };
+        // only way to access what weak_ptr points to is with .lock() , you
+        // cannot dereference weak_ptr directly as it does not own the object.
 
         ~Child1() = default;
     };
@@ -2485,11 +2490,41 @@ int smart_pointers() {
     return 0;
 }
 
+int smart_pointer_tools() {
+    // here is a list of smart pointer methods that you can use:
+
+    // ALL SMART POINTER METHODS
+    // 1. get() : returns the raw pointer that the smart pointer was storing
+    //      for unique and shared ptr , returns the owned pointer. for weak
+    //      ptr , returns the observed pointer.
+    // 2. reset() : cleans up the smart pointer. if optional argument passed
+    //      (has to be a pointer) , it takes ownership of the new object.
+    // 3. swap(smart_ptr) : exchanges the objects between two smart pointers of
+    //      the same type.
+
+    // UNIQUE_PTR METHODS
+    // 1. release() : returns the raw pointer and releases ownership without
+    //      destroying the object.
+
+    // SHARED_PTR METHODS
+    // 1. use_count() : returns the reference count for the object.
+    // 2. unique() : tests if the reference count == 1.
+
+    // WEAK_PTR METHODS
+    // 1. lock() : returns a shared_ptr for the weak_ptr if the object exists.
+    // 2. expired() : checks if the object still exists. returns true if object
+    //      has been destroyed.
+
+    return 0;
+}
+
 int polymorphism() {
+
     return 0;
 }
 
 int virtual_functions() {
+
     return 0;
 }
 
